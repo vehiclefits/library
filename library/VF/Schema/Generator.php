@@ -98,10 +98,9 @@ class VF_Schema_Generator
             $generator = new Elite_Vafpaint_Model_Schema_Generator();
             $return .= $generator->generator($levels);
         }
-        if (file_exists(ELITE_PATH . '/Vafnote')) {
-            $generator = new Elite_Vafnote_Model_Schema_Generator();
-            $return .= $generator->generator($levels);
-        }
+
+        $generator = new VF_Note_SchemaGenerator();
+        $return .= $generator->generator($levels);
 
         $generator = new VF_Import_Schema_Generator();
         $return .= $generator->generator($levels);

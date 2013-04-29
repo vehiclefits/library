@@ -341,12 +341,8 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
 
     function dispatchMappingImportEvent( $row )
     {
-        if( file_exists( ELITE_PATH  . '/Vafnote/Observer/Importer/Mappings.php' ) )
-        {
-            $noteImporter = new Elite_Vafnote_Observer_Importer_Mappings;
-            $noteImporter->doImportRow( $this->getFieldPositions(), $row );
-        }
-
+        $noteImporter = new VF_Note_Observer_Importer_Mappings;
+        $noteImporter->doImportRow( $this->getFieldPositions(), $row );
     }
     
     /** @return array Field positions keyed by the field's names */

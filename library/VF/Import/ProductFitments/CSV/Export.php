@@ -76,20 +76,14 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
 
     private function doCols()
     {
-	if (file_exists(ELITE_PATH . '/Vafnote/Observer/Exporter/Mappings.php'))
-	{
-	    $exporter = new Elite_Vafnote_Observer_Exporter_Mappings_CSV();
+	    $exporter = new VF_Note_Observer_Exporter_Mappings_CSV();
 	    return $exporter->doCols();
-	}
     }
 
     private function doRow($row)
     {
-	if (file_exists(ELITE_PATH . '/Vafnote/Observer/Exporter/Mappings.php'))
-	{
-	    $exporter = new Elite_Vafnote_Observer_Exporter_Mappings_CSV;
+	    $exporter = new VF_Note_Observer_Exporter_Mappings_CSV;
 	    return $exporter->doRow($row);
-	}
     }
 
 }
