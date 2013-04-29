@@ -31,7 +31,7 @@ class VF_Schema_Generator
 
     function __construct()
     {
-        $this->db = new Elite_Vaf_Db;
+        $this->db = new VF_Db;
     }
 
     function execute($levels, $showProgress = false, $id = 1)

@@ -222,7 +222,7 @@ class VF_Vehicle implements VF_Configurable
         }
 
         // doesnt exist, insert it
-        $insertAdapter = new Elite_Vaf_Model_Db_Adapter_InsertWrapper($this->getReadAdapter());
+        $insertAdapter = new VF_Db_Adapter_InsertWrapper($this->getReadAdapter());
         $insertAdapter->insert($this->schema()->definitionTable(), $bind);
         $this->row->id = $this->getReadAdapter()->lastInsertId();
     }

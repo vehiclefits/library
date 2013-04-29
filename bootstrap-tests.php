@@ -37,12 +37,16 @@ define( 'TEMP_PATH', getenv('PHP_TEMP_PATH') );
 define( 'VAF_DB_USERNAME', getenv('PHP_VAF_DB_USERNAME') );
 define( 'VAF_DB_PASSWORD', getenv('PHP_VAF_DB_PASSWORD') );
 define( 'VAF_DB_NAME', getenv('PHP_VAF_DB_NAME') );
+define( 'ELITE_CONFIG_DEFAULT', getenv('ELITE_CONFIG_DEFAULT') );
+define( 'ELITE_CONFIG', getenv('ELITE_CONFIG') );
+define( 'ELITE_PATH', getenv('ELITE_PATH') );
 
 # used to make "test only code" run (Google "test code in production")
 define( 'ELITE_TESTING', 1 );
 
 set_include_path(
         PATH_SEPARATOR . MAGE_PATH . '/lib/Vehicle-Fits-Core/library/'
+        . PATH_SEPARATOR . MAGE_PATH . '/lib/Vehicle-Fits-Core/vendor/zendframework/zendframework1/library/'
         . PATH_SEPARATOR . get_include_path()
 );
 
@@ -58,3 +62,8 @@ function my_autoload($class_name) {
     require_once $file;
 }
 spl_autoload_register('my_autoload');
+
+class Mage
+{
+    static function resetRegistry() {}
+}

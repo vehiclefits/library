@@ -21,9 +21,16 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-interface VF_Db 
+
+class VF_Db
 {
-    function getReadAdapter();
+    function getReadAdapter()
+    {
+        return VF_Singleton::getInstance()->getReadAdapter();
+    }
     
-    function getWriteAdapter();
+    function getWriteAdapter()
+    {
+        return VF_Singleton::getInstance()->getWriteAdapter();
+    }
 }
