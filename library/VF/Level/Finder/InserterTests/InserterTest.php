@@ -21,7 +21,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Level_Finder_InserterTests_InserterTest extends Elite_Vaf_TestCase
+class VF_Level_Finder_InserterTests_InserterTest extends VF_TestCase
 {
     const PARENT_ID = 1;
     
