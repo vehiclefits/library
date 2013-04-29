@@ -401,7 +401,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {
-        return Elite_Vaf_Helper_Data::getInstance()->getReadAdapter();
+        return VF_Singleton::getInstance()->getReadAdapter();
     }
 
     function schema()
@@ -417,7 +417,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
     function getConfig()
     {
         if (!$this->config) {
-            return Elite_Vaf_Helper_Data::getInstance()->getConfig();
+            return VF_Singleton::getInstance()->getConfig();
         }
         return $this->config;
     }

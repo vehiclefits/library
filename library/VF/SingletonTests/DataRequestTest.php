@@ -21,37 +21,12 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class Elite_Vaf_Block_Search_AjaxTestSub extends Elite_Vaf_Block_Search
+class VF_SingletonTests_DataRequestTest extends VF_Import_ProductFitments_CSV_ImportTests_TestCase
 {
-    function toHtml()
+    function testReqeust()
     {
-        VF_Singleton::getInstance()->setRequest( new Zend_Controller_Request_Http() );
-        require(getenv('PHP_MAGE_PATH').'/app/design/frontend/default/default/template/vaf/search.phtml');
+        $this->setRequestParams(array('make'=>'honda'));
+        $this->assertEquals('honda', VF_Singleton::getInstance()->getRequest()->getParam('make') );
     }
-
-    function url( $url )
-    {
-    }
-    
-    function getHeaderText()
-    {
-        return ('Search By Vehicle');
-    }
-    
-    function getSubmitText()
-    {
-        return ('Search');
-    }
-    
-    function getClearText()
-    {
-        return ('Clear');
-    }
-    
-    function translate($text)
-    {
-        return $text;
-    }
-    
     
 }

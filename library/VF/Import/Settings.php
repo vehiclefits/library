@@ -69,7 +69,7 @@ class VF_Import_Settings extends Zend_Form
     {
 	if (!$this->config instanceof Zend_Config)
 	{
-	    $this->config = Elite_Vaf_Helper_Data::getInstance()->getConfig();
+	    $this->config = VF_Singleton::getInstance()->getConfig();
 	}
 	return $this->config;
     }

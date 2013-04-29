@@ -373,7 +373,7 @@ class VF_Schema_Generator
     /** @return Zend_Db_Adapter_Abstract */
     function getReadAdapter()
     {
-        return Elite_Vaf_Helper_Data::getInstance()->getReadAdapter();
+        return VF_Singleton::getInstance()->getReadAdapter();
     }
 
     function id()

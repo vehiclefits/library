@@ -51,8 +51,8 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        Elite_Vaf_Helper_Data::getInstance(true);
-        Elite_Vaf_Helper_Data::getInstance()->setRequest($this->getRequest());
+        VF_Singleton::getInstance(true);
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         VF_Schema::$levels = null;
 
         $_SESSION = array();
@@ -397,7 +397,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {
-        $adapter = Elite_Vaf_Helper_Data::getInstance()->getReadAdapter();
+        $adapter = VF_Singleton::getInstance()->getReadAdapter();
         return $adapter;
     }
 
@@ -416,7 +416,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function setRequest($request)
     {
-        Elite_Vaf_Helper_Data::getInstance()->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
     }
 
     protected function request($controllerName = '', $routeName = '', $uri = false)
@@ -490,7 +490,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
             $this->setRequestParams($requestParams);
             $request = $this->getRequest($requestParams);
         } else {
-            $request = Elite_Vaf_Helper_Data::getInstance()->getRequest();
+            $request = VF_Singleton::getInstance()->getRequest();
         }
 
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $request);
@@ -645,7 +645,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     function getHelper($config = array(), $requestParams = array())
     {
         $request = $this->getRequest($requestParams);
-        $helper = Elite_Vaf_Helper_Data::getInstance();
+        $helper = VF_Singleton::getInstance();
         $helper->reset();
         $helper->setRequest($request);
         if (count($config)) {

@@ -49,5 +49,5 @@ if( isset( $config) )
 {
     $search->setConfig($config);
 }
-Elite_Vaf_Helper_Data::getInstance()->setRequest( new Zend_Controller_Request_Http() );
+VF_Singleton::getInstance()->setRequest( new Zend_Controller_Request_Http() );
 $search->toHtml();

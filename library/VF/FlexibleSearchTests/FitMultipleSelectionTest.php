@@ -21,7 +21,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_FlexibleSearchTests_FitMultipleSelectionTest extends Elite_Vaf_Helper_DataTestCase
+class VF_FlexibleSearchTests_FitMultipleSelectionTest extends VF_TestCase
 {
     protected function doSetUp()
     {

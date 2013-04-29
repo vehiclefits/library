@@ -72,7 +72,7 @@ for( $i = 0; $i < $c - 1; $i++ )
         
         var parentId = jQuery('.<?=$level?>Select').val();
         
-        jQuery('.<?=$levels[$i+1]?>Select').html( '<option value="0"><?=Elite_Vaf_Helper_Data::getInstance()->getDefaultSearchOptionText()?></option>' );
+        jQuery('.<?=$levels[$i+1]?>Select').html( '<option value="0"><?=VF_Singleton::getInstance()->getDefaultSearchOptionText()?></option>' );
         
         var newValues = <?=$levels[$i+1]?>[parentId];
         

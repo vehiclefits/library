@@ -151,7 +151,7 @@ abstract class VF_Import_Abstract
      /** @return Zend_Db_Adapter_Abstract */
     function getReadAdapter()
     {
-        return Elite_Vaf_Helper_Data::getInstance()->getReadAdapter();
+        return VF_Singleton::getInstance()->getReadAdapter();
     }
     
     /** @return Zend_Db_Statement_Interface */

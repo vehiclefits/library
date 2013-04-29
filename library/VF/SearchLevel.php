@@ -105,7 +105,7 @@ class VF_SearchLevel
             return (bool)( $entity->getId() == $this->block->getSelected( $this->level ) );
         }
         
-        $fit = Elite_Vaf_Helper_Data::getInstance()->vehicleSelection();
+        $fit = VF_Singleton::getInstance()->vehicleSelection();
         if( false === $fit )
         {
             return false;
@@ -149,7 +149,7 @@ class VF_SearchLevel
     	{
             return $this->displayBrTag;
     	}
-        return Elite_Vaf_Helper_Data::getInstance()->displayBrTag();
+        return VF_Singleton::getInstance()->displayBrTag();
     }
     
     protected function __( $text )
@@ -159,6 +159,6 @@ class VF_SearchLevel
     
     protected function helper()
     {
-        return Elite_Vaf_Helper_Data::getInstance();
+        return VF_Singleton::getInstance();
     }
 }

@@ -34,7 +34,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display( new Elite_Vaf_Block_Search, 'make' );
         
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('make', $vehicle->getLevel('make')->getId() );
+        VF_Singleton::getInstance()->getRequest()->setParam('make', $vehicle->getLevel('make')->getId() );
         
         $entity = $this->levelFinder()->find('make',$vehicle->getValue('make'));
         $this->assertTrue( $searchlevel->getSelected($entity) );
@@ -48,8 +48,8 @@ class VF_SearchLevelTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display( new Elite_Vaf_Block_Search, 'year' );
         
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('make', $vehicle->getLevel('make')->getId() );
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('model', $vehicle->getLevel('model')->getId() );
+        VF_Singleton::getInstance()->getRequest()->setParam('make', $vehicle->getLevel('make')->getId() );
+        VF_Singleton::getInstance()->getRequest()->setParam('model', $vehicle->getLevel('model')->getId() );
         
         $entity = $this->levelFinder()->find('year',$vehicle->getValue('year'));
         $this->assertFalse( $searchlevel->getSelected($entity) );
@@ -62,9 +62,9 @@ class VF_SearchLevelTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display( new Elite_Vaf_Block_Search, 'year' );
         
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('make', $vehicle->getLevel('make')->getId() );
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('model', $vehicle->getLevel('model')->getId() );
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('year', $vehicle->getLevel('year')->getId() );
+        VF_Singleton::getInstance()->getRequest()->setParam('make', $vehicle->getLevel('make')->getId() );
+        VF_Singleton::getInstance()->getRequest()->setParam('model', $vehicle->getLevel('model')->getId() );
+        VF_Singleton::getInstance()->getRequest()->setParam('year', $vehicle->getLevel('year')->getId() );
         
         $entity = $this->levelFinder()->find('year',$vehicle->getValue('year'));
         $this->assertTrue( $searchlevel->getSelected($entity));
@@ -77,9 +77,9 @@ class VF_SearchLevelTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display( new Elite_Vaf_Block_Search, 'year' );
         
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('make', $vehicle->getLevel('make')->getTitle() );
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('model', $vehicle->getLevel('model')->getTitle() );
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParam('year', $vehicle->getLevel('year')->getTitle() );
+        VF_Singleton::getInstance()->getRequest()->setParam('make', $vehicle->getLevel('make')->getTitle() );
+        VF_Singleton::getInstance()->getRequest()->setParam('model', $vehicle->getLevel('model')->getTitle() );
+        VF_Singleton::getInstance()->getRequest()->setParam('year', $vehicle->getLevel('year')->getTitle() );
         
         $entity = $vehicle->getLevel('year');
         $this->assertTrue( $searchlevel->getSelected($entity));

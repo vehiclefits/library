@@ -78,7 +78,7 @@ class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1, 1);
         
         $this->setRequestParams($vehicle1->toTitleArray());
-        $this->assertEquals( array(1), Elite_Vaf_Helper_Data::getInstance()->getProductIds() );
+        $this->assertEquals( array(1), VF_Singleton::getInstance()->getProductIds() );
     }
     
     function testGetProductIDsWithSpace()
@@ -87,7 +87,7 @@ class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
         $this->insertMappingMMY($vehicle2, 2);
         
         $this->setRequestParams($vehicle2->toTitleArray());
-        $this->assertEquals( array(2), Elite_Vaf_Helper_Data::getInstance()->getProductIds() );
+        $this->assertEquals( array(2), VF_Singleton::getInstance()->getProductIds() );
     }
     
     function testShouldStoreInSession()

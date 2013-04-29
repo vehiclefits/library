@@ -35,7 +35,7 @@ $leafLevel = $this->leafLevel();
 var chained = function() {
     <?php
      
-    if( Elite_Vaf_Helper_Data::getInstance()->getConfig()->mygarage->collapseAfterSelection )
+    if( VF_Singleton::getInstance()->getConfig()->mygarage->collapseAfterSelection )
     {
         ?>
         var myGarageActive = jQuery( '.vafMyGarageActive' );

@@ -26,14 +26,14 @@ $command = $front ? 'getLevels' : 'getLevels';
 $schema = new VF_Schema;
 
 
-$CONFIG['unavailableSelections'] = isset( $_GET['unavailableSelections'] ) ? $_GET['unavailableSelections'] : Elite_Vaf_Helper_Data::getInstance()->getConfig()->search->unavailableSelections;
-$CONFIG['loadingStrategy'] = isset( $_GET['loadingStrategy'] ) ? $_GET['loadingStrategy'] : Elite_Vaf_Helper_Data::getInstance()->getConfig()->search->loadingStrategy;
+$CONFIG['unavailableSelections'] = isset( $_GET['unavailableSelections'] ) ? $_GET['unavailableSelections'] : VF_Singleton::getInstance()->getConfig()->search->unavailableSelections;
+$CONFIG['loadingStrategy'] = isset( $_GET['loadingStrategy'] ) ? $_GET['loadingStrategy'] : VF_Singleton::getInstance()->getConfig()->search->loadingStrategy;
 
 if( $front )
 {
     function shouldAutoSubmit()
     {
-        return !Elite_Vaf_Helper_Data::getInstance()->showSearchButton();
+        return !VF_Singleton::getInstance()->showSearchButton();
     }
 }
 else
@@ -188,7 +188,7 @@ class VafJs_Loader_Ajax implements VafJs_Decorator
     
     protected function loadingText()
     {
-        return Elite_Vaf_Helper_Data::getInstance()->getLoadingText();
+        return VF_Singleton::getInstance()->getLoadingText();
     }
 }     
 
@@ -207,12 +207,12 @@ class VafJs_Loader_Offline implements VafJs_Decorator
     
     protected function leafFirst()
     {
-        return Elite_Vaf_Helper_Data::getInstance()->getConfig()->search->leafLevelFirst;
+        return VF_Singleton::getInstance()->getConfig()->search->leafLevelFirst;
     }
     
     protected function loadingText()
     {
-        return Elite_Vaf_Helper_Data::getInstance()->getLoadingText();
+        return VF_Singleton::getInstance()->getLoadingText();
     }
 }     
 

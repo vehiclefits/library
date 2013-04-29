@@ -167,7 +167,7 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
     {
 	if (!$this->config instanceof Zend_Config)
 	{
-	    $this->config = Elite_Vaf_Helper_Data::getInstance()->getConfig();
+	    $this->config = VF_Singleton::getInstance()->getConfig();
 	}
 	return $this->config;
     }

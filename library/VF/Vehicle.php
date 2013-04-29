@@ -59,7 +59,7 @@ class VF_Vehicle implements VF_Configurable
     function getConfig()
     {
         if (!$this->config instanceof Zend_Config) {
-            $this->config = Elite_Vaf_Helper_Data::getInstance()->getConfig();
+            $this->config = VF_Singleton::getInstance()->getConfig();
         }
         return $this->config;
     }
@@ -282,7 +282,7 @@ class VF_Vehicle implements VF_Configurable
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {
-        return Elite_Vaf_Helper_Data::getInstance()->getReadAdapter();
+        return VF_Singleton::getInstance()->getReadAdapter();
     }
 
     protected function levelIsOutsideFlexibleSelection($level)

@@ -347,7 +347,7 @@ class VF_Search implements VF_Configurable
         {
             return false;
         }
-        if( Elite_Vaf_Helper_Data::getInstance()->getConfig()->category->disable && !$this->isHomepage() && !$this->isVafPage() )
+        if( VF_Singleton::getInstance()->getConfig()->category->disable && !$this->isHomepage() && !$this->isVafPage() )
         {
             return false;
         }
@@ -464,7 +464,7 @@ class VF_Search implements VF_Configurable
     
     function shouldShowMyGarageActive()
     {
-        return Elite_Vaf_Helper_Data::getInstance()->getConfig()->mygarage->collapseAfterSelection  &&
+        return VF_Singleton::getInstance()->getConfig()->mygarage->collapseAfterSelection  &&
             $this->getFlexibleDefinition() !== false &&
             $this->formId() == 'vafForm';
     }
@@ -540,7 +540,7 @@ class VF_Search implements VF_Configurable
     {
         if( !$this->config instanceof Zend_Config )
         {
-            $this->config = Elite_Vaf_Helper_Data::getInstance()->getConfig();
+            $this->config = VF_Singleton::getInstance()->getConfig();
         }
         return $this->config;
     }

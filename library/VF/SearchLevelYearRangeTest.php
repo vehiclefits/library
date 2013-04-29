@@ -32,7 +32,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display( new Elite_Vaf_Block_Search, 'year', null, null, 'year_start' );
         
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParams(array(
+        VF_Singleton::getInstance()->getRequest()->setParams(array(
             'make' => $civic2000->getValue('make'),
             'model' => $civic2000->getValue('model'),
             'year_start' => $civic2000->getLevel('year')->getId(),
@@ -51,7 +51,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display( new Elite_Vaf_Block_Search, 'year', null, null, 'year_start' );
         
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParams(array(
+        VF_Singleton::getInstance()->getRequest()->setParams(array(
             'make' => $civic2000->getValue('make'),
             'model' => $civic2000->getValue('model'),
             'year_start' => $civic2001->getLevel('year')->getId(),
@@ -70,7 +70,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display( new Elite_Vaf_Block_Search, 'year', null, null, 'year_start' );
         
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParams(array(
+        VF_Singleton::getInstance()->getRequest()->setParams(array(
             'make' => $civic2000->getValue('make'),
             'model' => $civic2000->getValue('model'),
             'year_start' => $civic2000->getLevel('year')->getId(),
@@ -89,7 +89,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display( new Elite_Vaf_Block_Search, 'year', null, null, 'year_end' );
         
-        Elite_Vaf_Helper_Data::getInstance()->getRequest()->setParams(array(
+        VF_Singleton::getInstance()->getRequest()->setParams(array(
             'make' => $civic2000->getValue('make'),
             'model' => $civic2000->getValue('model'),
             'year_start' => $civic2000->getLevel('year')->getId(),

@@ -75,7 +75,7 @@ class VF_Ajax implements VF_Configurable
         {
             return false;
         }
-        return Elite_Vaf_Helper_Data::getInstance()->getDefaultSearchOptionText($level,$this->getConfig());
+        return VF_Singleton::getInstance()->getDefaultSearchOptionText($level,$this->getConfig());
     }
     
     function renderChildren( $children )
@@ -129,7 +129,7 @@ class VF_Ajax implements VF_Configurable
         if( !$this->config instanceof Zend_Config )
         {
             
-            $this->config = Elite_Vaf_Helper_Data::getInstance()->getConfig();
+            $this->config = VF_Singleton::getInstance()->getConfig();
         }    
         return $this->config;
     }
