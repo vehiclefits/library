@@ -102,10 +102,10 @@ class VF_Schema_Generator
             $generator = new Elite_Vafnote_Model_Schema_Generator();
             $return .= $generator->generator($levels);
         }
-        if (file_exists(ELITE_PATH . '/Vafimporter')) {
-            $generator = new VF_Import_Schema_Generator();
-            $return .= $generator->generator($levels);
-        }
+
+        $generator = new VF_Import_Schema_Generator();
+        $return .= $generator->generator($levels);
+
         if (file_exists(ELITE_PATH . '/Vafgarage')) {
             $generator = new Elite_Vafgarage_Model_Schema_Generator();
             $return .= $generator->generator($levels);
