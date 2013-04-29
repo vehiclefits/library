@@ -642,6 +642,18 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         $split->execute();
     }
 
+    function getHelper($config = array(), $requestParams = array())
+    {
+        $request = $this->getRequest($requestParams);
+        $helper = Elite_Vaf_Helper_Data::getInstance();
+        $helper->reset();
+        $helper->setRequest($request);
+        if (count($config)) {
+            $helper->setConfig(new Zend_Config($config, true));
+        }
+        return $helper;
+    }
+
 }
 
 class Elite_Vaf_Model_TestSubClass extends VF_Level
