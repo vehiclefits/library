@@ -10,6 +10,7 @@
         <script src="/skin/adminhtml/default/default/jquery-1.7.1.min.js"> </script>
         <script type="text/javascript">
             var testPages = new Array(
+                'InstallTest.php',
                 'ajaxTestJs/MMY.php',
                 'ajaxTestJs/Space.php',
                 //'ajaxTestJs/MMYMultiple.php',

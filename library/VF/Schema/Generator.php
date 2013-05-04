@@ -24,7 +24,7 @@ class VF_Schema_Generator
 {
     public $levels = array();
     public $level_options = array();
-    protected $id;
+    protected $id=1;
 
     const NEWLINE = "\n";
     const VERSION = 26;
