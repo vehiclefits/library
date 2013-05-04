@@ -52,7 +52,6 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     function setUp()
     {
         VF_Singleton::getInstance(true);
-        VF_Singleton::getInstance()->setRequest($this->getRequest());
         VF_Schema::$levels = null;
 
         $_SESSION = array();

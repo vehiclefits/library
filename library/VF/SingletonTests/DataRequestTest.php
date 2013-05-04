@@ -28,5 +28,11 @@ class VF_SingletonTests_DataRequestTest extends VF_Import_ProductFitments_CSV_Im
         $this->setRequestParams(array('make'=>'honda'));
         $this->assertEquals('honda', VF_Singleton::getInstance()->getRequest()->getParam('make') );
     }
+
+    function testWhenNoRequest()
+    {
+        $request = VF_Singleton::getInstance()->getRequest();
+        $this->assertNull($request);
+    }
     
 }

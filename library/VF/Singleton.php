@@ -27,6 +27,7 @@ class VF_Singleton implements VF_Configurable
     protected $config;
     static $dbAdapter;
     protected $productIds;
+    protected $_request;
 
     /** @return VF_Singleton */
     static function getInstance($new = false) // test only
@@ -126,14 +127,12 @@ class VF_Singleton implements VF_Configurable
         }
         // magento specific code
         if ($controller = Mage::app()->getFrontController()) {
-            $this->_request = $controller->getRequest();
+            return $controller->getRequest();
         } else {
             throw new Exception(Mage::helper('core')->__("Can't retrieve request object"));
         }
-        return $this->_request;
     }
 
-    /** for testability */
     function setRequest($request)
     {
         $this->_request = $request;
