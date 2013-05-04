@@ -42,7 +42,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_YMME_AllWildcardTest extends VF_
         $this->mappingsImport('sku, make, model, year, engine' . "\n" .
                               'sku,Ford,F-150,"2000,2001,2002",{{all}}');
         
-        $product = new Elite_Vaf_Model_Catalog_Product();
+        $product = new VF_Product();
         $product->setId($this->product_id);
         $fits = $product->getFits();
         

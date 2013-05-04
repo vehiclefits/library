@@ -33,7 +33,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
     {
         $this->mappingsImport('sku, make, model, year, universal
 "sku","","","","1"');
-        $this->assertTrue( $this->getProductForSku('sku')->isUniversal() );
+        $this->assertTrue( $this->getVFProductForSku('sku')->isUniversal() );
     }
         
     
@@ -42,7 +42,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
         $this->mappingsImport('sku, make, model, year_start, year_end, universal
 "sku","","","","","1"');
         return $this->markTestIncomplete();
-        //$this->assertTrue( $this->getProductForSku('sku')->isUniversal() );
+        //$this->assertTrue( $this->getVFProductForSku('sku')->isUniversal() );
     }
         
     function testDoesNotImportBlankDefinition()

@@ -42,7 +42,7 @@ honda, accord, 2001';
         $this->mappingsImport('sku, make, model, year
 sku, honda, {{all}}, 2000');
         
-        $product = new Elite_Vaf_Model_Catalog_Product();
+        $product = new VF_Product();
         $product->setId($this->product_id);
         $fits = $product->getFits();
         
@@ -58,7 +58,7 @@ sku, honda, {{all}}, 2000');
         $this->mappingsImport('sku, make, model, year
 sku, honda, {{all}}, {{all}}');
         
-        $product = new Elite_Vaf_Model_Catalog_Product();
+        $product = new VF_Product();
         $product->setId($this->product_id);
         $fits = $product->getFits();
         

@@ -440,6 +440,15 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return $product;
     }
 
+    function newVFProduct($id = null)
+    {
+        $product = new VF_Product;
+        if (!is_null($id)) {
+            $product->setId($id);
+        }
+        return $product;
+    }
+
     function newWheelProduct($id = null)
     {
         $product = new Elite_Vafwheel_Model_Catalog_Product($this->newProduct($id));
@@ -535,6 +544,22 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         $r->closeCursor();
 
         $product = new Elite_Vaf_Model_Catalog_Product();
+        $product->setId($product_id);
+
+        return $product;
+    }
+
+    function getVFProductForSku($sku)
+    {
+        $sql = sprintf(
+            "SELECT `entity_id` from `test_catalog_product_entity` WHERE `sku` = %s",
+            $this->getReadAdapter()->quote($sku)
+        );
+        $r = $this->query($sql);
+        $product_id = $r->fetchColumn();
+        $r->closeCursor();
+
+        $product = new VF_Product();
         $product->setId($product_id);
 
         return $product;

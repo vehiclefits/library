@@ -40,7 +40,7 @@ sku, honda, civic, 2000, 2001';
         $this->mappingsImport($this->csvData);
         $params = array('make'=>'honda', 'model'=>'civic', 'year' => '2000');
         $vehicle = $this->vehicleFinder()->findOneByLevels($params);
-        $product = $this->newProduct($this->product_id);
+        $product = $this->newVFProduct($this->product_id);
         $product->setCurrentlySelectedFit($vehicle);
         $this->assertTrue( $product->fitsSelection() );
     }
@@ -50,7 +50,7 @@ sku, honda, civic, 2000, 2001';
         $this->mappingsImport($this->csvData);
         $params = array('make'=>'honda', 'model'=>'civic', 'year' => '2001');
         $vehicle = $this->vehicleFinder()->findOneByLevels($params);
-        $product = $this->newProduct($this->product_id);
+        $product = $this->newVFProduct($this->product_id);
         $product->setCurrentlySelectedFit($vehicle);
         $this->assertTrue( $product->fitsSelection() );
     }
