@@ -86,7 +86,7 @@ class VF_Vehicle_FinderTests_ByLevelTest extends VF_Vehicle_FinderTests_TestCase
     }
     
     /**
-    * @expectedException Elite_Vaf_Exception_DefinitionNotFound
+    * @expectedException VF_Exception_DefinitionNotFound
     */
     function testFindByLevelNotFoundLeaf()
     {
@@ -94,7 +94,7 @@ class VF_Vehicle_FinderTests_ByLevelTest extends VF_Vehicle_FinderTests_TestCase
     }
     
     /**
-    * @expectedException Elite_Vaf_Exception_DefinitionNotFound
+    * @expectedException VF_Exception_DefinitionNotFound
     */
     function testFindByLevelNotFound()
     {

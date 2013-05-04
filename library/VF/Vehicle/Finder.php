@@ -103,7 +103,7 @@ class VF_Vehicle_Finder implements VF_Configurable
             throw new Exception('Your query is ambiguous, more than one vehicle matches this query.');
         }
         if (count($result)==0) {
-            throw new Elite_Vaf_Exception_DefinitionNotFound('No such definition with level [' . $level . '] and id [' . $id . ']');
+            throw new VF_Exception_DefinitionNotFound('No such definition with level [' . $level . '] and id [' . $id . ']');
         }
         $row = $result[0];
         foreach($this->schema->getLevels() as $schemaLevel) {
