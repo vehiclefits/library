@@ -104,7 +104,8 @@ class VF_SearchLevel
         {
             return (bool)( $entity->getId() == $this->block->getSelected( $this->level ) );
         }
-        
+
+        VF_Singleton::getInstance()->setRequest($this->block->getRequest());
         $fit = VF_Singleton::getInstance()->vehicleSelection();
         if( false === $fit )
         {

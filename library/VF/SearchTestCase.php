@@ -49,7 +49,7 @@ abstract class VF_SearchTestCase extends VF_TestCase
         return new Elite_Vaf_Block_Search();
     }
 
-    function getRequest( $params = array() )
+    function getMagentoRequest( $params = array() )
     {
         $request = $this->getMock( 'Mage_Core_Controller_Request_Http', array(), array(), '', false );
         foreach( $params as $key => $val )
@@ -63,12 +63,12 @@ abstract class VF_SearchTestCase extends VF_TestCase
     // @todo curently if it is anything but product & catalog, for the controller & route name, it detects it as homepage
     protected function emulateHomepage( $search )
     {
-        $search->setRequest( $this->getRequest( array( 'controllerName' => 'index', 'routeName' => 'cms' ) ) );
+        $search->setRequest( $this->getMagentoRequest( array( 'controllerName' => 'index', 'routeName' => 'cms' ) ) );
     }
 
     protected function emulateNotHomepage( $search )
     {
-        $search->setRequest( $this->getRequest( array( 'controllerName' => 'category', 'routeName' => 'catalog' ) ) );
+        $search->setRequest( $this->getMagentoRequest( array( 'controllerName' => 'category', 'routeName' => 'catalog' ) ) );
     }
 
 }
