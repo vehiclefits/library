@@ -42,7 +42,7 @@ class VF_SchemaTests_SchemaSpaceInLevelNameTest extends VF_Import_TestCase
 
     function testGetFits()
     {
-        $product = $this->newProduct(1);
+        $product = $this->newVFProduct(1);
         $vehicle = $this->createVehicle(array('make'=>'Honda', 'model type'=>'Civic', 'year'=>2000));
         $product->addVafFit( $vehicle->toValueArray() );
 

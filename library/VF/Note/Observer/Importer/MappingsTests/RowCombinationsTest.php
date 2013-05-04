@@ -42,8 +42,8 @@ class VF_Note_Observer_Importer_MappingsTests_RowCombinationsTest extends VF_Not
         $vehicle1 = $this->vehicleFinder()->findOneByLevels(array('make'=>'honda', 'model'=>'civic', 'year'=>2000));
         $vehicle2 = $this->vehicleFinder()->findOneByLevels(array('make'=>'honda', 'model'=>'civic', 'year'=>2001));
         
-        $product = $this->getProductForSku('sku');
-        $noteProduct = new Elite_Vafnote_Model_Catalog_Product($product);
+        $product = $this->getVFProductForSku('sku');
+        $noteProduct = new VF_Note_Catalog_Product($product);
         
         $this->assertEquals( 2, $noteProduct->numberOfNotes($vehicle1) );
         $this->assertEquals( 2, $noteProduct->numberOfNotes($vehicle2) );
@@ -60,8 +60,8 @@ class VF_Note_Observer_Importer_MappingsTests_RowCombinationsTest extends VF_Not
         $vehicle1 = $this->vehicleFinder()->findOneByLevels(array('make'=>'honda', 'model'=>'accord', 'year'=>2000));
         $vehicle2 = $this->vehicleFinder()->findOneByLevels(array('make'=>'honda', 'model'=>'civic', 'year'=>2000));
         
-        $product = $this->getProductForSku('sku');
-        $noteProduct = new Elite_Vafnote_Model_Catalog_Product($product);
+        $product = $this->getVFProductForSku('sku');
+        $noteProduct = new VF_Note_Catalog_Product($product);
         
         $this->assertEquals( 2, $noteProduct->numberOfNotes($vehicle1) );
         $this->assertEquals( 2, $noteProduct->numberOfNotes($vehicle2) );
@@ -78,8 +78,8 @@ class VF_Note_Observer_Importer_MappingsTests_RowCombinationsTest extends VF_Not
         $this->import('"sku", "make", "model", "year", "notes"' . "\n" .
                       '"sku", "honda", "{{all}}", "2000", "code1,code2",');
         
-        $product = $this->getProductForSku('sku');
-        $noteProduct = new Elite_Vafnote_Model_Catalog_Product($product);
+        $product = $this->getVFProductForSku('sku');
+        $noteProduct = new VF_Note_Catalog_Product($product);
         
         $this->assertEquals( 2, $noteProduct->numberOfNotes($vehicle1) );
         $this->assertEquals( 2, $noteProduct->numberOfNotes($vehicle2) );

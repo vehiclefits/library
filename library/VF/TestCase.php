@@ -592,7 +592,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function noteFinder()
     {
-        return new Elite_Vafnote_Model_Finder();
+        return new VF_Note_Finder();
     }
 
     function definitionsController($request = null)
@@ -651,8 +651,8 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function newNoteProduct($id = 0)
     {
-        $product = $this->newProduct($id);
-        return new Elite_Vafnote_Model_Catalog_Product($product);
+        $product = $this->newVFProduct($id);
+        return new VF_Note_Catalog_Product($product);
     }
 
     function merge($slaveLevels, $masterLevel)

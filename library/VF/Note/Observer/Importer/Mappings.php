@@ -114,6 +114,6 @@ class VF_Note_Observer_Importer_Mappings
     
     function noteFinder()
     {
-        return new Elite_Vafnote_Model_Finder();
+        return new VF_Note_Finder();
     }
 }
