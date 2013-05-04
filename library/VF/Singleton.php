@@ -36,6 +36,9 @@ class VF_Singleton implements VF_Configurable
         if (is_null($instance) || $new) {
             $instance = new VF_Singleton;
         }
+        if(!$instance->getRequest()) {
+            $instance->setRequest(new Zend_Controller_Request_Http());
+        }
         return $instance;
     }
 
@@ -118,13 +121,15 @@ class VF_Singleton implements VF_Configurable
     /** @return Zend_Controller_Request_Abstract */
     function getRequest()
     {
-        // for testing
         if ($this->_request instanceof Zend_Controller_Request_Abstract) {
             return $this->_request;
         }
+
+        // if we are running in a unit test do not proceed to the Magento specific code
         if (defined('ELITE_TESTING')) {
             return;
         }
+
         // magento specific code
         if ($controller = Mage::app()->getFrontController()) {
             return $controller->getRequest();

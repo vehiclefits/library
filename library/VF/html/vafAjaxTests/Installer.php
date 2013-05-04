@@ -51,7 +51,7 @@ $schemaGenerator->dropExistingTables();
         jQuery(document).ready(function(){
             
             QUnit.done = function (failures, total) {
-                top.testPageComplete( 'InstallTest.php', failures, total );
+                top.testPageComplete( 'Installer.php', failures, total );
             };
             
             module("Installer Test");
