@@ -14,13 +14,10 @@
         bootstrap="bootstrap-tests.php">
 
     <php>
-        <env name="PHP_MAGE_PATH" value="/home/josh/www/magento"/>
         <env name="PHP_TEMP_PATH" value="/tmp"/>
         <env name="PHP_VAF_DB_USERNAME" value="root"/>
         <env name="PHP_VAF_DB_PASSWORD" value=""/>
         <env name="PHP_VAF_DB_NAME" value="vf_core"/>
-        <env name="ELITE_CONFIG_DEFAULT" value="/home/josh/www/magento/app/code/local/Elite/Vaf/config.default.ini"/>
-        <env name="ELITE_CONFIG" value="/home/josh/www/magento/app/code/local/Elite/Vaf/config.ini"/>
     </php>
 
     <testsuites>

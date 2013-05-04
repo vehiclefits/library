@@ -37,8 +37,8 @@ define( 'TEMP_PATH', getenv('PHP_TEMP_PATH') );
 define( 'VAF_DB_USERNAME', getenv('PHP_VAF_DB_USERNAME') );
 define( 'VAF_DB_PASSWORD', getenv('PHP_VAF_DB_PASSWORD') );
 define( 'VAF_DB_NAME', getenv('PHP_VAF_DB_NAME') );
-define( 'ELITE_CONFIG_DEFAULT', getenv('ELITE_CONFIG_DEFAULT') );
-define( 'ELITE_CONFIG', getenv('ELITE_CONFIG') );
+define( 'ELITE_CONFIG_DEFAULT', dirname(__FILE__).'/config.default.ini' );
+define( 'ELITE_CONFIG', dirname(__FILE__).'/config.ini' );
 define( 'ELITE_PATH', getenv('ELITE_PATH') );
 
 # used to make "test only code" run (Google "test code in production")
