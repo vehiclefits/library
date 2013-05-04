@@ -23,6 +23,8 @@
  */
 class Elite_Vaf_Adminhtml_Block_Catalog_Product_Edit_Tab_Vaf_AjaxTestStub extends Elite_Vaf_Adminhtml_Block_Catalog_Product_Edit_Tab_Vaf
 {
+    protected $product;
+
     function toHtml()
     {
         require($this->designScriptPath() . '/adminhtml/default/default/template/vf/catalog/product/tab/vaf.phtml');
@@ -30,7 +32,16 @@ class Elite_Vaf_Adminhtml_Block_Catalog_Product_Edit_Tab_Vaf_AjaxTestStub extend
     
     function getProduct()
     {
+        if(isset($this->product))
+        {
+            return $this->product;
+        }
         return new Elite_Vaf_Model_Catalog_Product();
+    }
+
+    function setProduct($product)
+    {
+        $this->product = $product;
     }
     
     function renderConfigurations()
