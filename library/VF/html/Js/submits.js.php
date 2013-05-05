@@ -65,8 +65,7 @@ if (shouldAutoSubmit($levels)) {
     }
     var chooser = jQuery('#categorySelect');
     if( !chooser.is('input') && !chooser.is('select')) {
-    chooser.html('
-    <option value=""></option>');
+    chooser.html('<option value=""></option>');
     }
     jQuery('#vafForm').trigger("vafSubmit");
     return true;
