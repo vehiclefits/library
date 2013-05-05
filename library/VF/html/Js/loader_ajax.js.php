@@ -109,8 +109,7 @@ for ($i = 0; $i < $c - 1; $i++) {
     <?php
     for ($j = $i + 2; $j < $c; $j++) {
         ?>
-        jQuery('.<?= str_replace(' ', '_', $levels[$j]) ?>Select').html('
-        <option></option>');
+        jQuery('.<?= str_replace(' ', '_', $levels[$j]) ?>Select').html('<option></option>');
     <?php
     }
     ?>
