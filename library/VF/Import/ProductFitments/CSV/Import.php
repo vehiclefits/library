@@ -278,46 +278,6 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
         return $isUniversal;
     }
 
-    private static function getColumns(VF_Schema $schema)
-    {
-        $columns = '';
-
-        $levels = $schema->getLevels();
-
-        $c = count($levels);
-        $i = 0;
-        foreach ($levels as $level) {
-            $i++;
-
-            $columns .= sprintf('`%1$s_id`', $level);
-            if ($i < $c) {
-                $columns .= ',';
-            }
-        }
-        return $columns;
-    }
-
-    /** @param VF_Vehicle */
-    private static function getValues($vehicle, VF_Schema $schema)
-    {
-        $values = '';
-
-        $levels = $schema->getLevels();
-
-        $values = '';
-        $c = count($levels);
-        $i = 0;
-        foreach ($levels as $level) {
-            $i++;
-
-            $values .= $vehicle->getLevel($level)->getId();
-            if ($i < $c) {
-                $values .= ',';
-            }
-        }
-        return $values;
-    }
-
     function dispatchMappingImportEvent($row)
     {
         $noteImporter = new VF_Note_Observer_Importer_Mappings;
