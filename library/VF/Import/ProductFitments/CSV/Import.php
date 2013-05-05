@@ -186,8 +186,8 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
     
     function extractFitmentsFromImportTable()
     {
-	$cols = $this->cols();
-        $sql = 'INSERT IGNORE INTO '.$this->getSchema()->mappingsTable().' (' . $this->cols() . ' universal, entity_id, price) SELECT ' . $this->cols() . ' universal, product_id, price from elite_import where product_id != 0';
+        $sql = 'REPLACE INTO '.$this->getSchema()->mappingsTable() . '(' . $this->cols() . ' universal, entity_id, price) ' .
+            'SELECT ' . $this->cols() . ' universal, product_id, price from elite_import where product_id != 0';
         $this->query($sql);
     }
     

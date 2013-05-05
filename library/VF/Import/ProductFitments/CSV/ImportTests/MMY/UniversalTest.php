@@ -89,6 +89,19 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
 
         $this->assertEquals( 0, $importer->invalidVehicleCount() );
     }
+
+    function testShouldMarkProductAsNotUniversal()
+    {
+        $product = $this->getVFProductForSku(self::SKU);
+        $product->setUniversal(true);
+        $this->assertTrue($product->isUniversal(), 'product should start as universal');
+
+        $importer = $this->mappingsImporterFromData('sku, make, model, year, universal
+"sku","","","","0"');
+        $importer->import();
+
+        $this->assertFalse($product->isUniversal(), 'should mark product as not universal w/ import');
+    }
     
     function testShouldNotTallyInvalidVehicle_YearRange()
     {

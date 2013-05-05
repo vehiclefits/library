@@ -73,7 +73,13 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
             $this->row_number++;
 
             $values = $this->getLevelsArray($row);
-            if (!$values)
+            if('1' !== $this->getFieldValue('universal',$row) && '0' !== $this->getFieldValue('universal',$row) &&
+                $this->isInvalidVehicle($values)) {
+                $this->invalid_vehicle_count++;
+                continue;
+            }
+
+            if (null === $this->getFieldValue('universal',$row) && !$values)
             {
                 continue;
             }
@@ -102,6 +108,33 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
         $this->importFromTempStream($streamFile);
     }
 
+    function isInvalidVehicle($levels)
+    {
+        $invalid = false;
+        foreach($this->getSchema()->getLevels() as $level)
+        {
+            if($this->isInvalidLevel($level,$levels)) {
+                $invalid = true;
+            }
+        }
+        return $invalid;
+    }
+
+    function isInvalidLevel($level,$levels)
+    {
+        if(isset($levels[$level]) && $levels[$level]) {
+            return false;
+        }
+        if(isset($levels[$level.'_range']) && $levels[$level.'_range']) {
+            return false;
+        }
+        if(isset($levels[$level.'_start']) && $levels[$level.'_start'] &&
+            isset($levels[$level.'_end']) && $levels[$level.'_end']) {
+            return false;
+        }
+        return true;
+    }
+
     function rowContainsWildcards($row)
     {
         foreach($row as $field)
@@ -119,18 +152,13 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
         try
         {
             $query = 'LOAD DATA INFILE ' . $this->getReadAdapter()->quote($streamFile) . '
-            INTO TABLE elite_import
-                FIELDS TERMINATED BY \',\'  ENCLOSED BY \'"\'
+            INTO TABLE elite_import FIELDS TERMINATED BY \',\'  ENCLOSED BY \'"\'
             (' . $this->getSchema()->getLevelsString() . ',sku,universal,line,note_message,notes,price)
             ';
             $this->getReadAdapter()->query($query);
         } catch (Exception $e)
         {
-            //echo 'got here';exit;
-            /***
-             * If user does not have FILE privledges in MySql we'll have to use
-             * slow insert statements.
-             */
+            /** If user does not have FILE privileges in MySql we'll have to use slow insert statements. */
             $h = fopen($streamFile, 'r');
             while ($row = fgetcsv($h))
             {
@@ -358,8 +386,8 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
             if (isset($fieldPositions[$level . '_start']) && isset($fieldPositions[$level . '_end']))
             {
                 $this->has_range = true;
-                $levels[$level . '_start'] = $this->getFieldValue($level . '_start', $row);
-                $levels[$level . '_end'] = $this->getFieldValue($level . '_end', $row);
+                $levels[$level . '_start'] = $this->getFieldValue($level . '_start', $row) ? $this->getFieldValue($level . '_start', $row) : $this->getFieldValue($level . '_end', $row);
+                $levels[$level . '_end'] = $this->getFieldValue($level . '_end', $row) ? $this->getFieldValue($level . '_end', $row) : $this->getFieldValue($level . '_start', $row);
             } else if (isset($fieldPositions[$level . '_range']))
             {
                 $this->has_range = true;
@@ -370,8 +398,7 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
                 if (!$levels[$level] && !$this->getFieldValue('universal', $row))
                 {
                     $this->log('Line(' . $this->row_number . ') Blank ' . ucfirst($level), Zend_Log::NOTICE);
-                    $this->invalid_vehicle_count++;
-                    return false;
+                    $levels[$level] = false;
                 }
             } else
             {

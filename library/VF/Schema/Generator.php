@@ -254,7 +254,7 @@ class VF_Schema_Generator
             $level = str_replace(' ', '_', $level);
             $levels[] = sprintf('`%s_id`', $level);
         }
-        $levels[] = 'universal';
+
         $levels[] = 'entity_id';
         $levels = implode(',', $levels);
         return sprintf("ALTER TABLE `elite_%d_mapping` ADD UNIQUE ( %s );", $this->id(), $levels);

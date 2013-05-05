@@ -62,16 +62,16 @@ sku, honda, civic, 2000, 2001';
         $this->assertEquals(1, $count);
     }
     
-    function testMultiple()
+    function testShouldImportMultipleFitmentsForTheSameVehicle()
     {
         $this->insertProduct('sku1');
         $this->insertProduct('sku2');
         
-        $this->mappingsImport('sku, make, model, year_start, year_end' . "\n" .
+        $this->mappingsImport('sku, make, model, year' . "\n" .
                                'sku1, honda, civic, 2000' .  "\n" .
                                'sku2, honda, civic, 2000');
         $count = $this->getReadAdapter()->query('select count(*) from elite_1_mapping')->fetchColumn();
-        $this->assertEquals(2, $count);
+        $this->assertEquals(2, $count, 'should import multiple fitments for the same vehicle');
     }
     
     function testMultiple2()

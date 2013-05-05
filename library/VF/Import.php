@@ -34,13 +34,13 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
 
     function doImport()
     {
-	$this->insertRowsIntoTempTable();
-	$this->insertLevelsFromTempTable();
-	$this->insertFitmentsFromTempTable();
-	$this->insertVehicleRecords();
-	$this->cleanupTempTable();
+        $this->insertRowsIntoTempTable();
+        $this->insertLevelsFromTempTable();
+        $this->insertFitmentsFromTempTable();
+        $this->insertVehicleRecords();
+        $this->cleanupTempTable();
 
-	$this->runDeprecatedImports();
+        $this->runDeprecatedImports();
     }
 
     function runDeprecatedImports()
@@ -67,12 +67,13 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
     {
         if (!$this->getSchema()->hasParent($level))
         {
-            $sql = sprintf('INSERT INTO '.$this->schema()->levelTable($level) .' (title) SELECT DISTINCT %1$s FROM elite_import WHERE universal != 1 && %1$s_id = 0', str_replace(' ', '_', $level));
+            $sql = sprintf('INSERT INTO '.$this->schema()->levelTable($level) .' (title)
+                SELECT DISTINCT %1$s FROM elite_import WHERE universal != 1 && `%1$s` != "" && %1$s_id = 0', str_replace(' ', '_', $level));
             $this->query($sql);
         } else
         {
-            $sql = sprintf(
-                    'INSERT INTO `'.$this->getSchema()->levelTable($level).'` (`title`) SELECT DISTINCT `%1$s` FROM `elite_import` WHERE universal != 1 && `%1$s_id` = 0',
+            $sql = sprintf('INSERT INTO `'.$this->getSchema()->levelTable($level).'` (`title`)
+                    SELECT DISTINCT `%1$s` FROM `elite_import` WHERE `%1$s` != "" && universal != 1 && `%1$s_id` = 0',
                     str_replace(' ', '_', $level )
             );
             $this->query($sql);
