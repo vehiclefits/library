@@ -55,6 +55,7 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
 
         $this->getReadAdapter()->commit();
         $this->log('Import Completed', Zend_Log::INFO);
+        return $this;
     }
 
     function insertRowsIntoTempTable()

@@ -28,38 +28,74 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_SimpleTest extends VF_Import
         $this->csvData = 'sku, make, model, year
 sku, honda, civic, 2000';
 
-        $this->insertProduct(self::SKU);
+        $this->query(sprintf("INSERT INTO test_catalog_product_entity ( `sku` ) values ( '%s' )", self::SKU));
     }
 
-    function testSku()
+    function testShouldAddFitmentToProduct()
     {
-        $this->mappingsImport($this->csvData);
-        $fit = $this->getFitForSku(self::SKU);
-        $this->assertEquals('honda', $fit->getLevel('make')->getTitle());
+        $this->mappingsImporterFromData($this->csvData)
+            ->setProductTable('test_catalog_product_entity')
+            ->import();
+
+        $product = $this->getVFProductForSku(self::SKU);
+        $fitments = $product->getFitModels();
+        $this->assertEquals('honda civic 2000', $fitments[0]->__toString(), 'should add fitment to product');
     }
 
-    function testMake()
+    function testShouldCreateVehicle()
     {
-        $this->mappingsImport($this->csvData);
-        $this->assertTrue($this->vehicleExists(array('make' => 'honda')), 'should import make');
+        $this->mappingsImporterFromData($this->csvData)
+            ->setProductTable('test_catalog_product_entity')
+            ->import();
+        $vehicleExists = $this->vehicleExists(array(
+            'make' => 'honda',
+            'model'=> 'civic',
+            'year' => '2000'
+        ));
+        $this->assertTrue($vehicleExists, 'should create vehicle');
     }
 
     function testCountMappingsIs1AfterSuccess()
     {
-        $importer = $this->mappingsImporterFromData($this->csvData);
-        $importer->import();
-        $this->assertEquals(1, $importer->getCountMappings());
+        $importer = $this->mappingsImporterFromData($this->csvData)
+            ->setProductTable('test_catalog_product_entity')
+            ->import();
+        $this->assertEquals(1, $importer->getCountMappings(), 'should report on statistics that 1 fitment was imported');
     }
 
     function testAddedCountIs0IfFitAlreadyExists()
     {
-        $importer = $this->mappingsImporterFromData($this->csvData);
-        $importer->import();
+        $importer = $this->mappingsImporterFromData($this->csvData)
+            ->setProductTable('test_catalog_product_entity')
+            ->import()
+            ->import();
 
-        $importer = $this->mappingsImporterFromData($this->csvData);
-        $importer->import();
+        $this->assertEquals(0, $importer->getCountMappings(), 'shouldn\'t report on statistics for already existing vehicles');
+    }
 
-        $this->assertEquals(0, $importer->getCountMappings());
+    function testShouldImportPrestaShop()
+    {
+        return $this->markTestIncomplete();
+        $this->createPrestaShopProductsTable();
+        $this->mappingsImporterFromData($this->csvData)
+            ->setProductTable('ps_product')
+            ->import();
+
+    }
+
+    protected function createPrestaShopProductsTable()
+    {
+        try {
+            $this->query("DROP TABLE `ps_product`");
+        } catch (Exception $e) {
+
+        }
+
+        $this->query("CREATE TABLE `ps_product` (
+          `id_product` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `reference` varchar(32) NOT NULL DEFAULT 'simple',
+          PRIMARY KEY (`id_product`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product Entities' AUTO_INCREMENT=1 ;");
     }
 
 }

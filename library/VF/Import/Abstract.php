@@ -35,6 +35,9 @@ abstract class VF_Import_Abstract
     /** @var Zend_Log */
     protected $log;
 
+    /** @var  string name of the table where we can look to convert SKUs to product IDs */
+    protected $product_table;
+
     function __construct($file)
     {
         $this->file = $file;
@@ -151,9 +154,16 @@ abstract class VF_Import_Abstract
 
     function getProductTable()
     {
+        // Magento
         $resource = new Mage_Catalog_Model_Resource_Eav_Mysql4_Product;
         $table = $resource->getTable('catalog/product');
         return $table;
+    }
+
+    function setProductTable($product_table)
+    {
+        $this->product_table = $product_table;
+        return $this;
     }
 
     function log($message, $logLevel = null)
