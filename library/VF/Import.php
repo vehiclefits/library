@@ -82,23 +82,13 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
 
     function updateIdsInTempTable($level)
     {
-        if (!$this->getSchema()->hasParent($level))
-        {
-            $this->query(sprintf(
-                'UPDATE elite_import i, elite_level_%2$d_%1$s l SET i.%1$s_id = l.id WHERE l.title = i.%1$s',
-                str_replace(' ', '_', $level),
-                $this->schema()->id()
-            ));
-        } else
-        {
-            $sql = sprintf(
-                    'UPDATE elite_import i, `'.$this->getSchema()->levelTable($level).'` l
-                    SET i.`%1$s_id` = l.id
-                    WHERE i.`%1$s` = l.title',
-                    str_replace(' ', '_', $level)
-            );
-            $this->query($sql);
-        }
+        $sql = sprintf(
+                'UPDATE elite_import i, `'.$this->getSchema()->levelTable($level).'` l
+                SET i.`%1$s_id` = l.id
+                WHERE i.`%1$s` = l.title',
+                str_replace(' ', '_', $level)
+        );
+        $this->query($sql);
     }
 
     function insertVehicleRecords()
