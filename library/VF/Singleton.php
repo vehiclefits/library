@@ -130,6 +130,11 @@ class VF_Singleton implements VF_Configurable
             return;
         }
 
+        // prestashop specific code
+        if(defined('_PS_VERSION_')) {
+            return new Zend_Controller_Request_Http;
+        }
+
         // magento specific code
         if ($controller = Mage::app()->getFrontController()) {
             return $controller->getRequest();
@@ -189,7 +194,7 @@ class VF_Singleton implements VF_Configurable
 
     function showSearchButton()
     {
-        $block = new Elite_Vaf_Block_Search();
+        $block = new VF_Search();
         $block->setConfig($this->getConfig());
         return $block->showSearchButton();
     }
@@ -251,8 +256,29 @@ class VF_Singleton implements VF_Configurable
             }
             return self::$dbAdapter;
         }
-        // end 'test code only'
 
+        // prestashop specific code
+        if(defined('_PS_VERSION_')) {
+            if (is_null(self::$dbAdapter)) {
+
+                self::$dbAdapter = new Zend_Db_Adapter_Pdo_Mysql(array(
+                    'dbname' => 'OneMotoShop',
+                    'username' => 'root',
+                    'password' => ''
+                ));
+                self::$dbAdapter->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+
+                self::$dbAdapter->getConnection()->query('SET character set utf8;');
+                self::$dbAdapter->getConnection()->query('SET character_set_client = utf8;');
+                self::$dbAdapter->getConnection()->query('SET character_set_results = utf8;');
+                self::$dbAdapter->getConnection()->query('SET character_set_connection = utf8;');
+                self::$dbAdapter->getConnection()->query('SET character_set_database = utf8;');
+                self::$dbAdapter->getConnection()->query('SET character_set_server = utf8;');
+            }
+            return self::$dbAdapter;
+        }
+
+        // magento specific code
         $resource = Mage::getSingleton('core/resource');
         $read = $resource->getConnection('core_read');
         $read->query('SET character_set_client = utf8;');
@@ -318,16 +344,31 @@ class VF_Singleton implements VF_Configurable
 
     function getBaseUrl($https = null)
     {
+        // prestashop
+        if(defined('_PS_VERSION_')) {
+            return '';
+        }
+        // magento
         return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, $https);
     }
 
     function processUrl()
     {
+        // prestashop
+        if(defined('_PS_VERSION_')) {
+            return '/modules/vaf/process.php?';
+        }
+        // magento
         return $this->getBaseUrl(isset($_SERVER['HTTPS'])) . '/vaf/ajax/process?';
     }
 
     function homepageSearchURL()
     {
+        // prestashop
+        if(defined('_PS_VERSION_')) {
+            return '/?';
+        }
+        // magento
         return $this->getBaseUrl(isset($_SERVER['HTTPS'])) . '/vaf/product/list?';
     }
 
