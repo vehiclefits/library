@@ -17,6 +17,7 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
+
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -26,11 +27,12 @@ class vafAjaxInclude
     {
         $schema = new VF_Schema(isset($_GET['schema']) ? $_GET['schema'] : 1);
         $ajax = new VF_Ajax();
-        return $ajax->execute($schema);
+        return $ajax->execute( $schema );   
     }
 }
 
-if (isset($_GET['requestLevel'])) {
+if( isset($_GET['requestLevel']))
+{
     $a = new vafAjaxInclude();
     $a->execute();
 }

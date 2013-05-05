@@ -17,6 +17,7 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
+
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -28,10 +29,11 @@ class Elite_Vaf_Adminhtml_Block_Catalog_Product_Edit_Tab_Vaf_AjaxTestStub extend
     {
         require($this->designScriptPath() . '/adminhtml/default/default/template/vf/catalog/product/tab/vaf.phtml');
     }
-
+    
     function getProduct()
     {
-        if (isset($this->product)) {
+        if(isset($this->product))
+        {
             return $this->product;
         }
         return new Elite_Vaf_Model_Catalog_Product();
@@ -41,29 +43,29 @@ class Elite_Vaf_Adminhtml_Block_Catalog_Product_Edit_Tab_Vaf_AjaxTestStub extend
     {
         $this->product = $product;
     }
-
+    
     function renderConfigurations()
     {
-
+        
     }
-
+    
     function designScriptPath()
     {
-        return getenv('PHP_MAGE_PATH') . '/app/design';
+        return getenv('PHP_MAGE_PATH').'/app/design';
     }
-
-    function getUrl($routeString)
+    
+    function getUrl( $routeString )
     {
-        return '/' . str_replace('*', 'admin', $routeString);
+        return '/' . str_replace('*','admin',$routeString);
     }
-
+    
     function __()
     {
         $args = func_get_args();
         return $args[0];
     }
-
-    function htmlEscape($string)
+    
+    function htmlEscape( $string )
     {
         return htmlentities($string);
     }
