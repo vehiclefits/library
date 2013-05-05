@@ -530,6 +530,19 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
           KEY `FK_CATALOG_PRODUCT_ENTITY_ATTRIBUTE_SET_ID` (`attribute_set_id`),
           KEY `sku` (`sku`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product Entities' AUTO_INCREMENT=1 ;");
+
+        try {
+            $this->query("DROP TABLE `ps_product`");
+        } catch (Exception $e) {
+
+        }
+
+        $this->query("CREATE TABLE `ps_product` (
+          `id_product` int(10) unsigned NOT NULL AUTO_INCREMENT,
+          `reference` varchar(32) NOT NULL DEFAULT 'simple',
+          PRIMARY KEY (`id_product`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product Entities' AUTO_INCREMENT=1 ;");
+
     }
 
     function getProductForSku($sku)

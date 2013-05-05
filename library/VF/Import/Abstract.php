@@ -38,6 +38,9 @@ abstract class VF_Import_Abstract
     /** @var  string name of the table where we can look to convert SKUs to product IDs */
     protected $product_table;
 
+    protected $product_sku_field;
+    protected $product_id_field;
+
     function __construct($file)
     {
         $this->file = $file;
@@ -154,6 +157,10 @@ abstract class VF_Import_Abstract
 
     function getProductTable()
     {
+        if(isset($this->product_table)) {
+            return $this->product_table;
+        }
+
         // Magento
         $resource = new Mage_Catalog_Model_Resource_Eav_Mysql4_Product;
         $table = $resource->getTable('catalog/product');
@@ -163,6 +170,28 @@ abstract class VF_Import_Abstract
     function setProductTable($product_table)
     {
         $this->product_table = $product_table;
+        return $this;
+    }
+
+    function getProductSkuField()
+    {
+        return isset($this->product_sku_field) ? $this->product_sku_field : 'sku';
+    }
+
+    function setProductSkuField($product_sku_field)
+    {
+        $this->product_sku_field = $product_sku_field;
+        return $this;
+    }
+    
+    function getProductIdField()
+    {
+        return isset($this->product_id_field) ? $this->product_id_field : 'entity_id';
+    }
+
+    function setProductIdField($product_id_field)
+    {
+        $this->product_id_field = $product_id_field;
         return $this;
     }
 

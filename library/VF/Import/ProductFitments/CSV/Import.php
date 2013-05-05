@@ -118,9 +118,10 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
 
     function updateProductIdsInTempTable()
     {
-        $this->query('UPDATE elite_import i, ' . $this->getProductTable() . ' p
-                      SET i.product_id = p.entity_id
-                      WHERE i.sku = p.sku');
+        $sql = 'UPDATE elite_import i, ' . $this->getProductTable() . ' p' .
+               ' SET i.product_id = p.' . $this->getProductIdField() .
+               ' WHERE i.sku = p.' . $this->getProductSkuField();
+        $this->query($sql);
     }
 
     function determineInvalidSkus()

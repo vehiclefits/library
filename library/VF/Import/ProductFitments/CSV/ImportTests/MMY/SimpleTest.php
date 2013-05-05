@@ -75,27 +75,27 @@ sku, honda, civic, 2000';
 
     function testShouldImportPrestaShop()
     {
-        return $this->markTestIncomplete();
-        $this->createPrestaShopProductsTable();
-        $this->mappingsImporterFromData($this->csvData)
+        $this->query(sprintf("INSERT INTO `ps_product` ( `reference` ) values ( '%s' )", 'foobar123'));
+        $productID = $this->getReadAdapter()->lastInsertId();
+
+        $this->mappingsImporterFromData('sku, make, model, year
+foobar123, honda, civic, 2000')
             ->setProductTable('ps_product')
+            ->setProductSkuField('reference')
+            ->setProductIdField('id_product')
             ->import();
+
+        $product = new VF_Product;
+        $product->setId($productID);
+
+        $fitments = $product->getFitModels();
+        $this->assertEquals('honda civic 2000', $fitments[0]->__toString(), 'should add fitment to product');
 
     }
 
-    protected function createPrestaShopProductsTable()
+    function mappingsImporterFromFile($csvFile)
     {
-        try {
-            $this->query("DROP TABLE `ps_product`");
-        } catch (Exception $e) {
-
-        }
-
-        $this->query("CREATE TABLE `ps_product` (
-          `id_product` int(10) unsigned NOT NULL AUTO_INCREMENT,
-          `reference` varchar(32) NOT NULL DEFAULT 'simple',
-          PRIMARY KEY (`id_product`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product Entities' AUTO_INCREMENT=1 ;");
+        return new VF_Import_ProductFitments_CSV_Import($csvFile);
     }
 
 }
