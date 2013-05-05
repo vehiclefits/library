@@ -83,8 +83,7 @@ for ($i = 0; $i < $c - 1; $i++) {
 
     decorateUnavailableSelections();
 
-    var loadingText = '
-    <option value="0"><?= htmlentities(addslashes($this->loadingText())) ?></option>';
+    var loadingText = '<option value="0"><?= htmlentities(addslashes($this->loadingText())) ?></option>';
 
     if(jQuery('.<?= str_replace(' ', '_', $levels[$i + 1]) ?>_startSelect').size()) {
     var url = getUrl( jQuery(this).parent('form'), '<?= str_replace(' ', '_', $levels[$i + 1]) ?>' );
