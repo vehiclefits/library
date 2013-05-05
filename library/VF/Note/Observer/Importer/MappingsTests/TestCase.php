@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -26,8 +25,8 @@ abstract class VF_Note_Observer_Importer_MappingsTests_TestCase extends VF_Impor
     function import($stringData)
     {
         $file = TEMP_PATH . '/mappings.csv';
-        file_put_contents( $file, $stringData );
-        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass( $file );
+        file_put_contents($file, $stringData);
+        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass($file);
         $importer->import();
     }
 }

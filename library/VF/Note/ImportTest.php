@@ -17,14 +17,15 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class VF_Note_ImportTest extends VF_TestCase {
+class VF_Note_ImportTest extends VF_TestCase
+{
 
-    function testImportCode() {
+    function testImportCode()
+    {
         $csvData = "code,message
 code1,message1
 ";
@@ -41,7 +42,8 @@ code1,message1
         $this->assertEquals('code1', $actual[0]->code, 'should be able to import note definitions code');
     }
 
-    function testImportMessage() {
+    function testImportMessage()
+    {
         $csvData = "code,message
 code1,message1
 ";
@@ -58,7 +60,8 @@ code1,message1
         $this->assertEquals('message1', $actual[0]->message, 'should be able to import note definitions code');
     }
 
-    function testImportUpdatesCode() {
+    function testImportUpdatesCode()
+    {
         $csvData = "code,message
 code1,message1
 ";
@@ -86,7 +89,8 @@ code1,message-new
         $this->assertEquals('code1', $actual[0]->code, 'should be able to update note code with importer');
     }
 
-    function testImportUpdatesMessage() {
+    function testImportUpdatesMessage()
+    {
         $csvData = "code,message
 code1,message1
 ";

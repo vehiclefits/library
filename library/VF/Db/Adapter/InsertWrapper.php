@@ -19,7 +19,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -27,12 +26,12 @@ class VF_Db_Adapter_InsertWrapper
 {
     /** @var Zend_Db_Adapter_Abstract */
     protected $wrappedAdapter;
-    
+
     function __construct(Zend_Db_Adapter_Abstract $adapterToWrap)
     {
         $this->wrappedAdapter = $adapterToWrap;
     }
-    
+
     /**
      * Inserts a table row with specified data.
      *
@@ -49,7 +48,7 @@ class VF_Db_Adapter_InsertWrapper
         $result = $stmt->rowCount();
         return $result;
     }
-    
+
     /**
      * Inserts a table row with specified data.
      *
@@ -62,17 +61,17 @@ class VF_Db_Adapter_InsertWrapper
         // extract and quote col names from the array keys
         $cols = array();
         $vals = array();
-        $this->extractAndQuoteCols($bind,$cols,$vals);
+        $this->extractAndQuoteCols($bind, $cols, $vals);
 
         // build the statement
         $sql = "INSERT INTO "
-             . $this->wrappedAdapter->quoteIdentifier($table, true)
-             . ' (' . implode(', ', $cols) . ') '
-             . 'VALUES (' . implode(', ', $vals) . ')';
+            . $this->wrappedAdapter->quoteIdentifier($table, true)
+            . ' (' . implode(', ', $cols) . ') '
+            . 'VALUES (' . implode(', ', $vals) . ')';
         return $sql;
     }
-    
-    function extractAndQuoteCols($bind, &$cols, &$vals )
+
+    function extractAndQuoteCols($bind, &$cols, &$vals)
     {
         // extract and quote col names from the array keys
         $cols = array();

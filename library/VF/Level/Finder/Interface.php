@@ -17,13 +17,14 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 interface VF_Level_Finder_Interface
 {
-    function query( $sql );    
-    function listAll( VF_Level $entity, $parent_id = 0 );
-    function listInUse( VF_Level $entity, $parents = array(), $product_id = 0 );
+    function query($sql);
+
+    function listAll(VF_Level $entity, $parent_id = 0);
+
+    function listInUse(VF_Level $entity, $parents = array(), $product_id = 0);
 }

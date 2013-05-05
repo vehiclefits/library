@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -39,19 +38,19 @@ class VF_Import_VehiclesList_XML_ExportTests_EngineTest extends VF_Import_Vehicl
     </definition>        
 </vehicles>';
         $this->csvFile = TEMP_PATH . '/definitions.xml';
-        file_put_contents( $this->csvFile, $this->csvData );
-        
+        file_put_contents($this->csvFile, $this->csvData);
+
         $this->switchSchema('year,make,model,submodel,engine');
-        
-        $importer = $this->vehiclesListImporter( $this->csvFile );
+
+        $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
     }
-    
+
     function testImportsMakeTitle()
     {
         $exporter = new VF_Import_VehiclesList_XML_Export;
-                   
-        $this->assertEquals( '<?xml version="1.0"?>
+
+        $this->assertEquals('<?xml version="1.0"?>
 <vehicles version="1.0">
     <definition>
         <year id="8">2000</year>
@@ -60,13 +59,13 @@ class VF_Import_VehiclesList_XML_ExportTests_EngineTest extends VF_Import_Vehicl
         <submodel id="16">EX</submodel>
         <engine id="85">EX</engine>
     </definition>
-</vehicles>', $exporter->export() );
+</vehicles>', $exporter->export());
     }
-    
+
     /** @todo testIfIdIsNotAvailable */
     function testIfIdIsNotAvailable()
     {
         return $this->markTestIncomplete();
     }
-    
+
 }

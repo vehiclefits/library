@@ -27,15 +27,15 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     {
         // create a 'full' vehicle
         $vehicle = $this->createVehicle(array(
-            'make'=>'Honda',
-            'model'=>'Civic',
-            'year'=>'2000'
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
         ));
 
         // search for a 'partial' vehicle
         $actualValues = $this->getFinder()->findOneByLevelIds(array(
-                'make' => $vehicle->getValue('make')
-            ), VF_Vehicle_Finder::INCLUDE_PARTIALS)
+            'make' => $vehicle->getValue('make')
+        ), VF_Vehicle_Finder::INCLUDE_PARTIALS)
             ->toValueArray();
 
         $expectedValues = array(
@@ -50,15 +50,15 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     {
         // create a 'full' vehicle
         $vehicle = $this->createVehicle(array(
-            'make'=>'Honda',
-            'model'=>'Civic',
-            'year'=>'2000'
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
         ));
 
         // search for a 'partial' vehicle
         $actualVehicles = $this->getFinder()->findByLevelIds(array(
-                'make' => $vehicle->getValue('make')
-            ), VF_Vehicle_Finder::INCLUDE_PARTIALS);
+            'make' => $vehicle->getValue('make')
+        ), VF_Vehicle_Finder::INCLUDE_PARTIALS);
 
         $this->assertEquals(1, count($actualVehicles), 'should return only a partial vehicle, even if there are full vehicles');
     }
@@ -67,19 +67,19 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     {
         // create a 'partial' vehicle
         $vehicle = $this->createVehicle(array(
-            'make'=>'Honda'
+            'make' => 'Honda'
         ));
 
         // search for a 'partial' vehicle
         $actualValues = $this->getFinder()->findOneByLevelIds(array(
-                'make' => $vehicle->getValue('make')
-            ), VF_Vehicle_Finder::INCLUDE_PARTIALS)
+            'make' => $vehicle->getValue('make')
+        ), VF_Vehicle_Finder::INCLUDE_PARTIALS)
             ->toValueArray();
 
         $expectedValues = array(
-            'make'=>$vehicle->getValue('make'),
-            'model'=>0,
-            'year'=>0
+            'make' => $vehicle->getValue('make'),
+            'model' => 0,
+            'year' => 0
         );
         $this->assertEquals($expectedValues, $actualValues, 'should find partially created vehicles');
     }
@@ -87,12 +87,12 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     function testShouldFindPartialVehicleMake()
     {
         $vehicle = $this->createVehicle(array(
-            'make'=>'Honda'
+            'make' => 'Honda'
         ));
 
         $vehicles = $this->getFinder()->findByLevelIds(array(
-                'make' => $vehicle->getValue('make')
-            ), VF_Vehicle_Finder::INCLUDE_PARTIALS);
+            'make' => $vehicle->getValue('make')
+        ), VF_Vehicle_Finder::INCLUDE_PARTIALS);
         $this->assertEquals(1, count($vehicles), 'should find partial vehicle by make');
     }
 
@@ -108,7 +108,7 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
 
     function testPartialVehicleShouldHaveMakeID()
     {
-        $vehicle = $this->createVehicle(array('make'=>'Honda'));
+        $vehicle = $this->createVehicle(array('make' => 'Honda'));
 
         $params = array('make' => $vehicle->getValue('make'));
         $vehicles = $this->getFinder()->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
@@ -117,7 +117,7 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
 
     function testZeroShouldMatchPartialVehicle()
     {
-        $vehicle = $this->createVehicle(array('make'=>'Honda'));
+        $vehicle = $this->createVehicle(array('make' => 'Honda'));
         $make = $vehicle->getLevel('make');
 
         $params = array('make' => $make->getId(), 'model' => 0, 'year' => 0);

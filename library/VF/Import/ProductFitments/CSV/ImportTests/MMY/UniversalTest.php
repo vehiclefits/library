@@ -17,26 +17,25 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Import_ProductFitments_CSV_ImportTests_TestCase
-{    
+{
     protected function doSetUp()
     {
         $this->switchSchema('make,model,year');
-        $this->insertProduct( self::SKU );
+        $this->insertProduct(self::SKU);
     }
-    
+
     function testMakesProductUniversal()
     {
         $this->mappingsImport('sku, make, model, year, universal
 "sku","","","","1"');
-        $this->assertTrue( $this->getVFProductForSku('sku')->isUniversal() );
+        $this->assertTrue($this->getVFProductForSku('sku')->isUniversal());
     }
-        
-    
+
+
     function testMakesProductUniversal_YearRange()
     {
         $this->mappingsImport('sku, make, model, year_start, year_end, universal
@@ -44,50 +43,50 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
         return $this->markTestIncomplete();
         //$this->assertTrue( $this->getVFProductForSku('sku')->isUniversal() );
     }
-        
+
     function testDoesNotImportBlankDefinition()
     {
         $this->mappingsImport('sku, make, model, year, universal
 "sku","","","","1"');
-        
+
         $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
         $vehicles = $vehicleFinder->findAll();
-        $this->assertEquals( 0, count($vehicles));
+        $this->assertEquals(0, count($vehicles));
     }
-            
+
     function testDoesNotInsertNullVehicle()
     {
         $this->mappingsImport('sku, make, model, year, universal
 "sku","","","","1"');
-        
+
         $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
         $count = $this->getReadAdapter()->query('select count(*) from elite_1_definition')->fetchColumn();
-        $this->assertEquals( 0, $count);
+        $this->assertEquals(0, $count);
     }
-    
+
     function testShouldNotLogErrorsForUniversalRecord()
     {
         $importer = $this->mappingsImporterFromData('sku, make, model, year, universal
 "sku","","","","1"');
         $importer->import();
-        
+
         $writer = new Zend_Log_Writer_Mock();
         $logger = new Zend_Log($writer);
         $logger->addFilter(new Zend_Log_Filter_Priority(Zend_Log::NOTICE));
         $importer->setLog($logger);
-        
+
         $importer->import();
-        
-        $this->assertEquals( 0, count($writer->events) );
+
+        $this->assertEquals(0, count($writer->events));
     }
-    
+
     function testShouldNotTallyInvalidVehicle()
     {
         $importer = $this->mappingsImporterFromData('sku, make, model, year, universal
 "sku","","","","1"');
         $importer->import();
 
-        $this->assertEquals( 0, $importer->invalidVehicleCount() );
+        $this->assertEquals(0, $importer->invalidVehicleCount());
     }
 
     function testShouldMarkProductAsNotUniversal()
@@ -102,7 +101,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
 
         $this->assertFalse($product->isUniversal(), 'should mark product as not universal w/ import');
     }
-    
+
     function testShouldNotTallyInvalidVehicle_YearRange()
     {
         return $this->markTestIncomplete();
@@ -110,7 +109,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
 "sku","","","","1"');
         $importer->import();
 
-        $this->assertEquals( 0, $importer->invalidVehicleCount() );
+        $this->assertEquals(0, $importer->invalidVehicleCount());
     }
-    
+
 }

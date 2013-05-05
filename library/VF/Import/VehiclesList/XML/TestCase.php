@@ -17,24 +17,23 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 abstract class VF_Import_VehiclesList_XML_TestCase extends VF_TestCase
 {
-    function vehiclesListImporter( $file )
+    function vehiclesListImporter($file)
     {
-        $importer = new VF_Import_VehiclesList_XML_Import( $file );
+        $importer = new VF_Import_VehiclesList_XML_Import($file);
         return $importer;
     }
-    
-    function getDefinitionsData( $data )
+
+    function getDefinitionsData($data)
     {
         $file = TEMP_PATH . '/definitions.xml';
-        file_put_contents( $file, $data );
-        
-        $importer = new VF_Import_VehiclesList_XML_Import( $file );
+        file_put_contents($file, $data);
+
+        $importer = new VF_Import_VehiclesList_XML_Import($file);
         return $importer;
     }
 }

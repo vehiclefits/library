@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -37,61 +36,61 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYTest extends VF_Import_VehiclesL
     </definition>        
 </vehicles>';
         $this->xmlFile = TEMP_PATH . '/definitions.xml';
-        file_put_contents( $this->xmlFile, $this->xmlData );
-        
+        file_put_contents($this->xmlFile, $this->xmlData);
+
         $this->switchSchema('make,model,year');
     }
-    
+
     function testDoesntImportBlank()
     {
         $xmlDocument = new SimpleXMLElement($this->xmlData);
-        $importer = $this->vehiclesListImporter( $this->xmlFile );
+        $importer = $this->vehiclesListImporter($this->xmlFile);
         $importer->import();
-        $this->assertFalse( $this->vehicleExists(array('make'=>'')), 'should not import a blank make' );
+        $this->assertFalse($this->vehicleExists(array('make' => '')), 'should not import a blank make');
     }
-    
+
     function testImportsMakeTitle()
     {
-        $importer = $this->vehiclesListImporter( $this->xmlFile );
+        $importer = $this->vehiclesListImporter($this->xmlFile);
         $importer->import();
-        $this->assertTrue( $this->vehicleExists(array('make'=>'Honda')), 'should import a make title' );
+        $this->assertTrue($this->vehicleExists(array('make' => 'Honda')), 'should import a make title');
     }
-    
+
     function testImportsModelTitle()
     {
-        $importer = $this->vehiclesListImporter( $this->xmlFile );
+        $importer = $this->vehiclesListImporter($this->xmlFile);
         $importer->import();
-        $this->assertTrue( $this->vehicleExists(array('model'=>'Civic')), 'should import a model title' );
+        $this->assertTrue($this->vehicleExists(array('model' => 'Civic')), 'should import a model title');
     }
-    
+
     function testImportsYearTitle()
     {
-        $importer = $this->vehiclesListImporter( $this->xmlFile );
+        $importer = $this->vehiclesListImporter($this->xmlFile);
         $importer->import();
-        $this->assertTrue( $this->vehicleExists(array('year'=>'2000')), 'should import a year title' );
+        $this->assertTrue($this->vehicleExists(array('year' => '2000')), 'should import a year title');
     }
-    
+
     function testImportsMakeId()
     {
-        $importer = $this->vehiclesListImporter( $this->xmlFile );
+        $importer = $this->vehiclesListImporter($this->xmlFile);
         $importer->import();
-        $this->assertEquals( 4, $this->levelFinder()->find('make',4)->getId(), 'imports the makeID #' );
+        $this->assertEquals(4, $this->levelFinder()->find('make', 4)->getId(), 'imports the makeID #');
     }
-    
+
     function testImportsModelId()
     {
-        $importer = $this->vehiclesListImporter( $this->xmlFile );
+        $importer = $this->vehiclesListImporter($this->xmlFile);
         $importer->import();
-        $this->assertEquals( 5, $this->levelFinder()->find('model',5)->getId(), 'imports the modelID #' );
+        $this->assertEquals(5, $this->levelFinder()->find('model', 5)->getId(), 'imports the modelID #');
     }
-    
+
     function testImportsYearId()
     {
-        $importer = $this->vehiclesListImporter( $this->xmlFile );
+        $importer = $this->vehiclesListImporter($this->xmlFile);
         $importer->import();
-        $this->assertEquals( 8, $this->levelFinder()->find('year',8)->getId(), 'imports the yearID #' );
+        $this->assertEquals(8, $this->levelFinder()->find('year', 8)->getId(), 'imports the yearID #');
     }
-    
+
     function testBlah()
     {
         $importer = $this->getDefinitionsData('<?xml version="1.0" encoding="UTF-8"?>   
@@ -105,7 +104,7 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYTest extends VF_Import_VehiclesL
 </vehicles>');
         $importer->import();
     }
-    
+
     function testMultipleRecordsForSameMake()
     {
         $importer = $this->getDefinitionsData('<?xml version="1.0" encoding="UTF-8"?>   
@@ -151,8 +150,8 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYTest extends VF_Import_VehiclesL
 
 </vehicles>');
         $importer->import();
-        $this->assertEquals( 72, $this->levelFinder()->find('make',72)->getId(), 'imports the make #' );
-        $this->assertEquals( 'FMC2', $this->levelFinder()->find('make',72)->getTitle(), 'changes the makes title' );
+        $this->assertEquals(72, $this->levelFinder()->find('make', 72)->getId(), 'imports the make #');
+        $this->assertEquals('FMC2', $this->levelFinder()->find('make', 72)->getTitle(), 'changes the makes title');
     }
 
 }

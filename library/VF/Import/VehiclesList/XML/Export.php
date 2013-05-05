@@ -17,42 +17,39 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Import_VehiclesList_XML_Export extends VF_Import_VehiclesList_BaseExport
 {
     const EOL = "\n";
-    
+
     function export()
     {
 
-$xml = '<?xml version="1.0"?>'.self::EOL;
-$xml .= '<vehicles version="1.0">'.self::EOL;
-        
+        $xml = '<?xml version="1.0"?>' . self::EOL;
+        $xml .= '<vehicles version="1.0">' . self::EOL;
+
         $rowResult = $this->rowResult();
-        
-        while( $vehicleRow = $rowResult->fetch(Zend_Db::FETCH_OBJ) )
-        {
 
-$xml .= '    <definition>'.self::EOL;
-            foreach($this->schema()->getLevels() as $level )
-            {
-$xml .= '        '.$this->renderLevel($level,$vehicleRow);
+        while ($vehicleRow = $rowResult->fetch(Zend_Db::FETCH_OBJ)) {
+
+            $xml .= '    <definition>' . self::EOL;
+            foreach ($this->schema()->getLevels() as $level) {
+                $xml .= '        ' . $this->renderLevel($level, $vehicleRow);
             }
-$xml .= '    </definition>'.self::EOL;
-            
-        }
-$xml .= '</vehicles>';
+            $xml .= '    </definition>' . self::EOL;
 
-        return( $xml );
+        }
+        $xml .= '</vehicles>';
+
+        return ($xml);
     }
-    
-    function renderLevel($level,$vehicleRow)
+
+    function renderLevel($level, $vehicleRow)
     {
-        $id = $vehicleRow->{$level.'_id'};
+        $id = $vehicleRow->{$level . '_id'};
         $title = $vehicleRow->$level;
-        return '<'.$level.' id="'.$id.'">'.$title.'</'.$level.'>'.self::EOL;
+        return '<' . $level . ' id="' . $id . '">' . $title . '</' . $level . '>' . self::EOL;
     }
 }

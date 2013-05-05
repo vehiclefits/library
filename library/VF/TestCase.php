@@ -119,7 +119,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     protected function createVehicle($titles = array(), $schema = null)
     {
-        $vehicle = VF_Vehicle::create($schema?$schema:new VF_Schema(), $titles);
+        $vehicle = VF_Vehicle::create($schema ? $schema : new VF_Schema(), $titles);
         $vehicle->save();
         return $vehicle;
     }
@@ -569,9 +569,9 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return new VF_Level_Finder;
     }
 
-    function vehicleFinder($schema=null)
+    function vehicleFinder($schema = null)
     {
-        return new VF_Vehicle_Finder($schema?$schema:new VF_Schema());
+        return new VF_Vehicle_Finder($schema ? $schema : new VF_Schema());
     }
 
     function boltPattern($boltPatternString, $offset = null)
@@ -605,7 +605,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return $controller;
     }
 
-    function vehicleExists($titles = array(), $allowPartialVehicleMatch = false, $schema=null)
+    function vehicleExists($titles = array(), $allowPartialVehicleMatch = false, $schema = null)
     {
         return 0 != count($this->vehicleFinder($schema)->findByLevels($titles, $allowPartialVehicleMatch));
     }

@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -37,26 +36,26 @@ class VF_Import_VehiclesList_XML_MMYTest extends VF_Import_VehiclesList_XML_Test
     </definition>        
 </vehicles>';
         $this->csvFile = TEMP_PATH . '/definitions.xml';
-        file_put_contents( $this->csvFile, $this->csvData );
-        
+        file_put_contents($this->csvFile, $this->csvData);
+
         $this->switchSchema('make,model,year');
-        
-        $importer = $this->vehiclesListImporter( $this->csvFile );
+
+        $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
     }
-    
+
     function testImportsMakeTitle()
     {
         $exporter = new VF_Import_VehiclesList_XML_Export;
 
-        $this->assertEquals( '<?xml version="1.0"?>
+        $this->assertEquals('<?xml version="1.0"?>
 <vehicles version="1.0">
     <definition>
         <make id="4">Honda</make>
         <model id="5">Civic</model>
         <year id="8">2000</year>
     </definition>
-</vehicles>', $exporter->export() );
+</vehicles>', $exporter->export());
     }
-    
+
 }

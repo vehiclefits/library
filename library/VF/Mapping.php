@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -38,8 +37,7 @@ class VF_Mapping implements VF_Configurable
 
     function getConfig()
     {
-        if (!$this->config instanceof Zend_Config)
-        {
+        if (!$this->config instanceof Zend_Config) {
             $this->config = VF_Singleton::getInstance()->getConfig();
         }
         return $this->config;
@@ -57,8 +55,7 @@ class VF_Mapping implements VF_Configurable
 
     function save()
     {
-        if (!(int) $this->product_id)
-        {
+        if (!(int)$this->product_id) {
             throw new Exception('Trying to insert a mapping with no product ID');
         }
         $schema = $this->vehicle()->schema();
@@ -66,31 +63,28 @@ class VF_Mapping implements VF_Configurable
         $levels = $schema->getLevels();
 
         $select = $this->getReadAdapter()->select()
-                        ->from($schema->mappingsTable(), array('id'));
-        foreach ($this->vehicle->toValueArray() as $level => $id)
-        {
+            ->from($schema->mappingsTable(), array('id'));
+        foreach ($this->vehicle->toValueArray() as $level => $id) {
             $select->where($this->inflect($level) . '_id = ?', $id);
         }
         $select->where('entity_id = ?', $this->product_id);
 
-        $id = (int) $select->query()->fetchColumn();
-        if (0 !== $id)
-        {
+        $id = (int)$select->query()->fetchColumn();
+        if (0 !== $id) {
             return $id;
         }
 
         $columns = '';
         $values = '';
-        foreach ($levels as $level)
-        {
+        foreach ($levels as $level) {
             $columns .= '`' . $this->inflect($level) . '_id`,';
             $values .= $this->inflect($this->vehicle->getLevel($level)->getId());
             $values .= ',';
         }
         $query = sprintf(
-                        '
-            INSERT INTO
-                `'.$schema->mappingsTable().'`
+            '
+INSERT INTO
+    `' . $schema->mappingsTable() . '`
             (
                 ' . $columns . '
                 `entity_id`
@@ -101,7 +95,7 @@ class VF_Mapping implements VF_Configurable
                 %d
             )
             ',
-            (int) $this->product_id
+            (int)$this->product_id
         );
         $r = $this->query($query);
         return $this->getReadAdapter()->lastInsertId();

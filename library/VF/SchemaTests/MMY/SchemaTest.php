@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -27,82 +26,82 @@ class VF_SchemaTests_MMY_SchemaTest extends VF_TestCase
     {
         $this->switchSchema('make,model,year');
     }
-    
+
     function testLevels()
     {
         $schema = new VF_Schema();
-        $this->assertEquals( array( 'make','model','year'), $schema->getLevels(), 'should get levels' );
+        $this->assertEquals(array('make', 'model', 'year'), $schema->getLevels(), 'should get levels');
     }
-    
+
     function testGetRootLevel()
     {
         $schema = new VF_Schema();
-        $this->assertEquals( self::ENTITY_TYPE_MAKE, $schema->getRootLevel(), 'root level should be "make"' );
+        $this->assertEquals(self::ENTITY_TYPE_MAKE, $schema->getRootLevel(), 'root level should be "make"');
     }
-    
+
     function testGetLeafLevel()
     {
         $schema = new VF_Schema();
-        $this->assertEquals( self::ENTITY_TYPE_YEAR, $schema->getLeafLevel(), 'root level should be "year"' );
+        $this->assertEquals(self::ENTITY_TYPE_YEAR, $schema->getLeafLevel(), 'root level should be "year"');
     }
-    
+
     function testPrevLevelMake()
     {
-        $schema = new VF_Schema(); 
-        $this->assertEquals( false, $schema->getPrevLevel('make') );
+        $schema = new VF_Schema();
+        $this->assertEquals(false, $schema->getPrevLevel('make'));
     }
-    
+
     function testPrevLevelModel()
     {
-        $schema = new VF_Schema(); 
-        $this->assertEquals( 'make', $schema->getPrevLevel('model') );
+        $schema = new VF_Schema();
+        $this->assertEquals('make', $schema->getPrevLevel('model'));
     }
-    
+
     function testNextLevelMake()
     {
-        $schema = new VF_Schema(); 
-        $this->assertEquals( 'model', $schema->getNextLevel('make') );
+        $schema = new VF_Schema();
+        $this->assertEquals('model', $schema->getNextLevel('make'));
     }
-    
+
     function testNextLevelModel()
     {
-        $schema = new VF_Schema(); 
-        $this->assertEquals( 'year', $schema->getNextLevel('model') );
+        $schema = new VF_Schema();
+        $this->assertEquals('year', $schema->getNextLevel('model'));
     }
-    
+
     function testNextLevelYear()
     {
-        $schema = new VF_Schema(); 
-        $this->assertFalse( $schema->getNextLevel('year') );
+        $schema = new VF_Schema();
+        $this->assertFalse($schema->getNextLevel('year'));
     }
-    
+
     function testLevelIsBefore()
     {
         $schema = new VF_Schema();
-        $this->assertTrue( $schema->levelIsBefore( 'make', 'model' ) );
+        $this->assertTrue($schema->levelIsBefore('make', 'model'));
     }
-    
+
     function testLevelIsBefore2()
     {
         $schema = new VF_Schema();
-        $this->assertFalse( $schema->levelIsBefore( 'model', 'make' ) );
+        $this->assertFalse($schema->levelIsBefore('model', 'make'));
     }
-    
+
     function testGetLevelsExceptLeaf()
     {
         $schema = new VF_Schema();
-        $this->assertSame( array('make','model'), $schema->getLevelsExceptLeaf() );
+        $this->assertSame(array('make', 'model'), $schema->getLevelsExceptLeaf());
     }
-    
+
     function testGetLevelsExcluding()
     {
         $schema = new VF_Schema();
-        $this->assertSame( array('make','year'), $schema->getLevelsExcluding('model') );
+        $this->assertSame(array('make', 'year'), $schema->getLevelsExcluding('model'));
     }
-    
+
     function testGetLevelsExceptRoot()
     {
         $schema = new VF_Schema();
-        $this->assertSame( array('model','year'), $schema->getLevelsExceptRoot() );
+        $this->assertSame(array('model', 'year'), $schema->getLevelsExceptRoot());
     }
 }

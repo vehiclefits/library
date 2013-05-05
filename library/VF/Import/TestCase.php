@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -27,25 +26,25 @@ class VF_Import_TestCase extends VF_TestCase
     {
         return new VF_Import_VehiclesList_CSV_Export;
     }
-    
+
     function importVehiclesList($csvData)
     {
         $importer = $this->vehiclesListImporter($csvData);
         $importer->import();
         return $importer;
     }
-    
-    function importVehiclesListTwice( $file )
+
+    function importVehiclesListTwice($file)
     {
-        $this->importVehiclesList( $file );
-        return $this->importVehiclesList( $file );
+        $this->importVehiclesList($file);
+        return $this->importVehiclesList($file);
     }
-    
+
     function vehiclesListImporter($csvData)
     {
         $file = TEMP_PATH . '/vehicles-list.csv';
-        file_put_contents( $file, $csvData );
-        $importer = new VF_Import_VehiclesList_CSV_Import( $file );
+        file_put_contents($file, $csvData);
+        $importer = new VF_Import_VehiclesList_CSV_Import($file);
         return $importer;
     }
 }

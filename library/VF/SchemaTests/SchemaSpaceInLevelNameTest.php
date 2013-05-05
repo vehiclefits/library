@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -25,30 +24,30 @@ class VF_SchemaTests_SchemaSpaceInLevelNameTest extends VF_Import_TestCase
 {
     function doSetUp()
     {
-	$this->switchSchema('make,model type,year',true);
+        $this->switchSchema('make,model type,year', true);
     }
-    
+
     function testLevels()
     {
         $schema = new VF_Schema();
-        $this->assertEquals( array('make','model type','year'), $schema->getLevels(), 'should allow spaces in level name' );
+        $this->assertEquals(array('make', 'model type', 'year'), $schema->getLevels(), 'should allow spaces in level name');
     }
 
     function testImport()
     {
-	$this->importVehiclesList('make,model type, year' . "\n" .
-		'Honda, Civic EX, 2000' );
+        $this->importVehiclesList('make,model type, year' . "\n" .
+            'Honda, Civic EX, 2000');
     }
 
     function testGetFits()
     {
         $product = $this->newVFProduct(1);
-        $vehicle = $this->createVehicle(array('make'=>'Honda', 'model type'=>'Civic', 'year'=>2000));
-        $product->addVafFit( $vehicle->toValueArray() );
+        $vehicle = $this->createVehicle(array('make' => 'Honda', 'model type' => 'Civic', 'year' => 2000));
+        $product->addVafFit($vehicle->toValueArray());
 
         $actual = $product->getFits();
-        $this->assertEquals( 1, count($actual) );
+        $this->assertEquals(1, count($actual));
         $fit = $actual[0];
-        $this->assertEquals( $vehicle->toValueArray(), array('make'=>$fit->make_id,'model type'=>$fit->model_type_id,'year'=>$fit->year_id), 'should get fitment' );
+        $this->assertEquals($vehicle->toValueArray(), array('make' => $fit->make_id, 'model type' => $fit->model_type_id, 'year' => $fit->year_id), 'should get fitment');
     }
 }

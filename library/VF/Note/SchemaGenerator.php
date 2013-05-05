@@ -17,30 +17,26 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 /** Converts a comma delimeted list of level names into a suitable DDL for the schema */
 class VF_Note_SchemaGenerator
-{   
-    function execute( $showProgress = false )
+{
+    function execute($showProgress = false)
     {
         $sql = $this->generator();
-        foreach( explode( ';', $sql ) as $sql )
-        {
-            $sql = trim( $sql );
-            if( !empty( $sql ) )
-            {
-                if( $showProgress )
-                {
+        foreach (explode(';', $sql) as $sql) {
+            $sql = trim($sql);
+            if (!empty($sql)) {
+                if ($showProgress) {
                     echo '.';
                 }
-                $this->query( $sql );
+                $this->query($sql);
             }
         }
     }
-    
+
     function generator($levels)
     {
         return 'CREATE TABLE IF NOT EXISTS `elite_note` (
@@ -58,11 +54,11 @@ class VF_Note_SchemaGenerator
         ) ENGINE = InnoDB CHARSET=utf8;';
     }
 
-    protected function query( $sql )
+    protected function query($sql)
     {
-        return $this->getReadAdapter()->query( $sql );
+        return $this->getReadAdapter()->query($sql);
     }
-    
+
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {

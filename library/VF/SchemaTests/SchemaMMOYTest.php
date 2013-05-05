@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -25,12 +24,12 @@ class VF_SchemaTests_SchemaMMOYTest extends VF_TestCase
 {
     function doSetUp()
     {
-		$this->switchSchema('make,model,option,year');
+        $this->switchSchema('make,model,option,year');
     }
-    
+
     function testLevelsMMOY()
     {
         $schema = new VF_Schema();
-        $this->assertEquals( array('make','model','option','year'), $schema->getLevels(), 'should get levels MMOY' );
+        $this->assertEquals(array('make', 'model', 'option', 'year'), $schema->getLevels(), 'should get levels MMOY');
     }
 }

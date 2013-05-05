@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -28,49 +27,45 @@ class VF_Select extends Zend_Db_Select
     const DEFINITIONS = 'definitions';
     const MAPPINGS = 'mappings';
 
-    function joinAndSelectLevels($fromTable=null, $levels=array(), $schema=null)
+    function joinAndSelectLevels($fromTable = null, $levels = array(), $schema = null)
     {
         $this->schema = $schema ? $schema : new VF_Schema;
-        switch($fromTable)
-        {
+        switch ($fromTable) {
             case self::DEFINITIONS:
                 $fromTable = $this->getSchema()->definitionTable();
-            break;
+                break;
             case null:
             case self::MAPPINGS;
                 $fromTable = $this->getSchema()->mappingsTable();
-            break;
+                break;
             default:
                 // assume they passed in a literal string
-            break;
+                break;
         }
-        
-        if(array() == $levels)
-        {
+
+        if (array() == $levels) {
             $levels = $this->getSchema()->getLevels();
         }
-        foreach($levels as $level )
-        {
+        foreach ($levels as $level) {
             $level = str_replace(' ', '_', $level);
-            $table = 'elite_level_' . $this->getSchema()->id() . '_'.$level;
+            $table = 'elite_level_' . $this->getSchema()->id() . '_' . $level;
             $condition = "{$table}.id = {$fromTable}.{$level}_id";
-            $this->joinLeft($table, $condition, array($level=>'title', $level.'_id'=>'id') );
+            $this->joinLeft($table, $condition, array($level => 'title', $level . '_id' => 'id'));
         }
         return $this;
     }
-    
+
     function whereLevelIdsEqual($levelIds)
     {
-        foreach($levelIds as $level => $id)
-        {
-            if($id==false) {
+        foreach ($levelIds as $level => $id) {
+            if ($id == false) {
                 continue;
             }
             $this->where($this->inflect($level) . '_id = ?', $id);
         }
         return $this;
     }
-    
+
     function getSchema()
     {
         return $this->schema;

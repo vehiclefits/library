@@ -17,24 +17,23 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Note_ExportTest extends VF_TestCase
 {
-	function testExport()
-	{
-		$finder = new VF_Note_Finder();
-		$noteId = $finder->insert('code1','message1');
-		
-		$export = new VF_Note_Export;
-		$csv = $export->export();
-		
-		$expected = '"id","code","message"
+    function testExport()
+    {
+        $finder = new VF_Note_Finder();
+        $noteId = $finder->insert('code1', 'message1');
+
+        $export = new VF_Note_Export;
+        $csv = $export->export();
+
+        $expected = '"id","code","message"
 "' . $noteId . '","code1","message1"
 ';
 
-		$this->assertEquals( $expected, $csv );
-	}
+        $this->assertEquals($expected, $csv);
+    }
 }

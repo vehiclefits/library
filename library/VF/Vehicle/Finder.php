@@ -90,8 +90,8 @@ class VF_Vehicle_Finder implements VF_Configurable
             throw new Exception('must pass an level_id, [' . $id . '] given');
         }
 
-        if(isset(self::$IDENTITY_MAP_FINDBYLEVEL[$level.$id])) {
-            return self::$IDENTITY_MAP_FINDBYLEVEL[$level.$id];
+        if (isset(self::$IDENTITY_MAP_FINDBYLEVEL[$level . $id])) {
+            return self::$IDENTITY_MAP_FINDBYLEVEL[$level . $id];
         }
 
         $select = $this->getReadAdapter()->select()
@@ -99,22 +99,22 @@ class VF_Vehicle_Finder implements VF_Configurable
             ->where(sprintf('%s_id = ?', $level), $id);
 
         $result = $this->query($select)->fetchAll();
-        if(count($result)>1) {
+        if (count($result) > 1) {
             throw new Exception('Your query is ambiguous, more than one vehicle matches this query.');
         }
-        if (count($result)==0) {
+        if (count($result) == 0) {
             throw new VF_Exception_DefinitionNotFound('No such definition with level [' . $level . '] and id [' . $id . ']');
         }
         $row = $result[0];
-        foreach($this->schema->getLevels() as $schemaLevel) {
-            if(!isset($row[$schemaLevel.'_id'])) {
-                $row[$schemaLevel.'_id'] = 0;
+        foreach ($this->schema->getLevels() as $schemaLevel) {
+            if (!isset($row[$schemaLevel . '_id'])) {
+                $row[$schemaLevel . '_id'] = 0;
             }
         }
 
         $vehicle = $this->findOneByLevelIds($row, VF_Vehicle_Finder::INCLUDE_PARTIALS);
 
-        self::$IDENTITY_MAP_FINDBYLEVEL[$level.$id] = $vehicle;
+        self::$IDENTITY_MAP_FINDBYLEVEL[$level . $id] = $vehicle;
         return $vehicle;
     }
 
@@ -162,7 +162,7 @@ class VF_Vehicle_Finder implements VF_Configurable
 
         $select = $this->select()
             ->from('elite_' . $this->schema->id() . '_definition')
-            ->joinAndSelectLevels('elite_' . $this->schema->id() . '_definition',array_keys($levels), $this->schema);
+            ->joinAndSelectLevels('elite_' . $this->schema->id() . '_definition', array_keys($levels), $this->schema);
 
         foreach ($levels as $level => $value) {
 
@@ -184,20 +184,20 @@ class VF_Vehicle_Finder implements VF_Configurable
         $result = $this->query($select)->fetchAll(Zend_Db::FETCH_OBJ);
 
         $levelsToRemove = array();
-        foreach($this->schema->getLevels() as $levelInSchema) {
-            if($includePartials && !in_array($levelInSchema,array_keys($levels))) {
+        foreach ($this->schema->getLevels() as $levelInSchema) {
+            if ($includePartials && !in_array($levelInSchema, array_keys($levels))) {
                 $levelsToRemove[] = $levelInSchema;
             }
         }
 
 
         $return = array();
-        foreach($result as $row) {
-            foreach($levelsToRemove as $levelToRemove) {
+        foreach ($result as $row) {
+            foreach ($levelsToRemove as $levelToRemove) {
                 unset($row->$levelToRemove);
-                unset($row->{$levelToRemove.'_id'});
+                unset($row->{$levelToRemove . '_id'});
             }
-            $return[] = new VF_Vehicle($this->schema,$row->id,$row);
+            $return[] = new VF_Vehicle($this->schema, $row->id, $row);
         }
 
         return $return;
@@ -378,7 +378,7 @@ class VF_Vehicle_Finder implements VF_Configurable
     {
         foreach ($levels as $level => $value) {
             if (!in_array($level, $this->schema->getLevels())) {
-                throw new Exception('Invalid level '.$level);
+                throw new Exception('Invalid level ' . $level);
             }
         }
         return $levels;
@@ -389,7 +389,7 @@ class VF_Vehicle_Finder implements VF_Configurable
     {
         $levelsToSelect = array();
         foreach ($this->schema->getLevels() as $level) {
-            if(self::INCLUDE_PARTIALS == $mode && !$levelIds[$level]) {
+            if (self::INCLUDE_PARTIALS == $mode && !$levelIds[$level]) {
                 continue;
             }
             if (self::INCLUDE_PARTIALS == $mode && !$levelIds[$level]) {
@@ -404,9 +404,9 @@ class VF_Vehicle_Finder implements VF_Configurable
     function cleanupLevelIds($levelIds, $mode)
     {
         foreach ($this->schema->getLevels() as $level) {
-            if(isset($levelIds[$level.'_id'])) {
-                $levelIds[$level] = $levelIds[$level.'_id'];
-                unset($levelIds[$level.'_id']);
+            if (isset($levelIds[$level . '_id'])) {
+                $levelIds[$level] = $levelIds[$level . '_id'];
+                unset($levelIds[$level . '_id']);
             }
         }
         return $levelIds;
@@ -416,7 +416,7 @@ class VF_Vehicle_Finder implements VF_Configurable
     function specifyPartial($levelIds, $mode)
     {
         foreach ($this->schema->getLevels() as $level) {
-            if(isset($levelIds[$level])) {
+            if (isset($levelIds[$level])) {
                 continue;
             }
             if (self::INCLUDE_PARTIALS == $mode) {

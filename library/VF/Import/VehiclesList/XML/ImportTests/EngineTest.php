@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -39,54 +38,54 @@ class VF_Import_VehiclesList_XML_ImportTests_EngineTest extends VF_Import_Vehicl
     </definition>        
 </vehicles>';
         $this->csvFile = TEMP_PATH . '/definitions.xml';
-        file_put_contents( $this->csvFile, $this->csvData );
-        
+        file_put_contents($this->csvFile, $this->csvData);
+
         $this->switchSchema('year,make,model,submodel,engine');
     }
-    
+
     function testDoesntImportBlank()
     {
-        $importer = $this->vehiclesListImporter( $this->csvFile );
+        $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
-        $this->assertFalse( $this->vehicleExists(array('make'=>'')), 'should not import a blank make' );
+        $this->assertFalse($this->vehicleExists(array('make' => '')), 'should not import a blank make');
     }
 
     function testImportsYearTitle()
     {
-        $importer = $this->vehiclesListImporter( $this->csvFile );
+        $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
-        $this->assertTrue( $this->vehicleExists(array('year'=>'2000')), 'should import a year title' );
+        $this->assertTrue($this->vehicleExists(array('year' => '2000')), 'should import a year title');
     }
-    
+
     function testImportsMakeTitle()
     {
-        $importer = $this->vehiclesListImporter( $this->csvFile );
+        $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
-        $this->assertTrue( $this->vehicleExists(array('make'=>'Honda')), 'should import a make title' );
+        $this->assertTrue($this->vehicleExists(array('make' => 'Honda')), 'should import a make title');
     }
-    
+
     function testImportsModelTitle()
     {
-        $importer = $this->vehiclesListImporter( $this->csvFile );
+        $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
-        $this->assertTrue( $this->vehicleExists(array('model'=>'Civic')), 'should import a model title' );
+        $this->assertTrue($this->vehicleExists(array('model' => 'Civic')), 'should import a model title');
     }
-    
+
     function testImportsSubmodelTitle()
     {
-        $importer = $this->vehiclesListImporter( $this->csvFile );
+        $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
-        $this->assertTrue( $this->vehicleExists(array('submodel'=>'EX')), 'should import a submodel title' );
+        $this->assertTrue($this->vehicleExists(array('submodel' => 'EX')), 'should import a submodel title');
     }
-    
+
     function testImportsEngineTitle()
     {
-        $importer = $this->vehiclesListImporter( $this->csvFile );
+        $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
-        $this->assertTrue( $this->vehicleExists(array('engine'=>'4 Cylinder')), 'should import a engine title' );
+        $this->assertTrue($this->vehicleExists(array('engine' => '4 Cylinder')), 'should import a engine title');
     }
-    
-    
+
+
 //    function testImportsMakeId()
 //    {
 //        $importer = $this->vehiclesListImporter( $this->csvFile );

@@ -36,7 +36,7 @@ class VF_Singleton implements VF_Configurable
         if (is_null($instance) || $new) {
             $instance = new VF_Singleton;
         }
-        if(!$instance->getRequest()) {
+        if (!$instance->getRequest()) {
             $instance->setRequest(new Zend_Controller_Request_Http());
         }
         return $instance;
@@ -50,7 +50,7 @@ class VF_Singleton implements VF_Configurable
     function getConfig()
     {
         if (!$this->config instanceof Zend_Config) {
-            if(file_exists(ELITE_CONFIG)) {
+            if (file_exists(ELITE_CONFIG)) {
                 $config = new Zend_Config_Ini(ELITE_CONFIG, null, true);
             } else {
                 $config = new Zend_Config_Ini(ELITE_CONFIG_DEFAULT, null, true);
