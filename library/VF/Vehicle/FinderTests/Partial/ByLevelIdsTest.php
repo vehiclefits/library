@@ -46,7 +46,7 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
         $this->assertEquals($expectedValues, $actualValues, 'should return vehicle with just the "make" part');
     }
 
-    function testShouldReturnOnlyPartialVehicle()
+    function testShouldReturnOnlyPartialVehicleEvenIfThereAreFullVehicles()
     {
         // create a 'full' vehicle
         $vehicle = $this->createVehicle(array(
@@ -117,14 +117,73 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
 
     function testZeroShouldMatchPartialVehicle()
     {
-        $vehicle = $this->createVehicle(array('make' => 'Honda'));
+        $vehicle = $this->createVehicle(array(
+            'make' => 'Honda'
+        ));
         $make = $vehicle->getLevel('make');
 
-        $params = array('make' => $make->getId(), 'model' => 0, 'year' => 0);
+        $params = array(
+            'make' => $make->getId(),
+            'model' => 0,
+            'year' => 0
+        );
         $vehicles = $this->getFinder()->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
         $this->assertEquals(1, count($vehicles), 'zero should match partial vehicle');
         $this->assertEquals(0, $vehicles[0]->getValue('model'), 'zero should match partial vehicle');
         $this->assertEquals(0, $vehicles[0]->getValue('year'), 'zero should match partial vehicle');
+    }
+
+    function testNullShouldMatchPartialVehicle()
+    {
+        $vehicle = $this->createVehicle(array(
+            'make' => 'Honda'
+        ));
+        $make = $vehicle->getLevel('make');
+
+        $params = array(
+            'make' => $make->getId(),
+            'model' => null,
+            'year' => null
+        );
+        $vehicles = $this->getFinder()->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
+        $this->assertEquals(1, count($vehicles), 'zero should match partial vehicle');
+        $this->assertEquals(0, $vehicles[0]->getValue('model'), 'zero should match partial vehicle');
+        $this->assertEquals(0, $vehicles[0]->getValue('year'), 'zero should match partial vehicle');
+    }
+
+    function testEmptyStringShouldMatchPartialVehicle()
+    {
+        $vehicle = $this->createVehicle(array(
+            'make' => 'Honda'
+        ));
+        $make = $vehicle->getLevel('make');
+
+        $params = array(
+            'make' => $make->getId(),
+            'model' => "",
+            'year' => ""
+        );
+        $vehicles = $this->getFinder()->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
+        $this->assertEquals(1, count($vehicles), 'zero should match partial vehicle');
+        $this->assertNotEquals(0, $vehicles[0]->getValue('make'), 'zero should match partial vehicle');
+        $this->assertEquals(0, $vehicles[0]->getValue('model'), 'zero should match partial vehicle');
+        $this->assertEquals(0, $vehicles[0]->getValue('year'), 'zero should match partial vehicle');
+    }
+
+    function testPartialVehicleShouldRenderToString()
+    {
+        $vehicle = $this->createVehicle(array(
+            'make' => 'Honda'
+        ));
+        $make = $vehicle->getLevel('make');
+
+        $params = array(
+            'make' => $make->getId(),
+            'model' => "",
+            'year' => ""
+        );
+        $vehicles = $this->getFinder()->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
+        $this->assertEquals('Honda', $vehicles[0]->__toString(), 'partial vehicle should render to string');
     }
 
     function testZeroShouldExcludeFullVehicle()
