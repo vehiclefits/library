@@ -243,11 +243,11 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
             $sku = str_replace('*', '%', $sku);
             $result = $this->getReadAdapter()->select()
                 ->from($this->getProductTable())
-                ->where('sku LIKE ?', $sku)
+                ->where($this->getProductSkuField() . ' LIKE ?', $sku)
                 ->query();
 
             foreach ($result->fetchAll() as $matchedSku) {
-                array_push($return, $matchedSku['sku']);
+                array_push($return, $matchedSku[$this->getProductSkuField()]);
             }
         }
         return $return;
