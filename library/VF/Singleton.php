@@ -26,6 +26,7 @@ class VF_Singleton implements VF_Configurable
     /**  @var Zend_Config */
     protected $config;
     static $dbAdapter;
+    static $instance;
     protected $productIds;
     protected $_request;
 
@@ -36,15 +37,13 @@ class VF_Singleton implements VF_Configurable
         if (is_null($instance) || $new) {
             $instance = new VF_Singleton;
         }
-        if (!$instance->getRequest()) {
-            $instance->setRequest(new Zend_Controller_Request_Http());
-        }
         return $instance;
     }
 
-    function reset()
+    static function reset()
     {
-        unset($this->productIds);
+        static $instance;
+        $instance = null;
     }
 
     function getConfig()
@@ -121,25 +120,23 @@ class VF_Singleton implements VF_Configurable
     /** @return Zend_Controller_Request_Abstract */
     function getRequest()
     {
+        // get dependency injection request
         if ($this->_request instanceof Zend_Controller_Request_Abstract) {
             return $this->_request;
         }
 
-        // if we are running in a unit test do not proceed to the Magento specific code
-        if (defined('ELITE_TESTING')) {
-            return;
-        }
-
-        // prestashop specific code
+        // get Prestashop request
         if(defined('_PS_VERSION_')) {
             return new Zend_Controller_Request_Http;
         }
 
-        // magento specific code
-        if ($controller = Mage::app()->getFrontController()) {
-            return $controller->getRequest();
-        } else {
-            throw new Exception(Mage::helper('core')->__("Can't retrieve request object"));
+        // get Magento request
+        if(class_exists('Mage',false)) {
+            if ($controller = Mage::app()->getFrontController()) {
+                return $controller->getRequest();
+            } else {
+                throw new Exception(Mage::helper('core')->__("Can't retrieve request object"));
+            }
         }
     }
 

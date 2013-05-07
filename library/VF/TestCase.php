@@ -51,7 +51,10 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
+        VF_Singleton::reset();
         VF_Singleton::getInstance(true);
+        VF_Singleton::getInstance()->setRequest(new Zend_Controller_Request_Http);
+
         VF_Schema::$levels = null;
 
         $_SESSION = array();
@@ -63,7 +66,9 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         $this->resetIdentityMaps();
         $this->dropAndRecreateMockProductTable();
 
-        Mage::resetRegistry();
+        if(class_exists('Mage',false)) {
+            Mage::resetRegistry();
+        }
 
         $this->doSetUp();
     }

@@ -28,4 +28,11 @@ class VF_SingletonTests_DataRequestTest extends VF_Import_ProductFitments_CSV_Im
         $this->assertEquals('honda', VF_Singleton::getInstance()->getRequest()->getParam('make'));
     }
 
+    function testNewRequest()
+    {
+        $singleton = new VF_Singleton;
+        $request = $singleton->getRequest(); // make sure it doesn't run Magento specific code here
+        $this->assertNull($request); // we won't get here if it did.
+    }
+
 }

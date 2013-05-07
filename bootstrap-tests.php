@@ -62,8 +62,3 @@ function my_autoload($class_name) {
     require_once $file;
 }
 spl_autoload_register('my_autoload');
-
-class Mage
-{
-    static function resetRegistry() {}
-}
