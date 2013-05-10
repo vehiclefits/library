@@ -21,8 +21,12 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-require_once(dirname(__FILE__) . '/config.default.php');
-require_once(dirname(__FILE__) . '/../bootstrap-tests.php');
+if(file_exists(__DIR__).'/config.php') {
+    require_once(__DIR__ . '/config.php');
+} else {
+    require_once(__DIR__ . '/config.default.php');
+}
+require_once(__DIR__ . '/../bootstrap-tests.php');
 
 class VF_Schema_CLI
 {
