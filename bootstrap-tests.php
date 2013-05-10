@@ -45,10 +45,12 @@ define( 'ELITE_PATH', getenv('ELITE_PATH') );
 define( 'ELITE_TESTING', 1 );
 
 set_include_path(
-        dirname(__FILE__).'/library'
-        . PATH_SEPARATOR . dirname(__FILE__) . '/vendor/zendframework/zendframework1/library/'
+        dirname(__FILE__).'/library' // VF Core library
+        . PATH_SEPARATOR . 'vendor/zendframework/zendframework1/library/'
         . PATH_SEPARATOR . get_include_path()
 );
+
+require_once('vendor/autoload.php');
 
 $_SESSION = array();
 
