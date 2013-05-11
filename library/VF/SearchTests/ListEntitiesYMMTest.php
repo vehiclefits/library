@@ -21,7 +21,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class Elite_Vaf_Block_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTestCase
+class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTestCase
 {
     const MODEL2 = 'model2';
     
@@ -30,32 +30,34 @@ class Elite_Vaf_Block_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTe
 		$this->switchSchema('year,make,model');
     }
     
-    function testListYear()
+    function testShouldListYearsInUse()
     {
-        $block = $this->getBlock();
+        $search = new VF_Search();
+        $search->setRequest($this->getRequest());
         
         $vehicle = $this->createYMM();
         
         $this->insertMappingYMM( $vehicle->getLevel('year')->getId(), $vehicle->getLevel('make')->getId(), $vehicle->getLevel('model')->getId() );
-        $actual = $block->listEntities( 'year', '' );
+        $actual = $search->listEntities( 'year', '' );
         $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('year')->getId(), $actual[0]->getId(), 'if listing years in leaf first mode it returns the years in use' );
+        $this->assertEquals( $vehicle->getLevel('year')->getId(), $actual[0]->getId(), 'should list years in use' );
     }
     
-    function testListMake()
+    function testShouldListMakesInUse()
     {
-        $block = $this->getBlock();
+        $search = new VF_Search();
+        $search->setRequest($this->getRequest());
         
         $vehicle = $this->createYMM();
         $this->insertMappingYMM( $vehicle->getLevel('year')->getId(), $vehicle->getLevel('make')->getId(), $vehicle->getLevel('model')->getId() );
         
         $request = $this->getRequest( array( 'make' => $vehicle->getLevel('make')->getId(), 'model' => $vehicle->getLevel('model')->getId(), 'year' => $vehicle->getLevel('year')->getId() ) );
-        $block->setRequest($request);
+        $search->setRequest($request);
         $this->setRequest($request);
         
-        $actual = $block->listEntities( 'make' );
+        $actual = $search->listEntities( 'make' );
         $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'if listing make in leaf first mode it returns the make in use' );
+        $this->assertEquals( $vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list makes in use' );
     }
 
     function testListModel()
@@ -65,19 +67,11 @@ class Elite_Vaf_Block_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTe
         $_GET['make'] = $vehicle->getLevel('make')->getId();
         $_GET['model'] = $vehicle->getLevel('model')->getId();
         $_GET['year'] = $vehicle->getLevel('year')->getId();
-        $block = $this->getBlock();
-        $actual = $block->listEntities( 'model' );
+        $search = new VF_Search();
+        $search->setRequest($this->getRequest());
+        $actual = $search->listEntities( 'model' );
         $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'if listing models in leaf first mode it returns the model in use' );
+        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models in use' );
     }
-    
-    function getRequest( $params = array() )
-    {
-        $request = new Zend_Controller_Request_HttpTestCase();
-        foreach( $params as $key => $val )
-        {
-            $request->setParam( $key, $val );
-        }
-        return $request;
-    }
+
 }

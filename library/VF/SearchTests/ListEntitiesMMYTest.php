@@ -21,52 +21,55 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class Elite_Vaf_Block_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTestCase
+class VF_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTestCase
 {
     /**
+     * Should throw exception when asked to list blank level
     * @expectedException VF_Level_Exception_InvalidLevel
     */
-    function testListNoLevel()
+    function testShouldThrowExceptionWhenAskedToListBlankLevel()
     {
-        $block = $this->getBlock();
-        $actual = $block->listEntities('');
+        $search = new VF_Search();
+        $search->listEntities('');
     }
         
     /**
+     * Should throw exception when asked to list invalid level
     * @expectedException VF_Level_Exception_InvalidLevel
     */
-    function testListInvalidLevel()
+    function testShouldThrowExceptionWhenAskedToListInvalidLevel()
     {
-        $block = $this->getBlock();
-        $actual = $block->listEntities('foo');
+        $search = new VF_Search();
+        $search->listEntities('foo');
     }
-    
-    // makes
-    
+
     function testShouldListMakes_WhenNoVehicleIsSelected()
     {
         $vehicle = $this->createMMYWithFitment();
-        $actual = $this->getBlock()->listEntities('make');
-        $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('make')->getId(), $actual[0]->getId() );
+        $search = new VF_Search();
+        $actual = $search->listEntities('make');
+        $this->assertEquals( 1, count($actual), 'should list make when no vehicle selected' );
+        $this->assertEquals( $vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list make when no vehicle selected' );
     }
-       
-    // models
-    
+
     function testShouldBeNoModelsPreselected_WhenNoVehicleIsSelected()
     {
-        $vehicle = $this->createMMYWithFitment();
-        $actual = $this->getBlock()->listEntities('model');
-        $this->assertEquals( array(), $actual, 'should be no models pre-selected when vehicle not selected' );
+        $this->createMMYWithFitment();
+        $search = new VF_Search();
+        $search->setRequest($this->getRequest());
+        $actual = $search->listEntities('model');
+        $this->assertEquals( array(), $actual, 'should not list models before make is selected' );
     }
     
     function testShouldListModels_WhenVehicleIsSelected()
     {
         $vehicle = $this->createMMYWithFitment();
         $_GET = $vehicle->toValueArray();
-        $actual = $this->getBlock()->listEntities( 'model' );
-        $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId() );
+        $search = new VF_Search();
+        $search->setRequest($this->getRequest());
+        $actual = $search->listEntities( 'model' );
+        $this->assertEquals( 1, count($actual), 'should list models when make is selected' );
+        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when make is selected' );
     }
     
     function testShouldListModels_WhenPartialVehicleIsSelected()
@@ -74,19 +77,11 @@ class Elite_Vaf_Block_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTe
         $vehicle = $this->createMMYWithFitment();
         $_GET['make'] = $vehicle->getLevel('make')->getId();
         $_GET['model'] = $vehicle->getLevel('model')->getId();
-        $actual = $this->getBlock()->listEntities( 'model' );
-        $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId() );
+        $search = new VF_Search();
+        $search->setRequest($this->getRequest());
+        $actual = $search->listEntities( 'model' );
+        $this->assertEquals( 1, count($actual), 'should list models when just make is selected' );
+        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when just make is selected' );
     }
-    
-    function getRequest( $params = array() )
-    {
-        $request = new Zend_Controller_Request_HttpTestCase();
-        foreach( $params as $key => $val )
-        {
-            $request->setParam( $key, $val );
-        }
-        return $request;
-    } 
     
 }
