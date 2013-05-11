@@ -53,7 +53,57 @@ class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTestCase
         
         $actual = $search->listEntities( 'make' );
         $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list makes when model is selected' );
+        $this->assertEquals( $vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list makes in use when model is selected' );
+    }
+
+    function testShouldNotListMakesNotInUse()
+    {
+        $vehicle = $this->createVehicle(array('make'=>'Honda','model'=>'Civic','year'=>2000));
+        $search = new VF_Search();
+        $search->setRequest($this->getRequest());
+
+        $request = $this->getRequest($vehicle->toValueArray());
+        $search->setRequest($request);
+        $this->setRequest($request);
+
+        $actual = $search->listEntities( 'make' );
+        $this->assertEquals( 0, count($actual), 'should not list makes not in use when model is selected' );
+    }
+
+    function testShouldListYearsNotInUseIfConfigSaysTo()
+    {
+        $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
+
+        $vehicle = $this->createVehicle(array('make'=>'Honda','model'=>'Civic','year'=>2000));
+
+        $search = new VF_Search();
+        $search->setConfig($config);
+        $search->setRequest($this->getRequest());
+
+        $request = $this->getRequest($vehicle->toValueArray());
+        $search->setRequest($request);
+        $this->setRequest($request);
+
+        $actual = $search->listEntities( 'year' );
+        $this->assertEquals( 1, count($actual), 'should list years not in use when config says to' );
+    }
+
+    function testShouldListMakesNotInUseIfConfigSaysTo()
+    {
+        $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
+
+        $vehicle = $this->createVehicle(array('make'=>'Honda','model'=>'Civic','year'=>2000));
+
+        $search = new VF_Search();
+        $search->setConfig($config);
+        $search->setRequest($this->getRequest());
+
+        $request = $this->getRequest($vehicle->toValueArray());
+        $search->setRequest($request);
+        $this->setRequest($request);
+
+        $actual = $search->listEntities( 'make' );
+        $this->assertEquals( 1, count($actual), 'should list makes not in use when config says to' );
     }
 
     function testListModel()

@@ -267,10 +267,23 @@ class VF_Search implements VF_Configurable
             return array();
         }
         if (!$parentLevel || !$parent_id) {
-            return $levelObject->listInUse(array());
-        }
 
-        return $levelObject->listInUse(array($parentLevel => $parent_id));
+            if($this->shouldListAll()) {
+                return $levelObject->listAll();
+            } else {
+                return $levelObject->listInUse(array());
+            }
+        }
+        if($this->shouldListAll()) {
+            return $levelObject->listAll($parent_id);
+        } else {
+            return $levelObject->listInUse(array($parentLevel => $parent_id));
+        }
+    }
+
+    function shouldListAll()
+    {
+        return $this->getConfig()->search->showAllOptions;
     }
 
     function isNotRootAndHasNoParent($level, $parent_id)
