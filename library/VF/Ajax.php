@@ -42,13 +42,22 @@ class VF_Ajax implements VF_Configurable
             if ($alphaNumeric) {
                 $children = $levelFinder->listInUseByTitle(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
             } else {
-                $children = $levelFinder->listInUse(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
+                if($this->shouldListAll()) {
+                    $children = $levelFinder->listAll(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
+                } else {
+                    $children = $levelFinder->listInUse(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
+                }
             }
         } else {
             $children = $levelFinder->listAll($this->requestLevel(), $this->requestLevels());
         }
 
         echo $this->renderChildren($children);
+    }
+
+    function shouldListAll()
+    {
+        return $this->getConfig()->search->showAllOptions;
     }
 
     function requestLevel()

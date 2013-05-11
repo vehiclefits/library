@@ -106,6 +106,25 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $this->assertEquals('', $this->execute(), 'should not list models not in use');
     }
 
+    function testShouldListModelsNotInUseIfConfigSaysTo()
+    {
+        $vehicle = $this->createVehicle(array('make'=>'Honda','model'=>'Civic','year'=>2000));
+        $_GET['make'] = $vehicle->getValue('make');
+        $_GET['requestLevel'] = 'model';
+
+        ob_start();
+        $_GET['front'] = 1;
+
+        $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
+        $ajax = new VF_Ajax;
+        $ajax->setConfig($config);
+        $ajax->execute($this->getSchema());
+        $actual = ob_get_clean();
+
+        $expected = '<option value="' . $vehicle->getValue('model') . '">Civic</option>';
+        $this->assertEquals($expected, $actual, 'should list models not in use if config says to');
+    }
+
     function testShouldListMultipleModels_WithDefaultOption()
     {
         $vehicle1 = $this->createMMY('Honda', 'Accord', '2000');
