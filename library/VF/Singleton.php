@@ -22,11 +22,12 @@
  */
 class VF_Singleton implements VF_Configurable
 {
+    static $instance;
 
     /**  @var Zend_Config */
     protected $config;
-    static $dbAdapter;
-    static $instance;
+    /** @var  Zend_Db_Adapter_Abstract */
+    protected $dbAdapter;
     protected $productIds;
     protected $_request;
 
@@ -42,8 +43,7 @@ class VF_Singleton implements VF_Configurable
 
     static function reset()
     {
-        static $instance;
-        $instance = null;
+        self::$instance = null;
     }
 
     function getConfig()
@@ -230,60 +230,23 @@ class VF_Singleton implements VF_Configurable
     /** @return Zend_Db_Adapter_Abstract */
     function getReadAdapter()
     {
-        if (isset(self::$dbAdapter)) {
-            return self::$dbAdapter;
+        if(!isset($this->dbAdapter)) {
+            throw new Exception;
         }
+        return $this->dbAdapter;
+    }
 
-        // cron
-        if (Zend_Registry::isRegistered('db')) {
-            return Zend_Registry::get('db');
-        }
-
-        // test code only
-        if (defined('ELITE_TESTING') && is_null(self::$dbAdapter)) {
-            self::$dbAdapter = new VF_TestDbAdapter(array(
-                'dbname' => VAF_DB_NAME,
-                'username' => VAF_DB_USERNAME,
-                'password' => VAF_DB_PASSWORD
-            ));
-        }
-
-        // prestashop specific code
-        if(defined('_PS_VERSION_')  && is_null(self::$dbAdapter)) {
-            self::$dbAdapter = new Zend_Db_Adapter_Pdo_Mysql(array(
-                'dbname' => 'OneMotoShop',
-                'username' => 'root',
-                'password' => ''
-            ));
-        }
-
-        // magento specific code
-        if(class_exists('Mage',false) && is_null(self::$dbAdapter)) {
-            $resource = Mage::getSingleton('core/resource');
-            $read = $resource->getConnection('core_read');
-            $read->query('SET character_set_client = utf8;');
-            $config = $read->getConfig();
-
-            self::$dbAdapter = new VF_TestDbAdapter($config);
-        }
-
-        if (is_null(self::$dbAdapter)) {
-            self::$dbAdapter = new VF_TestDbAdapter(array(
-                'dbname' => VAF_DB_NAME,
-                'username' => VAF_DB_USERNAME,
-                'password' => VAF_DB_PASSWORD
-            ));
-        }
-
-        self::$dbAdapter->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-
-        self::$dbAdapter->getConnection()->query('SET character set utf8;');
-        self::$dbAdapter->getConnection()->query('SET character_set_client = utf8;');
-        self::$dbAdapter->getConnection()->query('SET character_set_results = utf8;');
-        self::$dbAdapter->getConnection()->query('SET character_set_connection = utf8;');
-        self::$dbAdapter->getConnection()->query('SET character_set_database = utf8;');
-        self::$dbAdapter->getConnection()->query('SET character_set_server = utf8;');
-        return self::$dbAdapter;
+    /** @param Zend_Db_Adapter_Abstract */
+    function setReadAdapter($dbAdapter)
+    {
+        $dbAdapter->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        $dbAdapter->getConnection()->query('SET character set utf8;');
+        $dbAdapter->getConnection()->query('SET character_set_client = utf8;');
+        $dbAdapter->getConnection()->query('SET character_set_results = utf8;');
+        $dbAdapter->getConnection()->query('SET character_set_connection = utf8;');
+        $dbAdapter->getConnection()->query('SET character_set_database = utf8;');
+        $dbAdapter->getConnection()->query('SET character_set_server = utf8;');
+        $this->dbAdapter = $dbAdapter;
     }
 
     function displayBrTag()

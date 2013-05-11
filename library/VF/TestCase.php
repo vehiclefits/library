@@ -54,6 +54,12 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         VF_Singleton::reset();
         VF_Singleton::getInstance(true);
         VF_Singleton::getInstance()->setRequest(new Zend_Controller_Request_Http);
+        $database = new VF_TestDbAdapter(array(
+            'dbname' => VAF_DB_NAME,
+            'username' => VAF_DB_USERNAME,
+            'password' => VAF_DB_PASSWORD
+        ));
+        VF_Singleton::getInstance()->setReadAdapter($database);
 
         VF_Schema::$levels = null;
 
