@@ -20,7 +20,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SingletonTests_DataRequestTest extends VF_Import_ProductFitments_CSV_ImportTests_TestCase
+class VF_SingletonTests_RequestTest extends VF_Import_ProductFitments_CSV_ImportTests_TestCase
 {
     function testReqeust()
     {
