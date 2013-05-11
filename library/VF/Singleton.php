@@ -362,7 +362,11 @@ class VF_Singleton implements VF_Configurable
             return '';
         }
         // magento
-        return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, $https);
+        if(class_exists('Mage',false)) {
+            return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, $https);
+        }
+        // default
+        return '';
     }
 
     function processUrl()
