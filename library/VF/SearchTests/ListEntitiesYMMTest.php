@@ -32,46 +32,39 @@ class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTestCase
     
     function testShouldListYearsInUse()
     {
+        $vehicle = $this->createMMYWithFitment();
         $search = new VF_Search();
         $search->setRequest($this->getRequest());
-        
-        $vehicle = $this->createYMM();
-        
-        $this->insertMappingYMM( $vehicle->getLevel('year')->getId(), $vehicle->getLevel('make')->getId(), $vehicle->getLevel('model')->getId() );
+
         $actual = $search->listEntities( 'year', '' );
         $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('year')->getId(), $actual[0]->getId(), 'should list years in use' );
+        $this->assertEquals( $vehicle->getLevel('year')->getId(), $actual[0]->getId(), 'should list years when year not yet selected' );
     }
     
     function testShouldListMakesInUse()
     {
+        $vehicle = $this->createMMYWithFitment();
         $search = new VF_Search();
         $search->setRequest($this->getRequest());
-        
-        $vehicle = $this->createYMM();
-        $this->insertMappingYMM( $vehicle->getLevel('year')->getId(), $vehicle->getLevel('make')->getId(), $vehicle->getLevel('model')->getId() );
-        
-        $request = $this->getRequest( array( 'make' => $vehicle->getLevel('make')->getId(), 'model' => $vehicle->getLevel('model')->getId(), 'year' => $vehicle->getLevel('year')->getId() ) );
+
+        $request = $this->getRequest($vehicle->toValueArray());
         $search->setRequest($request);
         $this->setRequest($request);
         
         $actual = $search->listEntities( 'make' );
         $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list makes in use' );
+        $this->assertEquals( $vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list makes when model is selected' );
     }
 
     function testListModel()
     {
-        $vehicle = $this->createYMM();
-        $this->insertMappingYMM( $vehicle->getLevel('year')->getId(), $vehicle->getLevel('make')->getId(), $vehicle->getLevel('model')->getId() );
-        $_GET['make'] = $vehicle->getLevel('make')->getId();
-        $_GET['model'] = $vehicle->getLevel('model')->getId();
-        $_GET['year'] = $vehicle->getLevel('year')->getId();
+        $vehicle = $this->createMMYWithFitment();
+
         $search = new VF_Search();
-        $search->setRequest($this->getRequest());
+        $search->setRequest($this->getRequest($vehicle->toValueArray()));
         $actual = $search->listEntities( 'model' );
         $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models in use' );
+        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when make is selected' );
     }
 
 }
