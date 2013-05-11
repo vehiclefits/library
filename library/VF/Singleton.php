@@ -112,7 +112,7 @@ class VF_Singleton implements VF_Configurable
         return $this->getValueForSelectedLevel($this->getLeafLevel());
     }
 
-    protected function hasAValidSessionRequest()
+    function hasAValidSessionRequest()
     {
         return isset($_SESSION[$this->getLeafLevel()]) && $_SESSION[$this->getLeafLevel()];
     }
@@ -162,7 +162,7 @@ class VF_Singleton implements VF_Configurable
         return $ids;
     }
 
-    protected function doGetProductIds()
+    function doGetProductIds()
     {
         $this->storeFitInSession();
         $productIds = $this->flexibleSearch()->doGetProductIds();
@@ -230,7 +230,9 @@ class VF_Singleton implements VF_Configurable
     /** @return Zend_Db_Adapter_Abstract */
     function getReadAdapter()
     {
-        if (isset(self::$dbAdapter)) return self::$dbAdapter;
+        if (isset(self::$dbAdapter)) {
+            return self::$dbAdapter;
+        }
 
         // cron
         if (Zend_Registry::isRegistered('db')) {
@@ -238,77 +240,49 @@ class VF_Singleton implements VF_Configurable
         }
 
         // test code only
-        if (defined('ELITE_TESTING')) {
-            if (is_null(self::$dbAdapter)) {
-
-                self::$dbAdapter = new My_Adapter(array('dbname' => VAF_DB_NAME, 'username' => VAF_DB_USERNAME, 'password' => VAF_DB_PASSWORD));
-                self::$dbAdapter->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-
-                self::$dbAdapter->getConnection()->query('SET character set utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_client = utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_results = utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_connection = utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_database = utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_server = utf8;');
-            }
-            return self::$dbAdapter;
+        if (defined('ELITE_TESTING') && is_null(self::$dbAdapter)) {
+            self::$dbAdapter = new VF_TestDbAdapter(array(
+                'dbname' => VAF_DB_NAME,
+                'username' => VAF_DB_USERNAME,
+                'password' => VAF_DB_PASSWORD
+            ));
         }
 
         // prestashop specific code
-        if(defined('_PS_VERSION_')) {
-            if (is_null(self::$dbAdapter)) {
-
-                self::$dbAdapter = new Zend_Db_Adapter_Pdo_Mysql(array(
-                    'dbname' => 'OneMotoShop',
-                    'username' => 'root',
-                    'password' => ''
-                ));
-                self::$dbAdapter->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-
-                self::$dbAdapter->getConnection()->query('SET character set utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_client = utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_results = utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_connection = utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_database = utf8;');
-                self::$dbAdapter->getConnection()->query('SET character_set_server = utf8;');
-            }
-            return self::$dbAdapter;
+        if(defined('_PS_VERSION_')  && is_null(self::$dbAdapter)) {
+            self::$dbAdapter = new Zend_Db_Adapter_Pdo_Mysql(array(
+                'dbname' => 'OneMotoShop',
+                'username' => 'root',
+                'password' => ''
+            ));
         }
 
         // magento specific code
-        if(class_exists('Mage')) {
+        if(class_exists('Mage',false) && is_null(self::$dbAdapter)) {
             $resource = Mage::getSingleton('core/resource');
             $read = $resource->getConnection('core_read');
             $read->query('SET character_set_client = utf8;');
-
-
             $config = $read->getConfig();
 
-            self::$dbAdapter = new My_Adapter($config);
-            self::$dbAdapter->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-
-            self::$dbAdapter->getConnection()->query('SET character set utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_client = utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_results = utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_connection = utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_database = utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_server = utf8;');
-
-            return self::$dbAdapter;
+            self::$dbAdapter = new VF_TestDbAdapter($config);
         }
 
         if (is_null(self::$dbAdapter)) {
-
-            self::$dbAdapter = new My_Adapter(array('dbname' => VAF_DB_NAME, 'username' => VAF_DB_USERNAME, 'password' => VAF_DB_PASSWORD));
-            self::$dbAdapter->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-
-            self::$dbAdapter->getConnection()->query('SET character set utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_client = utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_results = utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_connection = utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_database = utf8;');
-            self::$dbAdapter->getConnection()->query('SET character_set_server = utf8;');
+            self::$dbAdapter = new VF_TestDbAdapter(array(
+                'dbname' => VAF_DB_NAME,
+                'username' => VAF_DB_USERNAME,
+                'password' => VAF_DB_PASSWORD
+            ));
         }
+
+        self::$dbAdapter->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+
+        self::$dbAdapter->getConnection()->query('SET character set utf8;');
+        self::$dbAdapter->getConnection()->query('SET character_set_client = utf8;');
+        self::$dbAdapter->getConnection()->query('SET character_set_results = utf8;');
+        self::$dbAdapter->getConnection()->query('SET character_set_connection = utf8;');
+        self::$dbAdapter->getConnection()->query('SET character_set_database = utf8;');
+        self::$dbAdapter->getConnection()->query('SET character_set_server = utf8;');
         return self::$dbAdapter;
     }
 
@@ -395,61 +369,4 @@ class VF_Singleton implements VF_Configurable
         return '/';
     }
 
-}
-
-/** Test only DB Adapter for emulating transaction nesting in MYSQL */
-class My_Adapter extends Zend_Db_Adapter_Pdo_Mysql
-{
-
-    /**
-     * Keeps track of transaction nest level, to emulate mysql support, -1 meaning no transaction
-     * has begun, 0 meaning there is no nesting, 1 meaning there are 2 transactions, ad infintum
-     *
-     * @var integer
-     */
-    public $_transaction_depth = -1;
-    protected $_should_emulate_nesting = true;
-
-    function beginTransaction()
-    {
-        $this->_transaction_depth++;
-        if ($this->_transaction_depth > 0) {
-            return;
-        }
-        return parent::beginTransaction();
-    }
-
-    function commit()
-    {
-        $this->_transaction_depth--;
-        if ($this->shouldEmulateNesting()) {
-            return;
-        }
-        return parent::commit();
-    }
-
-    function rollBack()
-    {
-        $this->_transaction_depth--;
-        if ($this->shouldEmulateNesting()) {
-            return;
-        }
-        return parent::rollBack();
-    }
-
-    protected function shouldEmulateNesting()
-    {
-        return $this->_should_emulate_nesting && $this->isNested();
-    }
-
-    protected function isNested()
-    {
-        return $this->_transaction_depth >= 0;
-    }
-
-    function __call($methodName, $arguments)
-    {
-        $method = array($this->wrapped, $methodName);
-        return call_user_func_array($method, $arguments);
-    }
 }
