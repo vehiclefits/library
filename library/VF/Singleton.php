@@ -376,7 +376,10 @@ class VF_Singleton implements VF_Configurable
             return '/modules/vaf/process.php?';
         }
         // magento
-        return $this->getBaseUrl(isset($_SERVER['HTTPS'])) . '/vaf/ajax/process?';
+        if(class_exists('Mage',false)) {
+            return $this->getBaseUrl(isset($_SERVER['HTTPS'])) . '/vaf/ajax/process?';
+        }
+        return '/js/process?';
     }
 
     function homepageSearchURL()
@@ -386,7 +389,10 @@ class VF_Singleton implements VF_Configurable
             return '/?';
         }
         // magento
-        return $this->getBaseUrl(isset($_SERVER['HTTPS'])) . '/vaf/product/list?';
+        if(class_exists('Mage',false)) {
+            return $this->getBaseUrl(isset($_SERVER['HTTPS'])) . '/vaf/product/list?';
+        }
+        return '/';
     }
 
 }
