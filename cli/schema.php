@@ -120,9 +120,9 @@ if($config) {
 
 # Inject a database adapter into VF_Singleton using the configuration from previous step
 VF_Singleton::getInstance()->setReadAdapter(new VF_TestDbAdapter(array(
-    'dbname' => VAF_DB_NAME,
-    'username' => VAF_DB_USERNAME,
-    'password' => VAF_DB_PASSWORD
+    'dbname' => getenv('PHP_VAF_DB_NAME'),
+    'username' => getenv('PHP_VAF_DB_USERNAME'),
+    'password' => getenv('PHP_VAF_DB_PASSWORD')
 )));
 
 # Read some more command line flags and pass them off to our worker class
