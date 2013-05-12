@@ -24,6 +24,9 @@
         <testsuite name="vfcore">
             <directory>library/VF</directory>
         </testsuite>
+        <testsuite name="vfcli">
+            <directory>cli</directory>
+        </testsuite>
     </testsuites>
 
 </phpunit>

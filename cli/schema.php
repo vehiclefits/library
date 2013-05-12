@@ -21,13 +21,6 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-if(file_exists(__DIR__.'/config.php')) {
-    require_once(__DIR__ . '/config.php');
-} else {
-    require_once(__DIR__ . '/config.default.php');
-}
-require_once(__DIR__ . '/../bootstrap-tests.php');
-
 class VF_Schema_CLI
 {
     protected $levels;
@@ -104,12 +97,35 @@ class VF_Schema_CLI
     }
 }
 
+# Set up include paths & register autoloader
+require_once(__DIR__ . '/../bootstrap-tests.php');
+
+# Define the command line arguments this tool accepts
 $opt = new Zend_Console_Getopt(array(
     'force|f'    => 'force creation without prompting to delete old schema',
     'levels|l=s'    => 'levels to create',
-    'add|a' => 'add schema instead of replace'
+    'add|a' => 'add schema instead of replace',
+    'config|c=s' => 'PHP config file to initialize with'
 ));
 
+# Figure out where we are reading the database configuration from (default config, custom config, user defined)
+$config = $opt->getOption('config');
+if($config) {
+    require_once($config);
+} elseif(file_exists(__DIR__.'/config.php')) {
+    require_once(__DIR__ . '/config.php');
+} else {
+    require_once(__DIR__ . '/config.default.php');
+}
+
+# Inject a database adapter into VF_Singleton using the configuration from previous step
+VF_Singleton::getInstance()->setReadAdapter(new VF_TestDbAdapter(array(
+    'dbname' => VAF_DB_NAME,
+    'username' => VAF_DB_USERNAME,
+    'password' => VAF_DB_PASSWORD
+)));
+
+# Read some more command line flags and pass them off to our worker class
 $cli = new VF_Schema_CLI();
 $cli->main(array(
     'force'=>$opt->getOption('force'),

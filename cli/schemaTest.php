@@ -25,8 +25,14 @@ class VF_Schema_CLITest extends VF_TestCase
 {
     function setUp()
     {
+        VF_Singleton::getInstance()->setReadAdapter(new VF_TestDbAdapter(array(
+            'dbname' => VAF_DB_NAME,
+            'username' => VAF_DB_USERNAME,
+            'password' => VAF_DB_PASSWORD
+        )));
         $schemaGenerator = new VF_Schema_Generator();
         $schemaGenerator->dropExistingTables();
+        VF_Schema::$levels = null;
     }
 
     function tearDown()
@@ -34,9 +40,18 @@ class VF_Schema_CLITest extends VF_TestCase
 
     }
 
+    /**
+     * @expectedException Zend_Db_Statement_Exception
+     */
+    function testShouldStartWithEmptyDatabase()
+    {
+        $schema = new VF_Schema;
+        $schema->getLevels();
+    }
+
     function testShouldCreateSchemaOverCommandLine()
     {
-        $command = 'php '.__DIR__.'/Schema.php --force --levels="year,make,model"';
+        $command = 'php '.__DIR__.'/schema.php --config=config.default.php --force --levels="year,make,model"';
         exec($command);
         $schema = new VF_Schema;
         $this->assertEquals(array('year','make','model'), $schema->getLevels(), 'should create default schema of MMY');
@@ -44,7 +59,7 @@ class VF_Schema_CLITest extends VF_TestCase
 
     function testShouldCreateLevelTable()
     {
-        $command = 'php '.__DIR__.'/Schema.php --force --levels="year,make,model"';
+        $command = 'php '.__DIR__.'/schema.php --config=config.default.php --force --levels="year,make,model"';
         exec($command);
         $expectedTable = 'elite_level_1_make';
         $tables = $this->getReadAdapter()->listTables();
@@ -53,9 +68,9 @@ class VF_Schema_CLITest extends VF_TestCase
 
     function testShouldAddSecondSchema()
     {
-        $command = 'php '.__DIR__.'/Schema.php --force --levels="year,make,model"';
+        $command = 'php '.__DIR__.'/schema.php --config=config.default.php --force --levels="year,make,model"';
         exec($command);
-        $command = 'php '.__DIR__.'/Schema.php --add --levels="foo,bar"';
+        $command = 'php '.__DIR__.'/schema.php --config=config.default.php --add --levels="foo,bar"';
         exec($command);
         $schema = new VF_Schema(2);
         $this->assertEquals(array('foo','bar'), $schema->getLevels(), 'should create second schema');

@@ -231,7 +231,7 @@ class VF_Singleton implements VF_Configurable
     function getReadAdapter()
     {
         if(!isset($this->dbAdapter)) {
-            throw new Exception;
+            throw new Exception('No database adapter is set');
         }
         return $this->dbAdapter;
     }
@@ -294,42 +294,40 @@ class VF_Singleton implements VF_Configurable
 
     function getBaseUrl($https = null)
     {
-        // prestashop
-        if(defined('_PS_VERSION_')) {
-            return '';
+        if(isset($this->base_url)) {
+            return $this->base_url;
         }
-        // magento
-        if(class_exists('Mage',false)) {
-            return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK, $https);
-        }
-        // default
-        return '';
+        throw new Exception;
+    }
+    
+    function setBaseURL($url)
+    {
+        $this->base_url = $url;
     }
 
     function processUrl()
     {
-        // prestashop
-        if(defined('_PS_VERSION_')) {
-            return '/modules/vaf/process.php?';
+        if(isset($this->process_url)) {
+            return $this->process_url;
         }
-        // magento
-        if(class_exists('Mage',false)) {
-            return $this->getBaseUrl(isset($_SERVER['HTTPS'])) . '/vaf/ajax/process?';
-        }
-        return '/js/process?';
+        throw new Exception;
+    }
+
+    function setProcessURL($url)
+    {
+        $this->process_url = $url;
     }
 
     function homepageSearchURL()
     {
-        // prestashop
-        if(defined('_PS_VERSION_')) {
-            return '/?';
+        if(isset($this->homepagesearch_url)) {
+            return $this->homepagesearch_url;
         }
-        // magento
-        if(class_exists('Mage',false)) {
-            return $this->getBaseUrl(isset($_SERVER['HTTPS'])) . '/vaf/product/list?';
-        }
-        return '/';
+        throw new Exception;
     }
 
+    function setHomepagesearchURL($url)
+    {
+        $this->homepagesearch_url = $url;
+    }
 }
