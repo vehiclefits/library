@@ -12,7 +12,14 @@
             "email": "kyle.d.cannon@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "VF": "library/"
+        }
+    },
+    "include-path": [
+        "library/"
+    ],
     "require": {
         "joshribakoff/php-csv-utils":"1.*",
 	    "zendframework/zendframework1":"*"
