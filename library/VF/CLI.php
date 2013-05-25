@@ -21,12 +21,15 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_CLI_ImportVehicles extends VF_CLI
+
+class VF_CLI
 {
     protected $opt;
 
     function __construct()
     {
+        $this->bootstrap();
+
         # Define the command line arguments this tool accepts
         $this->opt = new Zend_Console_Getopt(array(
             'file|f=s'    => 'file to import',
@@ -35,19 +38,45 @@ class VF_CLI_ImportVehicles extends VF_CLI
             'levels|l=s'    => 'levels to create',
             'add|a' => 'add schema instead of replace',
         ));
-        parent::__construct();
+
+        $this->requireConfig();
+        $this->injectDb();
     }
 
-    function main()
+    /* Set up include paths & register autoloader */
+    function bootstrap()
     {
-        $file = $this->opt->getOption('file');
-
-        $writer = new Zend_Log_Writer_Stream('vehicles-list-import.csv.log');
-        $log = new Zend_Log($writer);
-
-        $importer = new VF_Import_VehiclesList_CSV_Import($file);
-        $importer->setLog($log);
-
-        $importer->import();
+        require_once(__DIR__ . '/../../bootstrap-tests.php');
     }
+
+    /* Figure out where we are reading the database configuration from */
+    function requireConfig()
+    {
+        $config = $this->opt->getOption('config');
+        if($config) {
+            require_once($config);
+        } elseif(file_exists(__DIR__.'/../../cli/config.php')) {
+            require_once(__DIR__ . '/../../cli/config.php');
+        } else {
+            require_once(__DIR__ . '/../../cli/config.default.php');
+        }
+    }
+
+    /* Inject a database adapter into VF_Singleton using the configuration from previous step */
+    function injectDb()
+    {
+        VF_Singleton::getInstance()->setReadAdapter(new VF_TestDbAdapter(array(
+            'dbname' => getenv('PHP_VAF_DB_NAME'),
+            'username' => getenv('PHP_VAF_DB_USERNAME'),
+            'password' => getenv('PHP_VAF_DB_PASSWORD')
+        )));
+    }
+
+
+/*    function usage()
+    {
+        echo "Usage vf <command> [<args>]\n\n";
+        echo "The most commonly used vf commands are:\n";
+        echo "  importvehicles - Import a list of vehicles\n";
+    }*/
 }

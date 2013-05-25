@@ -21,7 +21,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_CLI_Schema
+class VF_CLI_Schema extends  VF_CLI
 {
     protected $levels;
 
@@ -41,6 +41,7 @@ class VF_CLI_Schema
         ));
 
         $this->generator = new VF_Schema_Generator();
+        parent::__construct();
     }
 
     function main()

@@ -33,7 +33,7 @@ class VFTest extends VF_TestCase
         $data = "make,model,year\n";
         $data .= "Honda,Civic,2000";
         file_put_contents('test.csv',$data);
-        $command = __DIR__.'/vf importvehicles --config=config.default.php --file=test.csv';
+        $command = __DIR__.'/vf importvehicles --config=cli/config.default.php --file=test.csv';
         passthru($command);
         $this->assertTrue($this->vehicleExists(array('make'=>'Honda','model'=>'Civic','year'=>2000)), 'should import');
     }
