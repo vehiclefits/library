@@ -44,7 +44,7 @@ abstract class VF_Import_Abstract
     function __construct($file)
     {
         $this->file = $file;
-        $this->reader = new Csv_Reader($this->file);
+        $this->reader = new Csv_Reader($this->file, new Csv_Dialect);
     }
 
     function getFieldPosition($fieldName)
