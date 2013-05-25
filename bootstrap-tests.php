@@ -52,14 +52,3 @@ set_include_path(
 require_once('vendor/autoload.php');
 
 $_SESSION = array();
-
-function my_autoload($class_name) {
-    $file = str_replace( '_', '/', $class_name . '.php' );
-
-    if( 'Mage.php' == $file )
-    {
-        throw new Exception();
-    }
-    require_once $file;
-}
-spl_autoload_register('my_autoload');
