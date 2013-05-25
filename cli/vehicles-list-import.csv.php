@@ -45,7 +45,7 @@ $opt = new Zend_Console_Getopt(array(
     'config|c=s' => 'PHP config file to initialize with'
 ));
 
-# Figure out where we are reading the database configuration from (default config, custom config, user defined)
+# Figure out where we are reading the database configuration from (default config, or user's config)
 $config = $opt->getOption('config');
 if($config) {
     require_once($config);
