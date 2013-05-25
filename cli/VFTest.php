@@ -28,6 +28,12 @@ class VFTest extends VF_TestCase
         $this->switchSchema('make,model,year');
     }
 
+    function testShouldShowUsage()
+    {
+        exec(__DIR__.'/vf', $output);
+        $this->assertEquals(1,preg_match('#Usage vf#',$output[0]), 'should show usage if called with no command');
+    }
+
     function testShouldImport()
     {
         $data = "make,model,year\n";

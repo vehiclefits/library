@@ -73,10 +73,10 @@ class VF_CLI
     }
 
 
-/*    function usage()
+    function usage()
     {
         echo "Usage vf <command> [<args>]\n\n";
         echo "The most commonly used vf commands are:\n";
         echo "  importvehicles - Import a list of vehicles\n";
-    }*/
+    }
 }
