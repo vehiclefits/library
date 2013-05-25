@@ -34,7 +34,10 @@ class VF_CLI
         # Define the command line arguments this tool accepts
         $this->opt = new Zend_Console_Getopt(array(
             'file|f=s'    => 'file to import',
-            'config|c=s' => 'PHP config file to initialize with'
+            'config|c=s' => 'PHP config file to initialize with',
+            'force'    => 'force creation without prompting to delete old schema',
+            'levels|l=s'    => 'levels to create',
+            'add|a' => 'add schema instead of replace',
         ));
 
         $this->requireConfig();
@@ -83,6 +86,12 @@ class VF_CLI
         $importer->import();
     }
 
+    function schema()
+    {
+        $command = new VF_CLI_Schema;
+        $command->main();
+    }
+
     function usage()
     {
         echo "Usage vf <command> [<args>]\n\n";
@@ -97,6 +106,9 @@ switch($argv[1])
 {
     case 'importvehicles':
         $cli->importVehicles();
+        break;
+    case 'schema':
+        $cli->schema();
         break;
     default:
         $cli->usage();

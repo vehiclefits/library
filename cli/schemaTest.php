@@ -51,7 +51,7 @@ class VF_Schema_CLITest extends VF_TestCase
 
     function testShouldCreateSchemaOverCommandLine()
     {
-        $command = 'php '.__DIR__.'/schema.php --config=config.default.php --force --levels="year,make,model"';
+        $command = __DIR__.'/vf schema --config=config.default.php --force --levels="year,make,model"';
         exec($command);
         $schema = new VF_Schema;
         $this->assertEquals(array('year','make','model'), $schema->getLevels(), 'should create default schema of MMY');
@@ -59,7 +59,7 @@ class VF_Schema_CLITest extends VF_TestCase
 
     function testShouldCreateLevelTable()
     {
-        $command = 'php '.__DIR__.'/schema.php --config=config.default.php --force --levels="year,make,model"';
+        $command = __DIR__.'/vf schema --config=config.default.php --force --levels="year,make,model"';
         exec($command);
         $expectedTable = 'elite_level_1_make';
         $tables = $this->getReadAdapter()->listTables();
@@ -68,9 +68,9 @@ class VF_Schema_CLITest extends VF_TestCase
 
     function testShouldAddSecondSchema()
     {
-        $command = 'php '.__DIR__.'/schema.php --config=config.default.php --force --levels="year,make,model"';
+        $command = __DIR__.'/vf schema --config=config.default.php --force --levels="year,make,model"';
         exec($command);
-        $command = 'php '.__DIR__.'/schema.php --config=config.default.php --add --levels="foo,bar"';
+        $command = __DIR__.'/vf schema --config=config.default.php --add --levels="foo,bar"';
         exec($command);
         $schema = new VF_Schema(2);
         $this->assertEquals(array('foo','bar'), $schema->getLevels(), 'should create second schema');

@@ -21,20 +21,38 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Schema_CLI
+class VF_CLI_Schema
 {
     protected $levels;
-    
+
     protected $generator;
-    
+    protected $opt;
+
     const DONE = "\nDone";
-    
+
     function __construct()
     {
+        # Define the command line arguments this tool accepts
+        $this->opt = new Zend_Console_Getopt(array(
+            'force|f'    => 'force creation without prompting to delete old schema',
+            'levels|l=s'    => 'levels to create',
+            'add|a' => 'add schema instead of replace',
+            'config|c=s' => 'PHP config file to initialize with'
+        ));
+
         $this->generator = new VF_Schema_Generator();
     }
-    
-    function main($options)
+
+    function main()
+    {
+        $this->doMain(array(
+            'force'=>$this->opt->getOption('force'),
+            'levels'=>$this->opt->getOption('levels'),
+            'add'=>$this->opt->getOption('add')
+        ));
+    }
+
+    function doMain($options)
     {
         if(!$options['levels']) {
             $this->askUserLevels();
@@ -55,11 +73,11 @@ class VF_Schema_CLI
             $this->createTheNewTables();
         }
     }
-    
+
     protected function isYes( $value )
     {
         return 'y' == strtolower($value);
-    }    
+    }
 
     protected function askUserLevels()
     {
@@ -69,13 +87,13 @@ class VF_Schema_CLI
             $this->levels = 'make,model,year';
         }
     }
-    
+
     protected function askUser( $prompt )
     {
         $this->notifyUser( $prompt . ':' );
         return trim(fread(STDIN, 80),"\n\r "); // Read up to 80 characters or a newline
     }
-    
+
     protected function confirmTablesToDrop()
     {
         $tables = $this->generator->getEliteTables();
@@ -83,52 +101,16 @@ class VF_Schema_CLI
         $response = trim(fread(STDIN, 80),"\n\r "); // Read up to 80 characters or a newline
         if( trim(ucfirst($response)) != 'Y' ) exit();
     }
-    
+
     protected function createTheNewTables()
     {
         $this->notifyUser( "Applying Standard Schema" );
         $sql = $this->generator->execute( explode(',', $this->levels), true );
         $this->notifyUser( self::DONE );
     }
-    
+
     protected function notifyUser( $msg )
     {
         echo $msg . "\n";
     }
 }
-
-# Set up include paths & register autoloader
-require_once(__DIR__ . '/../bootstrap-tests.php');
-
-# Define the command line arguments this tool accepts
-$opt = new Zend_Console_Getopt(array(
-    'force|f'    => 'force creation without prompting to delete old schema',
-    'levels|l=s'    => 'levels to create',
-    'add|a' => 'add schema instead of replace',
-    'config|c=s' => 'PHP config file to initialize with'
-));
-
-# Figure out where we are reading the database configuration from (default config, custom config, user defined)
-$config = $opt->getOption('config');
-if($config) {
-    require_once($config);
-} elseif(file_exists(__DIR__.'/config.php')) {
-    require_once(__DIR__ . '/config.php');
-} else {
-    require_once(__DIR__ . '/config.default.php');
-}
-
-# Inject a database adapter into VF_Singleton using the configuration from previous step
-VF_Singleton::getInstance()->setReadAdapter(new VF_TestDbAdapter(array(
-    'dbname' => getenv('PHP_VAF_DB_NAME'),
-    'username' => getenv('PHP_VAF_DB_USERNAME'),
-    'password' => getenv('PHP_VAF_DB_PASSWORD')
-)));
-
-# Read some more command line flags and pass them off to our worker class
-$cli = new VF_Schema_CLI();
-$cli->main(array(
-    'force'=>$opt->getOption('force'),
-    'levels'=>$opt->getOption('levels'),
-    'add'=>$opt->getOption('add')
-));
