@@ -21,7 +21,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_CLI_vehiclesListCSVImportTest extends VF_TestCase
+class VFTest extends VF_TestCase
 {
     function doSetUp()
     {
@@ -33,7 +33,7 @@ class VF_CLI_vehiclesListCSVImportTest extends VF_TestCase
         $data = "make,model,year\n";
         $data .= "Honda,Civic,2000";
         file_put_contents('test.csv',$data);
-        $command = 'php '.__DIR__.'/vehicles-list-import.csv.php --config=config.default.php --file=test.csv';
+        $command = __DIR__.'/vf --config=config.default.php --file=test.csv';
         passthru($command);
         $this->assertTrue($this->vehicleExists(array('make'=>'Honda','model'=>'Civic','year'=>2000)), 'should import');
     }
