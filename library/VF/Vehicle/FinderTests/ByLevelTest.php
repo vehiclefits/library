@@ -28,15 +28,7 @@ class VF_Vehicle_FinderTests_ByLevelTest extends VF_Vehicle_FinderTests_TestCase
 
     protected function doSetUp()
     {
-        $this->schemaGenerator()->dropExistingTables();
         $this->switchSchema('make,model,year');
-    }
-
-    function testFindAll()
-    {
-        $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
-        $vehicles = $this->getFinder()->findAll();
-        $this->assertSame(self::MAKE, $vehicles[0]->getLevel('make')->getTitle());
     }
 
     function testFindByMake()
