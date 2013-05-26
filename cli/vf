@@ -9,6 +9,14 @@ switch($command)
         $cli = new VF_CLI_ExportVehicles();
         $cli->main();
         break;
+    case 'exportfitments':
+        $cli = new VF_CLI_ExportFitments();
+        $cli->main();
+        break;
+    case 'importfitments':
+        $cli = new VF_CLI_ImportFitments();
+        $cli->main();
+        break;
     case 'importvehicles':
         $cli = new VF_CLI_ImportVehicles();
         $cli->main();

@@ -25,13 +25,14 @@
 class VF_CLI
 {
     protected $opt;
+    protected $options = array();
 
     function __construct()
     {
         $this->bootstrap();
 
         # Define the command line arguments this tool accepts
-        $this->opt = new Zend_Console_Getopt(array(
+        $this->opt = new Zend_Console_Getopt($this->options + array(
             'file|f=s'    => 'file to import',
             'config|c=s' => 'PHP config file to initialize with',
             'force'    => 'force creation without prompting to delete old schema',
@@ -77,6 +78,10 @@ class VF_CLI
     {
         echo "Usage vf <command> [<args>]\n\n";
         echo "The most commonly used vf commands are:\n";
+        echo "  schema - (re)Set the schema levels\n";
         echo "  importvehicles - Import a list of vehicles\n";
+        echo "  exportvehicles - Export a list of vehicles\n";
+        echo "  importfitments - Import product fitments\n";
+        echo "  exportfitments - Export product fitments\n";
     }
 }

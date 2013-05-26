@@ -23,9 +23,24 @@
  */
 class VFTest extends VF_TestCase
 {
-    function doSetUp()
+    function setUp()
     {
-        $this->switchSchema('make,model,year');
+        VF_Singleton::reset();
+        VF_Singleton::getInstance(true);
+        VF_Singleton::getInstance()->setRequest(new Zend_Controller_Request_Http);
+        $database = new VF_TestDbAdapter(array(
+            'dbname' => VAF_DB_NAME,
+            'username' => VAF_DB_USERNAME,
+            'password' => VAF_DB_PASSWORD
+        ));
+        VF_Singleton::getInstance()->setReadAdapter($database);
+
+        VF_Schema::$levels = null;
+    }
+
+    function tearDown()
+    {
+
     }
 
     function testShouldShowUsage()
@@ -58,5 +73,23 @@ class VFTest extends VF_TestCase
         exec($command, $output);
         $this->assertEquals('make,model,year',$output[0],'should export field headers');
         $this->assertEquals('Honda,Civic,2000',$output[1],'should export vehicle row');
+    }
+
+    function testShouldExportFitments()
+    {
+        $this->insertProduct('sku123');
+
+        $data = "sku,make,model,year\n";
+        $data .= "sku123,Honda,Civic,2000";
+        file_put_contents('test.csv',$data);
+
+        $command = __DIR__.'/vf importfitments --config=cli/config.default.php --product-table=test_catalog_product_entity test.csv';
+        passthru($command);
+
+        $command = __DIR__.'/vf exportfitments --config=cli/config.default.php --product-table=test_catalog_product_entity';
+        exec($command, $output);
+
+        $this->assertEquals('sku,universal,make,model,year,notes', $output[0], 'should export field header');
+        $this->assertEquals('sku123,0,Honda,Civic,2000,""', $output[1], 'should export values');
     }
 }
