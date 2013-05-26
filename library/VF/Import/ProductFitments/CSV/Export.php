@@ -24,10 +24,12 @@
 class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Export
 {
 
+    protected $product_table;
+
     /** @var VF_Schema */
     protected $schema;
 
-    protected function cols()
+    function cols()
     {
         $return = $this->col('sku');
         $return .= $this->col('universal');
@@ -36,7 +38,7 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
         return $return;
     }
 
-    protected function rows($stream)
+    function rows($stream)
     {
         $rowResult = $this->rowResult();
         $i = 0;
@@ -50,7 +52,7 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
         }
     }
 
-    protected function rowResult()
+    function rowResult()
     {
         $this->getReadAdapter()->getConnection()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
         $select = $this->getReadAdapter()->select()
@@ -64,8 +66,16 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
         return $this->query($select);
     }
 
-    protected function getProductTable()
+    function setProductTable($tableName)
     {
+        $this->product_table = $tableName;
+    }
+
+    function getProductTable()
+    {
+        if(isset($this->product_table)) {
+            return $this->product_table;
+        }
         $resource = new Mage_Catalog_Model_Resource_Eav_Mysql4_Product;
         $table = $resource->getTable('catalog/product');
         return $table;

@@ -33,7 +33,7 @@ class VF_Import_VehiclesList_CSV_Export extends VF_Import_VehiclesList_BaseExpor
         $this->rows($stream);
     }
 
-    protected function cols()
+    function cols()
     {
         $return = '';
         foreach ($this->schema->getLevels() as $level) {
@@ -43,12 +43,12 @@ class VF_Import_VehiclesList_CSV_Export extends VF_Import_VehiclesList_BaseExpor
         return $return;
     }
 
-    protected function col($name, $insertComma = true)
+    function col($name, $insertComma = true)
     {
         return $name . ($insertComma ? "," : "");
     }
 
-    protected function rows($stream)
+    function rows($stream)
     {
         $rowResult = $this->rowResult();
         while ($row = $rowResult->fetch(Zend_Db::FETCH_OBJ)) {
@@ -57,7 +57,7 @@ class VF_Import_VehiclesList_CSV_Export extends VF_Import_VehiclesList_BaseExpor
         }
     }
 
-    protected function definitionCells($row)
+    function definitionCells($row)
     {
         $return = '';
         foreach ($this->schema->getLevels() as $level) {

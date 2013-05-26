@@ -48,7 +48,8 @@ sku123,acura,test,2002
     {
         $stream = fopen("php://temp", 'w');
 
-        $exporter = new VF_Import_ProductFitments_CSV_ExportTests_TestSub();
+        $exporter = new VF_Import_ProductFitments_CSV_Export();
+        $exporter->setProductTable('test_catalog_product_entity');
         $exporter->export($stream);
         rewind($stream);
 

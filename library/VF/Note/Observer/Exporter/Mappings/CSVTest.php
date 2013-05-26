@@ -50,7 +50,7 @@ sku, honda, civic, 2000, "code1,code2"';
 
 class VF_Import_ProductFitmentsExport_TestStub extends VF_Import_ProductFitments_CSV_Export
 {
-    protected function getProductTable()
+    function getProductTable()
     {
         return 'test_catalog_product_entity';
     }

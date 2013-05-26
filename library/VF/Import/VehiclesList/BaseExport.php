@@ -27,7 +27,7 @@ class VF_Import_VehiclesList_BaseExport
         return new VF_Schema();
     }
 
-    protected function rowResult()
+    function rowResult()
     {
         $select = $this->getReadAdapter()->select()
             ->from(array('d' => $this->schema()->definitionTable()));
@@ -42,13 +42,13 @@ class VF_Import_VehiclesList_BaseExport
     }
 
     /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
+    function query($sql)
     {
         return $this->getReadAdapter()->query($sql);
     }
 
     /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
+    function getReadAdapter()
     {
         return VF_Singleton::getInstance()->getReadAdapter();
     }
