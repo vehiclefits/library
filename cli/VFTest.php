@@ -35,13 +35,14 @@ class VFTest extends VF_TestCase
         ));
         VF_Singleton::getInstance()->setReadAdapter($database);
 
-        VF_Schema::$levels = null;
+        $schemaGenerator = new VF_Schema_Generator();
+        $schemaGenerator->dropExistingTables();
+        $schemaGenerator->execute(array('make','model','year'));
+
+        VF_Schema::reset();
     }
 
-    function tearDown()
-    {
-
-    }
+    function tearDown() {}
 
     function testShouldShowUsage()
     {
