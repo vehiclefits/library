@@ -27,7 +27,7 @@ class VF_Vehicle_FinderTests_FindAllTest extends VF_Vehicle_FinderTests_TestCase
         $this->switchSchema('make,model,year');
     }
 
-    function testFindAll()
+    function testFindOneVehicle()
     {
         $expectedVehicle = $this->createVehicle(array(
             'make'=>'Honda',
@@ -36,5 +36,23 @@ class VF_Vehicle_FinderTests_FindAllTest extends VF_Vehicle_FinderTests_TestCase
         ));
         $vehicles = $this->getFinder()->findAll();
         $this->assertEquals($expectedVehicle->__toString(), $vehicles[0]->__toString(), 'should list the one vehicle');
+    }
+
+    function testShouldFindMultipleVehicles()
+    {
+        $this->createVehicles(5);
+        $vehicles = $this->getFinder()->findAll();
+        $this->assertEquals(5, count($vehicles), 'should find 5 vehicles');
+    }
+
+    function createVehicles($count)
+    {
+        for($i=1; $i<=$count; $i++) {
+            $this->createVehicle(array(
+                'make'=>'Honda',
+                'model'=>'Civic',
+                'year'=>uniqid()
+            ));
+        }
     }
 }
