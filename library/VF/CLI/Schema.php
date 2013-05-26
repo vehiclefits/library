@@ -27,19 +27,16 @@ class VF_CLI_Schema extends  VF_CLI
 
     protected $generator;
     protected $opt;
+    protected $options = array(
+        'force|f'    => 'force creation without prompting to delete old schema',
+        'levels|l=s'    => 'levels to create',
+        'add|a' => 'add schema instead of replace',
+    );
 
     const DONE = "\nDone";
 
     function __construct()
     {
-        # Define the command line arguments this tool accepts
-        $this->opt = new Zend_Console_Getopt(array(
-            'force|f'    => 'force creation without prompting to delete old schema',
-            'levels|l=s'    => 'levels to create',
-            'add|a' => 'add schema instead of replace',
-            'config|c=s' => 'PHP config file to initialize with'
-        ));
-
         $this->generator = new VF_Schema_Generator();
         parent::__construct();
     }

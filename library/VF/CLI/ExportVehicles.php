@@ -23,17 +23,6 @@
  */
 class VF_CLI_ExportVehicles extends VF_CLI
 {
-    protected $opt;
-
-    function __construct()
-    {
-        # Define the command line arguments this tool accepts
-        $this->opt = new Zend_Console_Getopt(array(
-            'config|c=s' => 'PHP config file to initialize with',
-        ));
-        parent::__construct();
-    }
-
     function main()
     {
         $stream = fopen("php://output", 'w');

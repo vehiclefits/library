@@ -26,7 +26,6 @@ class VF_CLI_ExportFitments extends VF_CLI
     protected $opt;
 
     protected $options = array(
-        'config|c=s' => 'PHP config file to initialize with',
         'product-table=s'=>'Product table to use for converting IDs to SKUs'
     );
 

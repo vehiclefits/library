@@ -33,11 +33,7 @@ class VF_CLI
 
         # Define the command line arguments this tool accepts
         $this->opt = new Zend_Console_Getopt($this->options + array(
-            'file|f=s'    => 'file to import',
             'config|c=s' => 'PHP config file to initialize with',
-            'force'    => 'force creation without prompting to delete old schema',
-            'levels|l=s'    => 'levels to create',
-            'add|a' => 'add schema instead of replace',
         ));
 
         $this->requireConfig();
