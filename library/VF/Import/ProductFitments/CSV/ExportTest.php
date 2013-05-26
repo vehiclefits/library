@@ -46,7 +46,14 @@ sku123,acura,test,2002
 
     function testExport()
     {
-        $data = $this->exportProductFitments();
+        $stream = fopen("php://temp", 'w');
+
+        $exporter = new VF_Import_ProductFitments_CSV_ExportTests_TestSub();
+        $exporter->export($stream);
+        rewind($stream);
+
+        $data = stream_get_contents($stream);
+
         $output = explode("\n", $data);
 
         $this->assertEquals('sku,universal,make,model,year,notes', $output[0]);
