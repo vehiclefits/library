@@ -297,7 +297,7 @@ class VF_Singleton implements VF_Configurable
         if(isset($this->base_url)) {
             return $this->base_url;
         }
-        throw new Exception;
+        throw new Exception('base URL has not been injected into the singleton');
     }
     
     function setBaseURL($url)
@@ -310,7 +310,7 @@ class VF_Singleton implements VF_Configurable
         if(isset($this->process_url)) {
             return $this->process_url;
         }
-        throw new Exception;
+        throw new Exception('process URL has not been injected into the singleton');
     }
 
     function setProcessURL($url)
