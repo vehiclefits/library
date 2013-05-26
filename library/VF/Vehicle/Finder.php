@@ -35,7 +35,7 @@ class VF_Vehicle_Finder implements VF_Configurable
         $this->schema = $schema;
     }
 
-    function findAll()
+    function findAll($limit=null, $offset=null)
     {
         $columnsToSelect = array('id') + $this->getColumns();
 
@@ -45,6 +45,10 @@ class VF_Vehicle_Finder implements VF_Configurable
 
         foreach ($this->schema->getLevels() as $level) {
             $select->where('elite_' . $this->schema->id() . '_definition.' . $level . '_id != 0');
+        }
+
+        if($limit) {
+            $select->limit($limit, $offset);
         }
 
         $r = $this->query($select);
