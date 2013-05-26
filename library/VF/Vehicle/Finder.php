@@ -315,6 +315,30 @@ class VF_Vehicle_Finder implements VF_Configurable
         return $return;
     }
 
+    /** Count # of vehicles that match the query, [same interface as findByLevelIds() without the limit & offset] */
+    function countByLevelIds($levelIds, $mode=false)
+    {
+        $levelIds = $this->cleanupLevelIds($levelIds, $mode);
+        $levelIds = $this->specifyPartial($levelIds, $mode);
+        $levelsToSelect = $this->levelsToSelect($levelIds, $mode);
+
+        $select = $this->select()
+            ->from('elite_' . $this->schema->id() . '_definition', new Zend_Db_Expr('count(*)'))
+            ->joinAndSelectLevels(VF_Select::DEFINITIONS, $levelsToSelect, $this->schema)
+            ->whereLevelIdsEqual($levelIds);
+
+        if (self::INCLUDE_PARTIALS != $mode) {
+            foreach ($this->schema->getLevels() as $level) {
+                if (self::INCLUDE_PARTIALS != $mode || (isset($levelIds[$level]) && $levelIds[$level])) {
+                    $level = str_replace(' ', '_', $level);
+                    $select->where('elite_' . $this->schema->id() . '_definition.' . $level . '_id != 0');
+                }
+            }
+        }
+
+        return $this->query($select)->fetchColumn();
+    }
+
     /**
      * @param array ('make'=>'honda','year'=>'2000') conjunction of critera
      * @param $mode - set to true to match "partial" vehicles

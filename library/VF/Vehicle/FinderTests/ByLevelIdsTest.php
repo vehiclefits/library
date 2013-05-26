@@ -86,6 +86,45 @@ class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestC
         $this->assertEquals(2, count($vehicles), 'should find multiple matches');
     }
 
+    function testShouldCountMatches()
+    {
+        $vehicle1 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $vehicle2 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $count = $this->getFinder()->countByLevelIds(array(
+            'make' => $vehicle1->getValue('make'),
+            'model' => $vehicle2->getValue('model')
+        ));
+        $this->assertEquals(2, $count, 'should count matches');
+    }
+
+    function testShouldNotCountNonMatches()
+    {
+        $vehicle1 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $vehicle2 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $count = $this->getFinder()->countByLevelIds(array(
+            'make' => $vehicle1->getValue('make'),
+            'model' => $vehicle2->getValue('model'),
+            'year'=>$vehicle2->getValue('year')
+        ));
+        $this->assertEquals(1, $count, 'should not count non-matches');
+    }
+
     function testShouldLimit()
     {
         $vehicle1 = $this->createVehicle(array(
