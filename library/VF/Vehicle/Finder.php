@@ -62,6 +62,13 @@ class VF_Vehicle_Finder implements VF_Configurable
         return $return;
     }
 
+    function countAll()
+    {
+        $select = $this->getReadAdapter()->select()
+            ->from('elite_' . $this->schema->id() . '_definition', new Zend_Db_Expr('count(*)'));
+        return $select->query()->fetchColumn();
+    }
+
     function findById($id)
     {
         $identityMap = VF_Vehicle_Finder_IdentityMap::getInstance();

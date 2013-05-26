@@ -84,6 +84,13 @@ class VF_Vehicle_FinderTests_FindAllTest extends VF_Vehicle_FinderTests_TestCase
         $this->assertEquals($vehicle1->__toString(), $vehicles[0]->__toString(), 'should list the 1st vehicle');
     }
 
+    function testShouldCountAll()
+    {
+        $this->createVehicles(5);
+        $count = $this->getFinder()->countAll();
+        $this->assertEquals(5,$count,'should count all vehicles');
+    }
+
     function createVehicles($count)
     {
         for($i=1; $i<=$count; $i++) {
