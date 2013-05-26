@@ -83,8 +83,8 @@ class VF_Mapping implements VF_Configurable
         }
         $query = sprintf(
             '
-INSERT INTO
-    `' . $schema->mappingsTable() . '`
+            INSERT INTO
+            `' . $schema->mappingsTable() . '`
             (
                 ' . $columns . '
                 `entity_id`
@@ -97,6 +97,7 @@ INSERT INTO
             ',
             (int)$this->product_id
         );
+
         $r = $this->query($query);
         return $this->getReadAdapter()->lastInsertId();
     }
