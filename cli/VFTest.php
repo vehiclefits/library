@@ -56,7 +56,7 @@ class VFTest extends VF_TestCase
         $data .= "Honda,Civic,2000";
         file_put_contents('test.csv',$data);
 
-        $command = __DIR__.'/vf importvehicles --config=cli/config.default.php test.csv';
+        $command = __DIR__.'/vf importvehicles test.csv';
         passthru($command);
 
         $exists = $this->vehicleExists(array(
@@ -70,7 +70,7 @@ class VFTest extends VF_TestCase
     function testShouldExportVehicles()
     {
         $this->createVehicle(array('make'=>'Honda','model'=>'Civic','year'=>2000));
-        $command = __DIR__.'/vf exportvehicles --config=cli/config.default.php';
+        $command = __DIR__.'/vf exportvehicles ';
         exec($command, $output);
         $this->assertEquals('make,model,year',$output[0],'should export field headers');
         $this->assertEquals('Honda,Civic,2000',$output[1],'should export vehicle row');
@@ -84,10 +84,10 @@ class VFTest extends VF_TestCase
         $data .= "sku123,Honda,Civic,2000";
         file_put_contents('test.csv',$data);
 
-        $command = __DIR__.'/vf importfitments --config=cli/config.default.php --product-table=test_catalog_product_entity test.csv';
+        $command = __DIR__.'/vf importfitments  --product-table=test_catalog_product_entity test.csv';
         passthru($command);
 
-        $command = __DIR__.'/vf exportfitments --config=cli/config.default.php --product-table=test_catalog_product_entity';
+        $command = __DIR__.'/vf exportfitments  --product-table=test_catalog_product_entity';
         exec($command, $output);
 
         $this->assertEquals('sku,universal,make,model,year,notes', $output[0], 'should export field header');

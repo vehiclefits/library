@@ -52,10 +52,10 @@ class VF_CLI
         $config = $this->opt->getOption('config');
         if($config) {
             require_once($config);
-        } elseif(file_exists(__DIR__.'/../../cli/config.php')) {
-            require_once(__DIR__ . '/../../cli/config.php');
+        } elseif(file_exists('config.php')) {
+            require_once('config.php');
         } else {
-            require_once(__DIR__ . '/../../cli/config.default.php');
+            require_once('config.default.php');
         }
     }
 
