@@ -50,4 +50,13 @@ class VFTest extends VF_TestCase
         ));
         $this->assertTrue($exists, 'should import vehicles');
     }
+
+    function testShouldExportVehicles()
+    {
+        $this->createVehicle(array('make'=>'Honda','model'=>'Civic','year'=>2000));
+        $command = __DIR__.'/vf exportvehicles --config=cli/config.default.php';
+        exec($command, $output);
+        $this->assertEquals('make,model,year',$output[0],'should export field headers');
+        $this->assertEquals('Honda,Civic,2000',$output[1],'should export vehicle row');
+    }
 }

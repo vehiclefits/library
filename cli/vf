@@ -5,6 +5,10 @@ require_once(__DIR__.'/../vendor/autoload.php');
 $command = isset($argv[1]) ? $argv[1] : null;
 switch($command)
 {
+    case 'exportvehicles':
+        $cli = new VF_CLI_ExportVehicles();
+        $cli->main();
+        break;
     case 'importvehicles':
         $cli = new VF_CLI_ImportVehicles();
         $cli->main();
