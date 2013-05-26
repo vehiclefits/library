@@ -22,10 +22,6 @@
  */
 class VF_Vehicle_FinderTests_FindAllTest extends VF_Vehicle_FinderTests_TestCase
 {
-    const MAKE = 'Honda';
-    const MODEL = 'Civic';
-    const YEAR = '2002';
-
     protected function doSetUp()
     {
         $this->switchSchema('make,model,year');
@@ -33,8 +29,12 @@ class VF_Vehicle_FinderTests_FindAllTest extends VF_Vehicle_FinderTests_TestCase
 
     function testFindAll()
     {
-        $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
+        $expectedVehicle = $this->createVehicle(array(
+            'make'=>'Honda',
+            'model'=>'Civic',
+            'year'=>'2000'
+        ));
         $vehicles = $this->getFinder()->findAll();
-        $this->assertSame(self::MAKE, $vehicles[0]->getLevel('make')->getTitle());
+        $this->assertEquals($expectedVehicle->__toString(), $vehicles[0]->__toString(), 'should list the one vehicle');
     }
 }
