@@ -163,4 +163,80 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
         $vehicles = $this->getFinder()->findByLevels(array('make' => '.\+*?[^]$(){}=!<>|:-'), true);
         $this->assertEquals(1, count($vehicles), 'should escape regex');
     }
+
+    function testShouldFindMultipleMatches()
+    {
+        $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $vehicles = $this->getFinder()->findByLevels(array(
+            'make' => 'Honda',
+            'model' => 'Civic'
+        ),1);
+        $this->assertEquals(2, count($vehicles), 'should find multiple matches');
+    }
+
+    function testShouldLimit()
+    {
+        $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $vehicles = $this->getFinder()->findByLevels(array(
+            'make' => 'Honda',
+            'model' => 'Civic'
+        ),false,1);
+        $this->assertEquals(1, count($vehicles), 'should find by levels');
+    }
+
+    function testShouldOffsetLimitAndFind1stVehicle()
+    {
+        $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $vehicles = $this->getFinder()->findByLevels(array(
+            'make' => 'Honda',
+            'model' => 'Civic'
+        ),false,1,0);
+        $this->assertEquals('Honda Civic 2000', $vehicles[0]->__toString(), 'should offset limit & find 1st vehicle');
+    }
+
+    function testShouldOffsetLimitAndFind2ndVehicle()
+    {
+        $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $vehicles = $this->getFinder()->findByLevels(array(
+            'make' => 'Honda',
+            'model' => 'Civic'
+        ),false,1,1);
+        $this->assertEquals('Honda Civic 2001', $vehicles[0]->__toString(), 'should offset limit & find 2nd vehicle');
+    }
 }

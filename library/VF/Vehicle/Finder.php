@@ -167,7 +167,7 @@ class VF_Vehicle_Finder implements VF_Configurable
      * @param array conjunction of critera Ex: ('make'=>'honda','year'=>'2000')
      * @return array of Vehicle that meet the critera
      */
-    function findByLevels($levels, $includePartials = false)
+    function findByLevels($levels, $includePartials = false, $limit=null, $offset=null)
     {
         $levels = $this->checkForInvalidLevels($levels);
 
@@ -190,6 +190,10 @@ class VF_Vehicle_Finder implements VF_Configurable
             foreach ($this->schema->getLevels() as $level) {
                 $select->where('elite_' . $this->schema->id() . '_definition.' . $this->inflect($level) . '_id != 0');
             }
+        }
+
+        if($limit) {
+            $select->limit($limit,$offset);
         }
 
         $result = $this->query($select)->fetchAll(Zend_Db::FETCH_OBJ);
