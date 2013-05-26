@@ -179,7 +179,7 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
         $vehicles = $this->getFinder()->findByLevels(array(
             'make' => 'Honda',
             'model' => 'Civic'
-        ),1);
+        ));
         $this->assertEquals(2, count($vehicles), 'should find multiple matches');
     }
 
