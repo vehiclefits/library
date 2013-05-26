@@ -53,9 +53,9 @@ class VF_CLI
         if($config) {
             require_once($config);
         } elseif(file_exists('config.php')) {
-            require_once('config.php');
+            require_once('vfconfig.php');
         } else {
-            require_once('config.default.php');
+            require_once('vfconfig.default.php');
         }
     }
 
