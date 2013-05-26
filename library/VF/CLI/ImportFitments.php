@@ -31,12 +31,11 @@ class VF_CLI_ImportFitments extends VF_CLI
 
     function main()
     {
-        global $argv;
-        if(!isset($argv[count($argv)-1])) {
+        if(!$this->lastArgument()) {
             echo 'vfmagento importvehicles <filename>'."\n";
             exit;
         }
-        $file = $argv[count($argv)-1];
+        $file = $this->lastArgument();
 
         $importer = new VF_Import_ProductFitments_CSV_Import($file);
         $importer->setProductTable($this->opt->getOption('product-table'));

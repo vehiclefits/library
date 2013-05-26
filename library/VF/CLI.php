@@ -69,6 +69,13 @@ class VF_CLI
         )));
     }
 
+    function lastArgument()
+    {
+        global $argv;
+        if(isset($argv[count($argv)-1])) {
+            return $argv[count($argv)-1];
+        }
+    }
 
     function usage()
     {
