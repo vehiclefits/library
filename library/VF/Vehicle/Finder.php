@@ -27,7 +27,7 @@ class VF_Vehicle_Finder implements VF_Configurable
     /** @var Zend_Config */
     protected $config;
 
-    const INCLUDE_PARTIALS = 1;
+    const INCLUDE_PARTIALS = true;
     static $IDENTITY_MAP_FINDBYLEVEL = array();
 
     function __construct(VF_Schema $schema)
@@ -35,6 +35,15 @@ class VF_Vehicle_Finder implements VF_Configurable
         $this->schema = $schema;
     }
 
+    /**
+     * Find all vehicles in the system. Returns an array of VF_Vehicle objects. Optionally pass $limit & $offset
+     * to return only a subset of the results, useful for pagination.
+     *
+     * @param null|integer $limit the limit on the number of vehicles to return
+     * @param null|integer $offset the offset on the limit, useful for pagination
+     * @return array of VF_Vehicle objects
+     * @throws Exception Generates an exception if database communication fails
+     */
     function findAll($limit=null, $offset=null)
     {
         $columnsToSelect = array('id') + $this->getColumns();
@@ -62,6 +71,7 @@ class VF_Vehicle_Finder implements VF_Configurable
         return $return;
     }
 
+    /** @return integer the total number of vehicles in the system */
     function countAll()
     {
         $select = $this->getReadAdapter()->select()
@@ -164,7 +174,17 @@ class VF_Vehicle_Finder implements VF_Configurable
     }
 
     /**
-     * @param array conjunction of critera Ex: ('make'=>'honda','year'=>'2000')
+     * Find vehicles which match some criteria, for example searching for
+     * array(
+     *     'make'=>'honda',
+     *     'year'=>'2000'
+     * )
+     * would return "Honda Civic 2000", "Honda Fit 2000", but not "Honda Civic 2001"
+     *
+     * @param $levels array conjunction of critera Ex: ('make'=>'honda','year'=>'2000')
+     * @param boolean $includePartials set to true to include 'partial' vehicles in the result set
+     * @param $limit - limit of # of vehicles to return
+     * @param $offset - offset for limit clause
      * @return array of Vehicle that meet the critera
      */
     function findByLevels($levels, $includePartials = false, $limit=null, $offset=null)
@@ -230,8 +250,12 @@ class VF_Vehicle_Finder implements VF_Configurable
     }
 
     /**
-     * @param $levelIds - array conjunction of critera Ex: array('make'=>1'year'=>1)
-     * @param $mode - what mode to operate in (allow matching of 'partial' vehicles?)
+     * Just like findByLevels() but filters on the integer IDs of the levels, instead of their string titles
+     *
+     * @param $levelIds array conjunction of critera Ex: ('make'=>1,'year'=>1)
+     * @param boolean $mode set to true to include 'partial' vehicles in the result set
+     * @param $limit - limit of # of vehicles to return
+     * @param $offset - offset for limit clause
      * @return array of Vehicle that meet the critera
      */
     function findByLevelIds($levelIds, $mode = false, $limit=null, $offset=null)
@@ -293,6 +317,7 @@ class VF_Vehicle_Finder implements VF_Configurable
 
     /**
      * @param array ('make'=>'honda','year'=>'2000') conjunction of critera
+     * @param $mode - set to true to match "partial" vehicles
      * @return VF_Vehicle or false
      */
     function findOneByLevels($levels, $mode = false)
