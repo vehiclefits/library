@@ -40,7 +40,12 @@ class VF_CLI_ImportVehicles extends VF_CLI
 
     function main()
     {
-        $file = $this->opt->getOption('file');
+        global $argv;
+        if(!isset($argv[count($argv)-1])) {
+            echo 'vfmagento importvehicles <filename>'."\n";
+            exit;
+        }
+        $file = $argv[count($argv)-1];
 
         $writer = new Zend_Log_Writer_Stream('vehicles-list-import.csv.log');
         $log = new Zend_Log($writer);

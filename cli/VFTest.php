@@ -34,13 +34,20 @@ class VFTest extends VF_TestCase
         $this->assertEquals(1,preg_match('#Usage vf#',$output[0]), 'should show usage if called with no command');
     }
 
-    function testShouldImport()
+    function testShouldImportVehicles()
     {
         $data = "make,model,year\n";
         $data .= "Honda,Civic,2000";
         file_put_contents('test.csv',$data);
-        $command = __DIR__.'/vf importvehicles --config=cli/config.default.php --file=test.csv';
+
+        $command = __DIR__.'/vf importvehicles --config=cli/config.default.php test.csv';
         passthru($command);
-        $this->assertTrue($this->vehicleExists(array('make'=>'Honda','model'=>'Civic','year'=>2000)), 'should import');
+
+        $exists = $this->vehicleExists(array(
+            'make'=>'Honda',
+            'model'=>'Civic',
+            'year'=>2000
+        ));
+        $this->assertTrue($exists, 'should import vehicles');
     }
 }
