@@ -42,7 +42,7 @@ class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestC
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $vehicles = $this->getFinder()->findByLevelIds(array('make_id' => $vehicle->getValue('make')));
-        $this->assertEquals(1, count($vehicles), 'should find by make w/ alternative paramater style (make_id)');
+        $this->assertEquals(1, count($vehicles), 'should find by make w/ alternative parameter style (make_id)');
     }
 
     function testShouldFindOneByLevelIds()
@@ -65,6 +65,82 @@ class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestC
         $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
         $found = $this->getFinder($schema)->findOneByLevelIds(array('foo' => $vehicle->getValue('foo')));
         $this->assertEquals($vehicle->getValue('foo'), $found->getValue('foo'), 'should find in second schema');
+    }
+
+    function testShouldFindMultipleVehicles()
+    {
+        $vehicle1 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $vehicle2 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $vehicles = $this->getFinder()->findByLevelIds(array(
+            'make' => $vehicle1->getValue('make'),
+            'model' => $vehicle2->getValue('model')
+        ));
+        $this->assertEquals(2, count($vehicles), 'should find multiple matches');
+    }
+
+    function testShouldLimit()
+    {
+        $vehicle1 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $vehicle2 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $vehicles = $this->getFinder()->findByLevelIds(array(
+            'make' => $vehicle1->getValue('make'),
+            'model' => $vehicle2->getValue('model')
+        ),false,1);
+        $this->assertEquals(1, count($vehicles), 'should limit # of vehicles found');
+    }
+
+    function testShouldOffsetLimitAndFind1stVehicle()
+    {
+        $vehicle1 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $vehicle2 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $vehicles = $this->getFinder()->findByLevelIds(array(
+            'make' => $vehicle1->getValue('make'),
+            'model' => $vehicle2->getValue('model')
+        ),false,1,0);
+        $this->assertEquals('Honda Civic 2000', $vehicles[0]->__toString(), 'should offset limit & find 1st vehicle');
+    }
+
+    function testShouldOffsetLimitAndFind2ndVehicle()
+    {
+        $vehicle1 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
+        ));
+        $vehicle2 = $this->createVehicle(array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
+        ));
+        $vehicles = $this->getFinder()->findByLevelIds(array(
+            'make' => $vehicle1->getValue('make'),
+            'model' => $vehicle2->getValue('model')
+        ),false,1,1);
+        $this->assertEquals('Honda Civic 2001', $vehicles[0]->__toString(), 'should offset limit & find 2nd vehicle');
     }
 
 }

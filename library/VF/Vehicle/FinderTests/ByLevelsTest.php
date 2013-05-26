@@ -199,7 +199,7 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
             'make' => 'Honda',
             'model' => 'Civic'
         ),false,1);
-        $this->assertEquals(1, count($vehicles), 'should find by levels');
+        $this->assertEquals(1, count($vehicles), 'should limit # of vehicles found');
     }
 
     function testShouldOffsetLimitAndFind1stVehicle()

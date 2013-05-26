@@ -234,7 +234,7 @@ class VF_Vehicle_Finder implements VF_Configurable
      * @param $mode - what mode to operate in (allow matching of 'partial' vehicles?)
      * @return array of Vehicle that meet the critera
      */
-    function findByLevelIds($levelIds, $mode = false)
+    function findByLevelIds($levelIds, $mode = false, $limit=null, $offset=null)
     {
         $levelIds = $this->cleanupLevelIds($levelIds, $mode);
         $levelIds = $this->specifyPartial($levelIds, $mode);
@@ -252,6 +252,10 @@ class VF_Vehicle_Finder implements VF_Configurable
                     $select->where('elite_' . $this->schema->id() . '_definition.' . $level . '_id != 0');
                 }
             }
+        }
+
+        if($limit) {
+            $select->limit($limit,$offset);
         }
 
         $result = $this->query($select)->fetchAll(Zend_Db::FETCH_OBJ);
