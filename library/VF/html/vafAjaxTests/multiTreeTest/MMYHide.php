@@ -22,7 +22,11 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 session_start();
-require_once '../config.default.php';
+if(file_exists('../config.php')) {
+    require_once '../config.php';
+} else {
+    require_once '../config.default.php';
+}
 require_once(getenv('PHP_MAGE_PATH').'/app/code/local/Elite/Vaf/bootstrap-tests.php');
 
 $schemaGenerator = new VF_Schema_Generator();
