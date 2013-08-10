@@ -23,6 +23,7 @@
 class VF_Import_VehiclesList_Xml_Import extends VF_Import
 {
     protected $file;
+    protected $row_number;
 
     function __construct($file)
     {
@@ -53,7 +54,6 @@ class VF_Import_VehiclesList_Xml_Import extends VF_Import
         $xmlDocument = simplexml_load_file($this->file);
 
         foreach ($xmlDocument->definition as $vehicleInput) {
-
             $this->row_number++;
             $values = $this->getLevelsArray($vehicleInput);
             if (!$values) {
