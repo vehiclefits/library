@@ -384,7 +384,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             }
 
             $vehicleFinder = new VF_Vehicle_Finder($this->schema());
-            $vehicle = $vehicleFinder->findOneByLevelIds($this->getRequestValues());
+            $vehicle = $vehicleFinder->findOneByLevelIds($this->vehicleRequestParams());
         } catch (VF_Exception_DefinitionNotFound $e) {
             return false;
         }

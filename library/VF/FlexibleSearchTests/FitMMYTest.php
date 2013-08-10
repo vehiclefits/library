@@ -38,6 +38,15 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->vehicleSelection()->getLeafValue());
     }
 
+    function testShouldGetFlexibleDefinition()
+    {
+        $vehicle1 = $this->createVehicle(array('make'=>'Honda1', 'model'=>'Civic', 'year'=>'2000'));
+        $vehicle2 = $this->createVehicle(array('make'=>'Honda2', 'model'=>'Civic', 'year'=>'2000'));
+        $_SESSION = $vehicle2->toValueArray();
+        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest());
+        $this->assertEquals($vehicle2->toValueArray(), $flexibleSearch->getFlexibleDefinition()->toValueArray());
+    }
+
     function testGetFitId2()
     {
         $vehicle = $this->createMMY();
