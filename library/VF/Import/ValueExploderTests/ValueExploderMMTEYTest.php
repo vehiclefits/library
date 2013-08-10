@@ -51,7 +51,6 @@ honda, civic, ex, a, 2000
 honda, civic, ex, b, 2000
 honda, civic, lx, a, 2000
 honda, civic, lx, b, 2000
-
 honda, civic, lx, b, 2001
 not honda, civic, lx, b, 2000';
         $csvFile = TEMP_PATH . '/definitions.csv';
