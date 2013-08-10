@@ -30,8 +30,5 @@
         "phpunit/phpunit-selenium": "*",
         "phpunit/phpunit-story": "*",
         "phpunit/dbunit": "*"
-    },
-    "bin": [
-        "bin/vf"
-    ]
+    }
 }
