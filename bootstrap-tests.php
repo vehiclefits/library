@@ -17,12 +17,12 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
+ *
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-error_reporting( E_ALL | E_STRICT | E_NOTICE );
-ini_set( 'display_errors', 1 );
+error_reporting(E_ALL | E_STRICT | E_NOTICE);
+ini_set('display_errors', 1);
 
 /**
  * The paths are controlled by app/code/local/Elite/phpunit.xml.dist
@@ -30,25 +30,27 @@ ini_set( 'display_errors', 1 );
  * of phpunit.xml.dist to phpunit.xml
  */
 
-define( 'MAGE_PATH', realpath(getenv('PHP_MAGE_PATH')));
-define( 'TEMP_PATH', getenv('PHP_TEMP_PATH') );
+define('MAGE_PATH', realpath(getenv('PHP_MAGE_PATH')));
+define('TEMP_PATH', getenv('PHP_TEMP_PATH'));
 
 # database details for test server
-define( 'VAF_DB_USERNAME', getenv('PHP_VAF_DB_USERNAME') );
-define( 'VAF_DB_PASSWORD', getenv('PHP_VAF_DB_PASSWORD') );
-define( 'VAF_DB_NAME', getenv('PHP_VAF_DB_NAME') );
-define( 'ELITE_CONFIG_DEFAULT', dirname(__FILE__).'/config.default.ini' );
-define( 'ELITE_CONFIG', dirname(__FILE__).'/config.ini' );
-define( 'ELITE_PATH', getenv('ELITE_PATH') );
+define('VAF_DB_USERNAME', getenv('PHP_VAF_DB_USERNAME'));
+define('VAF_DB_PASSWORD', getenv('PHP_VAF_DB_PASSWORD'));
+define('VAF_DB_NAME', getenv('PHP_VAF_DB_NAME'));
+define('ELITE_CONFIG_DEFAULT', dirname(__FILE__) . '/config.default.ini');
+define('ELITE_CONFIG', dirname(__FILE__) . '/config.ini');
+define('ELITE_PATH', getenv('ELITE_PATH'));
 
 # used to make "test only code" run (Google "test code in production")
-define( 'ELITE_TESTING', 1 );
+define('ELITE_TESTING', 1);
 
 set_include_path(
-        dirname(__FILE__).'/library' // VF Core library
-        . PATH_SEPARATOR . get_include_path()
+    dirname(__FILE__) . '/library' // VF Core library
+    . PATH_SEPARATOR . get_include_path()
 );
 
-require_once('vendor/autoload.php');
+if (!defined('COMPOSER_INIT')) {
+    require_once('vendor/autoload.php');
+}
 
 $_SESSION = array();
