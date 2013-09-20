@@ -17,7 +17,7 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
+ *
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -36,7 +36,7 @@ class VF_CLI
             'config|c=s' => 'PHP config file to initialize with',
         ));
 
-        $this->requireConfig();
+        # $this->requireConfig();
         $this->injectDb();
     }
 
@@ -49,31 +49,35 @@ class VF_CLI
     /* Figure out where we are reading the database configuration from */
     function requireConfig()
     {
-        $config = $this->opt->getOption('config');
-        if($config) {
-            require_once($config);
-        } elseif(file_exists('config.php')) {
-            require_once('vfconfig.php');
-        } else {
-            require_once('vfconfig.default.php');
+        if (!defined('DB_ENV_INJECTED')) {
+            $config = $this->opt->getOption('config');
+            if ($config) {
+                require_once($config);
+            } elseif (file_exists('config.php')) {
+                require_once('vfconfig.php');
+            } else {
+                require_once('vfconfig.default.php');
+            }
         }
     }
 
     /* Inject a database adapter into VF_Singleton using the configuration from previous step */
     function injectDb()
     {
-        VF_Singleton::getInstance()->setReadAdapter(new VF_TestDbAdapter(array(
-            'dbname' => getenv('PHP_VAF_DB_NAME'),
-            'username' => getenv('PHP_VAF_DB_USERNAME'),
-            'password' => getenv('PHP_VAF_DB_PASSWORD')
-        )));
+        VF_Singleton::getInstance()->setReadAdapter(
+            new VF_TestDbAdapter(array(
+                                      'dbname'   => getenv('PHP_VAF_DB_NAME'),
+                                      'username' => getenv('PHP_VAF_DB_USERNAME'),
+                                      'password' => getenv('PHP_VAF_DB_PASSWORD')
+                                 ))
+        );
     }
 
     function lastArgument()
     {
         global $argv;
-        if(isset($argv[count($argv)-1])) {
-            return $argv[count($argv)-1];
+        if (isset($argv[count($argv) - 1])) {
+            return $argv[count($argv) - 1];
         }
     }
 
