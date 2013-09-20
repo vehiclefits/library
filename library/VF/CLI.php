@@ -36,7 +36,7 @@ class VF_CLI
             'config|c=s' => 'PHP config file to initialize with',
         ));
 
-        # $this->requireConfig();
+        $this->requireConfig();
         $this->injectDb();
     }
 
