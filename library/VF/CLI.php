@@ -53,7 +53,7 @@ class VF_CLI
             $config = $this->opt->getOption('config');
             if ($config) {
                 require_once($config);
-            } elseif (file_exists('config.php')) {
+            } elseif (file_exists('vfconfig.php')) {
                 require_once('vfconfig.php');
             } else {
                 require_once('vfconfig.default.php');
