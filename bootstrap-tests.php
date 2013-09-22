@@ -49,8 +49,4 @@ set_include_path(
     . PATH_SEPARATOR . get_include_path()
 );
 
-if (!defined('COMPOSER_INIT')) {
-    require_once('vendor/autoload.php');
-}
-
 $_SESSION = array();
