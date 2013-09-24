@@ -5,3 +5,5 @@ vendor/
 /cli/config.php
 /config.ini
 vfconfig.php
+test.csv
+vehicles-list-import.csv.log
