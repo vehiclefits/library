@@ -21,7 +21,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchTests_Search_ListEntitiesMMYAlnumTest extends VF_SearchTestCase
+class VF_SearchTests_Search_ListEntitiesMMYAlnumTest extends VF_TestCase
 {
     function testShouldListMakes_WhenNoVehicleIsSelected()
     {
