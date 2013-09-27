@@ -74,19 +74,44 @@ class VF_Singleton implements VF_Configurable
         $search = $this->flexibleSearch();
         $mapping_id = $search->storeFitInSession();
 
-        if (file_exists(ELITE_PATH . '/Vaftire')) {
+        if ($this->shouldEnableVaftireModule()) {
             $tireSearch = new Elite_Vaftire_Model_FlexibleSearch($search);
             $tireSearch->storeTireSizeInSession();
         }
-        if (file_exists(ELITE_PATH . '/Vafwheel')) {
+        if ($this->shouldEnableVafWheelModule()) {
             $wheelSearch = new Elite_Vafwheel_Model_FlexibleSearch($search);
             $wheelSearch->storeSizeInSession();
         }
-        if (file_exists(ELITE_PATH . '/Vafwheeladapter')) {
+        if ($this->shouldEnableVafwheeladapterModule()) {
             $wheeladapterSearch = new Elite_Vafwheeladapter_Model_FlexibleSearch($search);
             $wheeladapterSearch->storeAdapterSizeInSession();
         }
         return $mapping_id;
+    }
+
+    function shouldEnableVafWheelModule()
+    {
+        if (!$this->getConfig()->modulestatus->enableVafwheel || !file_exists(ELITE_PATH . '/Vafwheel')) {
+            return false;
+        }
+        return true;
+    }
+
+    function shouldEnableVaftireModule()
+    {
+        if (!$this->getConfig()->modulestatus->enableVaftire || !file_exists(ELITE_PATH . '/Vaftire')) {
+            return false;
+        }
+        return true;
+    }
+
+
+    function shouldEnableVafwheeladapterModule()
+    {
+        if (!$this->getConfig()->modulestatus->enableVafwheeladapter || !file_exists(ELITE_PATH . '/Vafwheeladapter')) {
+            return false;
+        }
+        return true;
     }
 
     function clearSelection()
@@ -218,6 +243,7 @@ class VF_Singleton implements VF_Configurable
         $this->ensureSectionExists($config, 'directory');
         $this->ensureSectionExists($config, 'importer');
         $this->ensureSectionExists($config, 'tire');
+        $this->ensureSectionExists($config, 'modulestatus');
     }
 
     function ensureSectionExists($config, $section)
@@ -277,15 +303,13 @@ class VF_Singleton implements VF_Configurable
         $search = new VF_FlexibleSearch($this->schema(), $this->getRequest());
         $search->setConfig($this->getConfig());
 
-        if (file_exists(ELITE_PATH . '/Vafwheel')) {
+        if ($this->shouldEnableVafWheelModule()) {
             $search = new Elite_Vafwheel_Model_FlexibleSearch($search);
         }
-
-        if (file_exists(ELITE_PATH . '/Vaftire')) {
+        if ($this->shouldEnableVaftireModule()) {
             $search = new Elite_Vaftire_Model_FlexibleSearch($search);
         }
-
-        if (file_exists(ELITE_PATH . '/Vafwheeladapter')) {
+        if ($this->shouldEnableVafwheeladapterModule()) {
             $search = new Elite_Vafwheeladapter_Model_FlexibleSearch($search);
         }
 
