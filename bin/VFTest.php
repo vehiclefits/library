@@ -25,6 +25,7 @@ class VFTest extends VF_TestCase
 {
     function setUp()
     {
+        VF_Singleton::reset();
         VF_Singleton::getInstance(true);
         VF_Singleton::getInstance()->setRequest(new Zend_Controller_Request_Http);
         $database = new VF_TestDbAdapter(array(
