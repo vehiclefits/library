@@ -82,18 +82,15 @@ class VF_Schema_Generator
         $return .= $this->createSchemaTable();
         $return .= $this->createVersionTable();
 
-        if (file_exists(ELITE_PATH . '/Vafwheel')) {
-            $generator = new Elite_Vafwheel_Model_Schema_Generator();
-            $return .= $generator->generator($levels);
-        }
-        if (file_exists(ELITE_PATH . '/Vafwheeladapter')) {
-            $generator = new Elite_Vafwheeladapter_Model_Schema_Generator();
-            $return .= $generator->generator($levels);
-        }
-        if (file_exists(ELITE_PATH . '/Vaftire')) {
-            $generator = new Elite_Vaftire_Model_Schema_Generator();
-            $return .= $generator->generator($levels);
-        }
+        $generator = new VF_Wheel_Schema_Generator();
+        $return .= $generator->generator($levels);
+
+        $generator = new VF_Wheeladapter_Schema_Generator();
+        $return .= $generator->generator($levels);
+
+        $generator = new VF_Tire_Schema_Generator();
+        $return .= $generator->generator($levels);
+
         if (file_exists(ELITE_PATH . '/Vafpaint')) {
             $generator = new Elite_Vafpaint_Model_Schema_Generator();
             $return .= $generator->generator($levels);
