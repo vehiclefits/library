@@ -473,7 +473,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function newTireProduct($id = null, $tireSize = null, $tireType = null)
     {
-        $tireProduct = new Elite_Vaftire_Model_Catalog_TireProduct($this->newProduct($id));
+        $tireProduct = new Elite_Vaftire_Model_Catalog_TireProduct($this->newVFProduct($id));
         if (!is_null($tireSize)) {
             $tireProduct->setTireSize($tireSize);
         }
