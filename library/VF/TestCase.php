@@ -461,13 +461,13 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function newWheelProduct($id = null)
     {
-        $product = new Elite_Vafwheel_Model_Catalog_Product($this->newProduct($id));
+        $product = new Elite_Vafwheel_Model_Catalog_Product($this->newVFProduct($id));
         return $product;
     }
 
     function newWheelAdapterProduct($id = null)
     {
-        $product = new Elite_Vafwheeladapter_Model_Catalog_Product($this->newProduct($id));
+        $product = new Elite_Vafwheeladapter_Model_Catalog_Product($this->newVFProduct($id));
         return $product;
     }
 
