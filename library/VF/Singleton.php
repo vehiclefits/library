@@ -75,15 +75,15 @@ class VF_Singleton implements VF_Configurable
         $mapping_id = $search->storeFitInSession();
 
         if ($this->shouldEnableVaftireModule()) {
-            $tireSearch = new Elite_Vaftire_Model_FlexibleSearch($search);
+            $tireSearch = new VF_Tire_FlexibleSearch($search);
             $tireSearch->storeTireSizeInSession();
         }
         if ($this->shouldEnableVafWheelModule()) {
-            $wheelSearch = new Elite_Vafwheel_Model_FlexibleSearch($search);
+            $wheelSearch = new VF_Wheel_FlexibleSearch($search);
             $wheelSearch->storeSizeInSession();
         }
         if ($this->shouldEnableVafwheeladapterModule()) {
-            $wheeladapterSearch = new Elite_Vafwheeladapter_Model_FlexibleSearch($search);
+            $wheeladapterSearch = new VF_Wheeladapter_FlexibleSearch($search);
             $wheeladapterSearch->storeAdapterSizeInSession();
         }
         return $mapping_id;
@@ -91,7 +91,7 @@ class VF_Singleton implements VF_Configurable
 
     function shouldEnableVafWheelModule()
     {
-        if (!$this->getConfig()->modulestatus->enableVafwheel || !file_exists(ELITE_PATH . '/Vafwheel')) {
+        if (!$this->getConfig()->modulestatus->enableVafwheel) {
             return false;
         }
         return true;
@@ -99,7 +99,7 @@ class VF_Singleton implements VF_Configurable
 
     function shouldEnableVaftireModule()
     {
-        if (!$this->getConfig()->modulestatus->enableVaftire || !file_exists(ELITE_PATH . '/Vaftire')) {
+        if (!$this->getConfig()->modulestatus->enableVaftire) {
             return false;
         }
         return true;
@@ -108,7 +108,7 @@ class VF_Singleton implements VF_Configurable
 
     function shouldEnableVafwheeladapterModule()
     {
-        if (!$this->getConfig()->modulestatus->enableVafwheeladapter || !file_exists(ELITE_PATH . '/Vafwheeladapter')) {
+        if (!$this->getConfig()->modulestatus->enableVafwheeladapter) {
             return false;
         }
         return true;
@@ -304,13 +304,13 @@ class VF_Singleton implements VF_Configurable
         $search->setConfig($this->getConfig());
 
         if ($this->shouldEnableVafWheelModule()) {
-            $search = new Elite_Vafwheel_Model_FlexibleSearch($search);
+            $search = new VF_Wheel_FlexibleSearch($search);
         }
         if ($this->shouldEnableVaftireModule()) {
-            $search = new Elite_Vaftire_Model_FlexibleSearch($search);
+            $search = new VF_Tire_FlexibleSearch($search);
         }
         if ($this->shouldEnableVafwheeladapterModule()) {
-            $search = new Elite_Vafwheeladapter_Model_FlexibleSearch($search);
+            $search = new VF_Wheeladapter_FlexibleSearch($search);
         }
 
         return $search;

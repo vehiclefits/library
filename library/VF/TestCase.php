@@ -158,7 +158,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     function createTireMMY($make, $model, $year)
     {
         $vehicle = $this->createMMY($make, $model, $year);
-        return new Elite_Vaftire_Model_Vehicle($vehicle);
+        return new VF_Tire_Vehicle($vehicle);
     }
 
     protected function createYMM($yearTitle = 'test year', $makeTitle = 'test make', $modelTitle = 'test model')
@@ -461,19 +461,19 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function newWheelProduct($id = null)
     {
-        $product = new Elite_Vafwheel_Model_Catalog_Product($this->newVFProduct($id));
+        $product = new VF_Wheel_Catalog_Product($this->newVFProduct($id));
         return $product;
     }
 
     function newWheelAdapterProduct($id = null)
     {
-        $product = new Elite_Vafwheeladapter_Model_Catalog_Product($this->newVFProduct($id));
+        $product = new VF_Wheeladapter_Catalog_Product($this->newVFProduct($id));
         return $product;
     }
 
     function newTireProduct($id = null, $tireSize = null, $tireType = null)
     {
-        $tireProduct = new Elite_Vaftire_Model_Catalog_TireProduct($this->newVFProduct($id));
+        $tireProduct = new VF_Tire_Catalog_TireProduct($this->newVFProduct($id));
         if (!is_null($tireSize)) {
             $tireProduct->setTireSize($tireSize);
         }
@@ -483,23 +483,23 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return $tireProduct;
     }
 
-    /** @return Elite_Vaftire_Model_FlexibleSearch */
+    /** @return VF_Tire_FlexibleSearch */
     function flexibleTireSearch($requestParams = array())
     {
         $this->setRequestParams($requestParams);
 
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $this->getRequest($requestParams));
-        $tireFlexibleSearch = new Elite_Vaftire_Model_FlexibleSearch($flexibleSearch);
+        $tireFlexibleSearch = new VF_Tire_FlexibleSearch($flexibleSearch);
         return $tireFlexibleSearch;
     }
 
-    /** @return Elite_Vafwheeladapter_Model_FlexibleSearch */
+    /** @return VF_Wheeladapter_FlexibleSearch */
     function flexibleWheeladapterSearch($requestParams = array())
     {
         $this->setRequestParams($requestParams);
 
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $this->getRequest($requestParams));
-        $tireFlexibleSearch = new Elite_Vafwheeladapter_Model_FlexibleSearch($flexibleSearch);
+        $tireFlexibleSearch = new VF_Wheeladapter_FlexibleSearch($flexibleSearch);
         return $tireFlexibleSearch;
     }
 
@@ -513,7 +513,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         }
 
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $request);
-        $flexibleSearch = new Elite_Vafwheel_Model_FlexibleSearch($flexibleSearch);
+        $flexibleSearch = new VF_Wheel_FlexibleSearch($flexibleSearch);
         return $flexibleSearch;
     }
 
@@ -600,17 +600,17 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function boltPattern($boltPatternString, $offset = null)
     {
-        return Elite_Vafwheel_Model_BoltPattern::create($boltPatternString, $offset);
+        return VF_Wheel_BoltPattern::create($boltPatternString, $offset);
     }
 
     function wheelAdapterFinder()
     {
-        return new Elite_Vafwheeladapter_Model_Finder;
+        return new VF_Wheeladapter_Finder;
     }
 
     function tireFinder()
     {
-        return new Elite_Vaftire_Model_Finder;
+        return new VF_Tire_Finder;
     }
 
     function noteFinder()
