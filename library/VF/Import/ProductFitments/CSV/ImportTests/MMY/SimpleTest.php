@@ -93,6 +93,28 @@ foobar123, honda, civic, 2000')
 
     }
 
+    function testShouldThrowExceptionForInvalidProductTable()
+    {
+        $this->setExpectedException('Zend_Db_Statement_Exception');
+
+        $this->query(sprintf("INSERT INTO `ps_product` ( `reference` ) values ( '%s' )", 'foobar123'));
+        $productID = $this->getReadAdapter()->lastInsertId();
+
+        $this->mappingsImporterFromData('sku, make, model, year
+foobar123, honda, civic, 2000')
+            ->setProductTable('invalid')
+            ->setProductSkuField('reference')
+            ->setProductIdField('id_product')
+            ->import();
+
+        $product = new VF_Product;
+        $product->setId($productID);
+
+        $fitments = $product->getFitModels();
+        $this->assertEquals('honda civic 2000', $fitments[0]->__toString(), 'should add fitment to product');
+
+    }
+
     function mappingsImporterFromFile($csvFile)
     {
         return new VF_Import_ProductFitments_CSV_Import($csvFile);
