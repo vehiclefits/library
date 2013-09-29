@@ -36,11 +36,11 @@ sku123,acura,test,2002
         $this->csvFile = TEMP_PATH . '/mappings-single.csv';
         file_put_contents($this->csvFile, $this->csvData);
 
-
         $this->insertProduct('sku123');
         $this->insertProduct('sku456');
 
-        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass($this->csvFile);
+        $importer = new VF_Import_ProductFitments_CSV_Import($this->csvFile);
+        $importer->setProductTable('test_catalog_product_entity');
         $importer->import();
     }
 
