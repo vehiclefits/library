@@ -69,6 +69,7 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
     function setProductTable($tableName)
     {
         $this->product_table = $tableName;
+        return $this;
     }
 
     function getProductTable()
