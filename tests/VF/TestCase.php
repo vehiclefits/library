@@ -345,9 +345,9 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return $id;
     }
 
-    protected function insertProduct($sku)
+    protected function insertProduct($sku, $table='test_catalog_product_entity', $skuColumn = 'sku')
     {
-        $this->query(sprintf("INSERT INTO test_catalog_product_entity ( `sku` ) values ( '%s' )", $sku));
+        $this->query(sprintf("INSERT INTO $table ( `$skuColumn` ) values ( '%s' )", $sku));
         return $this->getReadAdapter()->lastInsertId();
     }
 

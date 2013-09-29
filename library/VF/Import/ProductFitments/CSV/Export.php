@@ -62,7 +62,12 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
             $condition = sprintf('%s.id = ' . $this->schema()->mappingsTable() . '.%s_id', $levelTable, $level);
             $select->joinLeft($levelTable, $condition, array($level => 'title'));
         }
-        $select->joinLeft(array('p' => $this->getProductTable()), 'p.entity_id = ' . $this->schema()->mappingsTable() . '.entity_id', array('sku'));
+
+        $table = array('p' => $this->getProductTable());
+        $condition = 'p.' . $this->getProductIdField() . ' = ' . $this->schema()->mappingsTable() . '.entity_id';
+        $columns = array('sku'=>$this->getProductSkuField());
+        $select->joinLeft($table, $condition, $columns);
+
         return $this->query($select);
     }
 
@@ -82,6 +87,28 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
         return $table;
     }
 
+    function getProductSkuField()
+    {
+        return isset($this->product_sku_field) ? $this->product_sku_field : 'sku';
+    }
+
+    function setProductSkuField($product_sku_field)
+    {
+        $this->product_sku_field = $product_sku_field;
+        return $this;
+    }
+
+    function getProductIdField()
+    {
+        return isset($this->product_id_field) ? $this->product_id_field : 'entity_id';
+    }
+
+    function setProductIdField($product_id_field)
+    {
+        $this->product_id_field = $product_id_field;
+        return $this;
+    }
+
     private function doCols()
     {
         $exporter = new VF_Note_Observer_Exporter_Mappings_CSV();
@@ -93,5 +120,4 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
         $exporter = new VF_Note_Observer_Exporter_Mappings_CSV;
         return $exporter->doRow($row);
     }
-
 }
