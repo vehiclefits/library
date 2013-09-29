@@ -14,7 +14,7 @@
     ],
     "autoload": {
         "psr-0": {
-            "VF": "library/"
+            "VF": ["library/", "tests/"]
         }
     },
     "include-path": [

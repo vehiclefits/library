@@ -21,8 +21,8 @@
     </php>
 
     <testsuites>
-        <testsuite name="vfcore">
-            <directory>library/VF</directory>
+        <testsuite name="unit">
+            <directory>tests/VF</directory>
         </testsuite>
         <testsuite name="vfcli">
             <directory>cli</directory>
