@@ -29,7 +29,8 @@
         "phpunit/php-invoker": "*",
         "phpunit/phpunit-selenium": "*",
         "phpunit/phpunit-story": "*",
-        "phpunit/dbunit": "*"
+        "phpunit/dbunit": "*",
+        "robmorgan/phinx" : "*"
     },
     "extra": {
         "branch-alias": {
