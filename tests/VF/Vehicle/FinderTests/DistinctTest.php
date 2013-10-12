@@ -7,28 +7,46 @@
 
 class VF_Vehicle_FinderTests_DistinctTest extends VF_Vehicle_FinderTests_TestCase
 {
-
-    function testShouldFindDistinct()
+    function doSetUp()
     {
-        return $this->markTestIncomplete('placeholder test for selecting distinct vehicles');
+        $this->switchSchema('make,model,year');
+        $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
+        $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2001'));
+        $this->createVehicle(array('make' => 'Ford', 'model' => 'F150', 'year' => '2000'));
+        $this->createVehicle(array('make' => 'Ford', 'model' => 'F150', 'year' => '2001'));
+        $this->createVehicle(array('make' => 'Ford', 'model' => 'F150', 'year' => '2002'));
+    }
 
-        $this->createVehicle(array(
-            'make' => 'Honda',
-            'model' => 'Civic',
-            'year' => '2000'
-        ));
-        $this->createVehicle(array(
-            'make' => 'Honda',
-            'model' => 'Civic',
-            'year' => '2001'
-        ));
-        $vehicles = $this->getFinder()->findDistinctByLevels(array(
-            'make' => 'Honda',
-            'model' => 'Civic',
-        ));
-        $this->assertEquals(1, count($vehicles), 'should find by levels');
+    function testShouldFindDistinctMakes()
+    {
+        $vehicles = $this->getFinder()->findDistinct(array('make'));
+        $this->assertEquals(2, count($vehicles), 'should find 2 makes');
+        $this->assertEquals('Ford', $vehicles[0]->__toString());
+        $this->assertEquals('Honda', $vehicles[1]->__toString());
+    }
 
-        $firstVehicle = $vehicles[0];
-        $this->assertEquals('Honda Civic', $firstVehicle->__toString());
+    function testShouldFindCardsMadeIn2002()
+    {
+        $levels = array('make','model');
+        $where = array('year'=>'2002');
+
+        $vehicles = $this->getFinder()->findDistinct($levels, $where);
+
+        $this->assertEquals(1, count($vehicles));
+        $this->assertEquals('Ford F150', $vehicles[0]->__toString(), 'should find cars made in 2002');
+    }
+
+    function testShouldFindMakesAssignedToProduct()
+    {
+        $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
+        $this->insertMappingMMY($vehicle, 1);
+
+        $levels = array('make');
+        $where = array('product_id'=>1);
+
+        $vehicles = $this->getFinder()->findDistinct($levels, $where);
+
+        $this->assertEquals(1, count($vehicles));
+        $this->assertEquals('Honda', $vehicles[0]->__toString(), 'should find makes assigned to product');
     }
 }

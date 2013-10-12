@@ -73,9 +73,10 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
 
     function insertVehicleRecords()
     {
-        $cols = $this->getSchema()->getLevels();
-        foreach ($cols as $i => $col) {
-            $cols[$i] = $this->getReadAdapter()->quoteIdentifier(str_replace(' ', '_', $col) . '_id');
+        $cols = array();
+        foreach ($this->getSchema()->getLevels() as $i => $col) {
+            $cols[] = $this->getReadAdapter()->quoteIdentifier(str_replace(' ', '_', $col));
+            $cols[] = $this->getReadAdapter()->quoteIdentifier(str_replace(' ', '_', $col) . '_id');
         }
         $query = 'REPLACE INTO ' . $this->getSchema()->definitionTable() . ' (' . implode(',', $cols) . ')';
         $query .= ' SELECT DISTINCT ' . implode(',', $cols) . ' FROM elite_import WHERE universal != 1';

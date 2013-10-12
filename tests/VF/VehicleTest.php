@@ -69,4 +69,11 @@ class VF_VehicleTest extends VF_TestCase
         $this->assertEquals($vehicle->getValue('model'), $truncateAfter['model']);
         $this->assertFalse(isset($truncateAfter['year']));
     }
+
+    function testShouldNotSaveTwice()
+    {
+        $id1 = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
+        $id2 = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
+        $this->assertEquals($id1, $id2);
+    }
 }

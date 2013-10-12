@@ -141,11 +141,7 @@ class VF_Schema_Generator
         $return .= 'PRIMARY KEY (`id`),' . self::NEWLINE;
         $return .= 'KEY `title` (`title`)' . self::NEWLINE;
         $return .= ') ENGINE=InnoDB DEFAULT CHARSET=utf8;' . self::NEWLINE;
-        //$return .= $this->indexForeignKeyIntoPreviousLevel($i);
 
-//        if(1||$this->id()>1 ) {
-//            var_dump($return);
-//        }
         return $return;
     }
 
@@ -298,6 +294,7 @@ class VF_Schema_Generator
         foreach ($this->levels() as $level) {
             $level = str_replace(' ', '_', $level);
             $return .= sprintf('`%s_id` int(15) NOT NULL,', $level);
+            $return .= sprintf('`%s` varchar(255) NOT NULL,', $level);
         }
         return $return;
     }

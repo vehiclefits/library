@@ -77,8 +77,11 @@ class VF_Mapping implements VF_Configurable
         $columns = '';
         $values = '';
         foreach ($levels as $level) {
+            $columns .= '`' . $this->inflect($level) . '`,';
             $columns .= '`' . $this->inflect($level) . '_id`,';
-            $values .= $this->inflect($this->vehicle->getLevel($level)->getId());
+            $values .= $this->getReadAdapter()->quote($this->vehicle->getLevel($level)->getTitle());
+            $values .= ',';
+            $values .= $this->getReadAdapter()->quote($this->vehicle->getLevel($level)->getId());
             $values .= ',';
         }
         $query = sprintf(

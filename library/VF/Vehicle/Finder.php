@@ -238,6 +238,40 @@ class VF_Vehicle_Finder implements VF_Configurable
         return $return;
     }
 
+    function findDistinct($levelsToSelect, $where=array())
+    {
+        $select = $this->select();
+
+        if(isset($where['product_id'])) {
+            $select->from('elite_' . $this->schema->id() . '_mapping', $levelsToSelect);
+        } else {
+            $select->from('elite_' . $this->schema->id() . '_definition', $levelsToSelect);
+        }
+
+        foreach ($this->schema->getLevels() as $level) {
+            if(isset($where[$level])) {
+                $select->where($this->inflect($level) . ' = ?', $where[$level]);
+            }
+        }
+
+        foreach($levelsToSelect as $levelToSelect) {
+            $select->group($this->inflect($levelsToSelect));
+        }
+
+        if(isset($where['product_id'])) {
+            $select->where('entity_id = ?', $where['product_id']);
+        }
+
+        $result = $this->query($select)->fetchAll(Zend_Db::FETCH_ASSOC);
+
+        $return = array();
+        foreach ($result as $row) {
+            $return[] = new VF_Vehicle($this->schema, 0, $row, false, $row);
+        }
+
+        return $return;
+    }
+
     function regexifyValue($value)
     {
         $value = str_replace(array('-', '*'), array('##hyphen##', '##dash##'), $value);

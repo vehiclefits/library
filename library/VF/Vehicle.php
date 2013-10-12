@@ -213,6 +213,7 @@ class VF_Vehicle implements VF_Configurable
             }
             $level->save(null, null, false);
             $bind[str_replace(' ', '_', $level->getType()) . '_id'] = $level->getId();
+            $bind[str_replace(' ', '_', $level->getType())] = $level->getTitle();
         }
 
         $finder = new VF_Vehicle_Finder($this->schema);

@@ -180,6 +180,7 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
         $cols = '';
         foreach ($this->getSchema()->getLevels() as $level) {
             $cols .= $level . '_id, ';
+            $cols .= $level . ', ';
         }
         return $cols;
     }
