@@ -3,6 +3,7 @@
 jQuery('#vafForm .vafSubmit').click(submitVafForm); 
 jQuery('#vafChooserForm .vafSubmit').click(submitVafChooserForm); 
 jQuery('#vafClear').click( clearVafForm ); 
+jQuery('.vafClear').click( clearVafForm );
 
 jQuery( '.vafCheckAll' ).click( function() {
     jQuery( '.vafcheck' ).attr( 'checked', jQuery(this).attr( 'checked' ) );
