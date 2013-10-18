@@ -51,5 +51,4 @@ abstract class VF_SearchTestCase extends VF_TestCase
     {
         $search->setRequest($this->getMagentoRequest(array('controllerName' => 'category', 'routeName' => 'catalog')));
     }
-
 }

@@ -16,7 +16,6 @@ class VF_Import_ArrayCombiner
 
     function getCombinations()
     {
-
         foreach ($this->keys() as $key) {
             foreach ($this->allCombinations as $previousCombination) {
                 foreach ($this->traits[$key] as $value) {

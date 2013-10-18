@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Tire_Catalog_TireProduct
 {
 
@@ -48,7 +47,6 @@ class VF_Tire_Catalog_TireProduct
             ->where('section_width = ?', $tireSize->sectionWidth())
             ->where('diameter = ?', $tireSize->diameter())
             ->where('aspect_ratio = ?', $tireSize->aspectRatio());
-
         $result = $select->query();
         foreach ($result->fetchAll() as $vehicleRow) {
             $vehicle = $this->vehicle($vehicleRow['leaf_id']);
@@ -71,13 +69,11 @@ class VF_Tire_Catalog_TireProduct
         $select = $this->getReadAdapter()->select()
             ->from('elite_product_tire')
             ->where('entity_id=?', $this->getId());
-
         $result = $select->query();
         $row = $result->fetchObject();
         if (!$row || (!$row->section_width && !$row->aspect_ratio && !$row->diameter)) {
             return false;
         }
-
         $tireSize = new VF_TireSize($row->section_width, $row->aspect_ratio, $row->diameter);
         return $tireSize;
     }
@@ -126,5 +122,4 @@ class VF_Tire_Catalog_TireProduct
     {
         return VF_Singleton::getInstance()->getReadAdapter();
     }
-
 }

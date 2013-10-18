@@ -20,7 +20,6 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 /** The association between a product ID and a definition */
 class VF_Mapping implements VF_Configurable
 {
@@ -61,19 +60,16 @@ class VF_Mapping implements VF_Configurable
         $schema = $this->vehicle()->schema();
         $schema->setConfig($this->getConfig());
         $levels = $schema->getLevels();
-
         $select = $this->getReadAdapter()->select()
             ->from($schema->mappingsTable(), array('id'));
         foreach ($this->vehicle->toValueArray() as $level => $id) {
             $select->where($this->inflect($level) . '_id = ?', $id);
         }
         $select->where('entity_id = ?', $this->product_id);
-
         $id = (int)$select->query()->fetchColumn();
         if (0 !== $id) {
             return $id;
         }
-
         $columns = '';
         $values = '';
         foreach ($levels as $level) {
@@ -100,7 +96,6 @@ class VF_Mapping implements VF_Configurable
             ',
             (int)$this->product_id
         );
-
         $r = $this->query($query);
         return $this->getReadAdapter()->lastInsertId();
     }
@@ -121,5 +116,4 @@ class VF_Mapping implements VF_Configurable
     {
         return str_replace(' ', '_', $identifier);
     }
-
 }

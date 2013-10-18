@@ -17,49 +17,41 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Tire_FlexibleSearchTests_FilterByTypeTest extends VF_TestCase
 {
-	function testFilterByType()
+    function testFilterByType()
     {
-        $tireSize = new VF_TireSize(205,55,16);
-        
+        $tireSize = new VF_TireSize(205, 55, 16);
         $product = $this->newTireProduct();
         $product->setId(1);
         $product->setTireSize($tireSize);
         $product->setTireType(VF_Tire_Catalog_TireProduct::SUMMER_ALL);
-        
-        $flexibleSearch = $this->flexibleTireSearch(array('section_width'=>'205', 'aspect_ratio'=>'55', 'diameter'=>'16', 'tire_type'=>VF_Tire_Catalog_TireProduct::SUMMER_ALL));
-        $this->assertEquals( array(1), $flexibleSearch->doGetProductIds(), 'should filter by tire type' );
-	}
-	
-	function testOmitsDifferentType()
-	{
-		$tireSize = new VF_TireSize(205,55,16);
-        
+        $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16', 'tire_type' => VF_Tire_Catalog_TireProduct::SUMMER_ALL));
+        $this->assertEquals(array(1), $flexibleSearch->doGetProductIds(), 'should filter by tire type');
+    }
+
+    function testOmitsDifferentType()
+    {
+        $tireSize = new VF_TireSize(205, 55, 16);
         $product = $this->newTireProduct();
         $product->setId(1);
         $product->setTireSize($tireSize);
         $product->setTireType(VF_Tire_Catalog_TireProduct::SUMMER_ALL);
-        
-        $flexibleSearch = $this->flexibleTireSearch(array('section_width'=>'205', 'aspect_ratio'=>'55', 'diameter'=>'16', 'tire_type'=>VF_Tire_Catalog_TireProduct::WINTER));
-        $this->assertEquals( array(0), $flexibleSearch->doGetProductIds(), 'should exclude different tire type' );
-	}
-    	
-	function testAllTypes()
-	{
-		$tireSize = new VF_TireSize(205,55,16);
-        
+        $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16', 'tire_type' => VF_Tire_Catalog_TireProduct::WINTER));
+        $this->assertEquals(array(0), $flexibleSearch->doGetProductIds(), 'should exclude different tire type');
+    }
+
+    function testAllTypes()
+    {
+        $tireSize = new VF_TireSize(205, 55, 16);
         $product = $this->newTireProduct();
         $product->setId(1);
         $product->setTireSize($tireSize);
         $product->setTireType(VF_Tire_Catalog_TireProduct::SUMMER_ALL);
-        
-        $flexibleSearch = $this->flexibleTireSearch(array('section_width'=>'205', 'aspect_ratio'=>'55', 'diameter'=>'16', 'tire_type'=>0));
-        $this->assertEquals( array(1), $flexibleSearch->doGetProductIds(), 'should show all types' );
-	}
-    
+        $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16', 'tire_type' => 0));
+        $this->assertEquals(array(1), $flexibleSearch->doGetProductIds(), 'should show all types');
+    }
 }

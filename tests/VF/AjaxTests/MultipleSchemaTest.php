@@ -15,17 +15,14 @@ class VF_AjaxTests_MultipleSchemaTest extends VF_TestCase
     {
         $schema = VF_Schema::create('foo,bar');
         $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
-
         $mapping = new VF_Mapping(1, $vehicle);
         $mapping->save();
-
         ob_start();
         $_GET['front'] = 1;
         $_GET['requestLevel'] = 'foo';
         $ajax = new VF_Ajax();
         $ajax->execute($schema);
         $actual = ob_get_clean();
-
         $this->assertEquals('<option value="' . $vehicle->getValue('foo') . '">123</option>', $actual, 'should list root levels from 2nd schema');
     }
 
@@ -33,10 +30,8 @@ class VF_AjaxTests_MultipleSchemaTest extends VF_TestCase
     {
         $schema = VF_Schema::create('foo,bar');
         $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
-
         $mapping = new VF_Mapping(1, $vehicle);
         $mapping->save();
-
         ob_start();
         $_GET['front'] = 1;
         $_GET['requestLevel'] = 'bar';
@@ -44,7 +39,6 @@ class VF_AjaxTests_MultipleSchemaTest extends VF_TestCase
         $ajax = new VF_Ajax();
         $ajax->execute($schema);
         $actual = ob_get_clean();
-
         $this->assertEquals('<option value="' . $vehicle->getValue('bar') . '">456</option>', $actual, 'should list child levels from 2nd schema');
     }
 
@@ -52,17 +46,14 @@ class VF_AjaxTests_MultipleSchemaTest extends VF_TestCase
     {
         $schema = VF_Schema::create('foo,bar');
         $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
-
         $mapping = new VF_Mapping(1, $vehicle);
         $mapping->save();
-
         ob_start();
         $_GET['requestLevel'] = 'bar';
         $_GET['foo'] = $vehicle->getValue('bar');
         $ajax = new VF_Ajax();
         $ajax->execute($schema);
         $actual = ob_get_clean();
-
         $this->assertEquals('<option value="' . $vehicle->getValue('bar') . '">456</option>', $actual, 'should list child levels from 2nd schema');
     }
 }

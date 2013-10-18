@@ -30,10 +30,8 @@ class VF_VehicleMultipleSchemaTest extends VF_TestCase
         $schema = VF_Schema::create('foo,bar');
         $vehicle = VF_Vehicle::create($schema, array('foo' => 'valfoo', 'bar' => 'valbar'));
         $vehicle->save();
-
         $levelFinder = new VF_Level_Finder($schema);
         $foundLevel = $levelFinder->find('foo', $vehicle->getValue('foo'));
-
         $this->assertEquals($vehicle->getValue('foo'), $foundLevel->getId(), 'should save & find level');
     }
 
@@ -42,9 +40,7 @@ class VF_VehicleMultipleSchemaTest extends VF_TestCase
         $schema = VF_Schema::create('foo,bar');
         $vehicle = VF_Vehicle::create($schema, array('foo' => 'valfoo', 'bar' => 'valbar'));
         $vehicle->save();
-
         $vehicleExists = $this->vehicleExists(array('foo' => 'valfoo', 'bar' => 'valbar'), false, $schema);
         $this->assertTrue($vehicleExists, 'should find vehicles in different schema');
     }
-
 }

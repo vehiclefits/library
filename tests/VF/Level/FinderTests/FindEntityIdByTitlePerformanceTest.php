@@ -10,7 +10,6 @@ class VF_Level_FinderTests_FindEntityIdByTitlePerformanceTest extends VF_TestCas
     {
         $originalVehicle = $this->createMMY('Honda');
         $this->startProfiling();
-
         $finder = new VF_Level_Finder;
         $makeId = $finder->findEntityIdByTitle('make', 'Honda');
         $makeId = $finder->findEntityIdByTitle('make', 'Honda');
@@ -21,7 +20,6 @@ class VF_Level_FinderTests_FindEntityIdByTitlePerformanceTest extends VF_TestCas
     {
         $originalVehicle = $this->createMMY('Honda', 'Civic');
         $this->startProfiling();
-
         $finder = new VF_Level_Finder;
         $modelId = $finder->findEntityIdByTitle('model', 'Civic', $originalVehicle->getValue('make'));
         $modelId = $finder->findEntityIdByTitle('model', 'Civic', $originalVehicle->getValue('make'));

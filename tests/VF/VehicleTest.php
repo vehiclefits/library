@@ -43,7 +43,6 @@ class VF_VehicleTest extends VF_TestCase
     {
         $this->createVehicle(array('make' => 'Honda ', 'model' => 'Civic', 'year' => '2000'));
         $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
-
         $vehicles = $this->vehicleFinder()->findByLevels(array('year' => '2000'));
         $this->assertEquals(1, count($vehicles));
     }

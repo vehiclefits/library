@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Import_VehiclesList_CSV_Import extends VF_Import
 {
 
@@ -25,7 +24,6 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
     {
         $this->log('Import Started', Zend_Log::INFO);
         $this->getReadAdapter()->beginTransaction();
-
         try {
             $this->startCountingAdded();
             $this->getFieldPositions();
@@ -36,7 +34,6 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
             $this->log('Import Cancelled & Reverted Due To Critical Error: ' . $e->getMessage() . $e->getTraceAsString(), Zend_log::CRIT);
             throw $e;
         }
-
         $this->getReadAdapter()->commit();
         $this->log('Import Completed', Zend_Log::INFO);
         return $this;
@@ -45,14 +42,11 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
     function insertRowsIntoTempTable()
     {
         $this->cleanupTempTable();
-
         $streamFile = sys_get_temp_dir() . '/import' . md5(uniqid());
         $stream = fopen($streamFile, 'w');
-
         while ($row = $this->getReader()->getRow()) {
             $row = $this->trimSpaces($row);
             $this->row_number++;
-
             $values = $this->getLevelsArray($row);
             if ('1' !== $this->getFieldValue('universal', $row) && '0' !== $this->getFieldValue('universal', $row) &&
                 $this->isInvalidVehicle($values)
@@ -60,29 +54,24 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
                 $this->invalid_vehicle_count++;
                 continue;
             }
-
             if (null === $this->getFieldValue('universal', $row) && !$values) {
                 continue;
             }
-
             if (!$this->has_range && !$this->rowContainsWildcards($row)) {
                 // HAS NO WILD CARDS, DO THE FAST WAY
                 if (false !== $this->getFieldPosition('sku')) {
                     $values['sku'] = $this->getFieldValue('sku', $row);
                     $values['universal'] = $this->getFieldValue('universal', $row);
                 }
-
                 $this->insertIntoTempStream($stream, $row, $values);
                 continue;
             }
-
             // HAS WILD CARDS, DO THIS ITS SLOWER THOUGH
             $combinations = $this->getCombinations($values, $row);
             foreach ($combinations as $combination) {
                 $this->insertIntoTempStream($stream, $row, $combination);
             }
         }
-
         $this->importFromTempStream($streamFile);
     }
 
@@ -142,14 +131,13 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
                     $i++;
                 }
                 $newRow = $newRow + array(
-                    'sku' => $row[$i + 0],
-                    'universal' => $row[$i + 1],
-                    'line' => $row[$i + 2],
-                    'note_message' => $row[$i + 3],
-                    'notes' => isset($row[$i + 4]) ? $row[$i + 4] : '',
-                    'price' => isset($row[$i + 5]) ? $row[$i + 5] : ''
-                );
-
+                        'sku' => $row[$i + 0],
+                        'universal' => $row[$i + 1],
+                        'line' => $row[$i + 2],
+                        'note_message' => $row[$i + 3],
+                        'notes' => isset($row[$i + 4]) ? $row[$i + 4] : '',
+                        'price' => isset($row[$i + 5]) ? $row[$i + 5] : ''
+                    );
                 $this->insertIntoTempTable($newRow, $newRow);
             }
         }
@@ -158,7 +146,6 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
     function runDeprecatedImports()
     {
         $this->getReader()->rewind();
-
         $this->getReader()->getRow(); // pop fields
         $this->row_number = 0;
         while ($row = $this->getReader()->getRow()) {
@@ -173,7 +160,6 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
         $combination['notes'] = $this->getFieldValue('notes', $row);
         $combination['universal'] = $this->getFieldValue('universal', $row) ? $this->getFieldValue('universal', $row) : 0;
         $combination['price'] = $this->getFieldValue('price', $row);
-
         fputcsv($stream, $combination);
     }
 
@@ -195,13 +181,11 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
             return;
         }
         $combinations = $this->getCombinations($values, $row);
-
         foreach ($combinations as $combination) {
             if ($this->fieldsAreBlank($combination)) {
                 $this->doImportRow($row, false);
                 continue;
             }
-
             $vehicle = $this->vehicleFinder()->findOneByLevels($combination);
             $this->doImportRow($row, $vehicle);
         }
@@ -229,7 +213,6 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
      */
     function doImportRow($row, $vehicle)
     {
-
     }
 
     function trimSpaces($values)
@@ -245,7 +228,6 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
     {
         $this->start_count_vehicles = 0;
         $this->stop_count_vehicles = 0;
-
         $this->count_added_by_level = array();
         $this->start_count_added_by_level = array();
         $this->stop_count_added_by_level = array();
@@ -267,7 +249,6 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
 
     function doStartCountingAdded()
     {
-
     }
 
     /** Probe how many Make,Model,Year there are before the import */
@@ -297,7 +278,6 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
 
     function doStopCountingAdded()
     {
-
     }
 
     function stopCountingAddedLevels()
@@ -379,5 +359,4 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
     {
         return $combinations;
     }
-
 }

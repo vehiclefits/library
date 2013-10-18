@@ -54,5 +54,4 @@ honda, civi-c, 2000');
         $result = $this->query('select count(*) from elite_1_definition;');
         $this->assertEquals(2, $result->fetchColumn());
     }
-
 }

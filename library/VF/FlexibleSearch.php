@@ -39,17 +39,14 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if ($this->getRequest()->getParam('fit')) {
             return $this->schema->getLeafLevel();
         }
-
         if (!$this->hasGETRequest() && !$this->hasSESSIONRequest()) {
             return false;
         }
-
         $last = false;
         foreach ($this->schema->getLevels() as $level) {
             if ($this->hasGETRequest() && !$this->requestingGETLevel($level)) {
                 break;
             }
-
             if ($this->hasSESSIONRequest() && !$this->requestingSESSIONLevel($level)) {
                 break;
             }
@@ -100,13 +97,10 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if ($fit = $this->getRequest()->getParam('fit')) {
             return $fit;
         }
-
         $level = $this->getLevel();
-
         if ($this->request->getParam($level)) {
             return $this->request->getParam($level);
         }
-
         if (isset($_SESSION[$level])) {
             return $_SESSION[$level];
         }
@@ -118,9 +112,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             $this->clearSelection();
             return new VF_Vehicle_Selection(array());
         }
-
         $vehicleFinder = new VF_Vehicle_Finder($this->schema);
-
         // Multi-tree (admin panel) integration
         if ($this->request->getParam('fit')) {
             $id = $this->getId();
@@ -132,7 +124,6 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if (!$this->hasGETRequest() && !$this->hasSESSIONRequest()) {
             return new VF_Vehicle_Selection(array());
         }
-
         // front-end lookup
         try {
             $params = $this->vehicleRequestParams();
@@ -181,7 +172,6 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
                 $return[$level] = 0;
             }
         }
-
         return $return;
     }
 
@@ -190,7 +180,6 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if ($this->hasGETRequest()) {
             return (bool)$this->requestingGETLevel($level);
         }
-
         return (bool)$this->requestingSESSIONLevel($level);
     }
 
@@ -246,31 +235,25 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if ($fit = $this->getRequest()->getParam('fit')) {
             return $fit;
         }
-
         if (!$this->hasGETRequest() && isset($_SESSION[$level])) {
             return $_SESSION[$level];
         }
-
         if (!$this->getRequest()->getParam($level) || 'loading' == $this->getRequest()->getParam($level)) {
             return false;
         }
-
         if ($this->isNumericRequest()) {
             return $this->getRequest()->getParam($level);
         } else {
             $levelStringValue = $this->getRequest()->getParam($level);
             $levelFinder = new VF_Level_Finder();
             $parentLevel = $this->schema()->getPrevLevel($level);
-
             if ($parentLevel) {
                 $parentValue = $this->getValueForSelectedLevel($parentLevel);
             } else {
                 $parentValue = null;
             }
-
             return $levelFinder->findEntityIdByTitle($level, $levelStringValue, isset($parentValue) ? $parentValue : null);
         }
-
         return false;
     }
 
@@ -279,7 +262,6 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if ($this->vehicleSelection()->isEmpty()) {
             return array();
         }
-
         $level = $this->getLevel();
         $where = ' `universal` = 1 ';
         $where .= 'OR (';
@@ -288,20 +270,16 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             if (!$id) {
                 continue;
             }
-
             if ($level_type != $this->schema()->getRootLevel()) {
                 $where .= ' && ';
             }
             $where .= sprintf(' `%s_id` = %d  ', $level_type, $id);
         }
         $where .= ')';
-
         $rows = $this->getReadAdapter()->fetchAll("SELECT distinct( entity_id ) FROM " . $this->schema()->mappingsTable() . " WHERE  $where");
-
         if (count($rows) == 0) {
             return array(0);
         }
-
         foreach ($rows as $r) {
             $ids [] = $r['entity_id'];
         }
@@ -317,7 +295,6 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if (!$this->shouldStoreVehicleInSession()) {
             return;
         }
-
         if ($this->hasGETRequest()) {
             foreach ($this->schema()->getLevels() as $level) {
                 if ($this->getValueForSelectedLevel($level . '_start')) {
@@ -327,24 +304,20 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
                     $_SESSION[$level] = $this->getValueForSelectedLevel($level);
                 }
             }
-
             if (file_exists(ELITE_PATH . '/Vafgarage')) {
                 if (!isset($_SESSION['garage'])) {
                     $_SESSION['garage'] = new Elite_Vafgarage_Model_Garage;
                 }
                 $_SESSION['garage']->addVehicle($this->getRequestValues());
             }
-
             $leafVal = $this->getValueForSelectedLevel($this->schema()->getLeafLevel());
             if ($leafVal) {
                 return $leafVal;
             }
         }
-
         if ($this->shouldClear()) {
             $this->clearSelection();
         }
-
         return $this->getValueForSelectedLevel($this->schema()->getLeafLevel());
     }
 
@@ -377,12 +350,10 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             if (!$vehicle) {
                 return false;
             }
-
             $levelObj = $vehicle->getLevel($level);
             if (!$level || !$levelObj || !$levelObj->getId()) {
                 return false;
             }
-
             $vehicleFinder = new VF_Vehicle_Finder($this->schema());
             $vehicle = $vehicleFinder->findOneByLevelIds($this->vehicleRequestParams());
         } catch (VF_Exception_DefinitionNotFound $e) {
@@ -423,5 +394,4 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         }
         return $this->config;
     }
-
 }

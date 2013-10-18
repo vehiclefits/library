@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -25,26 +24,25 @@ class VF_TireSizeTests_ConstructorTest extends VF_TestCase
 {
     function testSectionWidth()
     {
-        $tireSize = new VF_TireSize(205,null,null);
-        $this->assertEquals(205,$tireSize->sectionWidth(),'tire size has a section width');
+        $tireSize = new VF_TireSize(205, null, null);
+        $this->assertEquals(205, $tireSize->sectionWidth(), 'tire size has a section width');
     }
-    
+
     function testAspectRatio()
     {
-        $tireSize = new VF_TireSize(null,55,null);
-        $this->assertEquals(55,$tireSize->aspectRatio(),'tire size has an aspect ratio');
+        $tireSize = new VF_TireSize(null, 55, null);
+        $this->assertEquals(55, $tireSize->aspectRatio(), 'tire size has an aspect ratio');
     }
-    
+
     function testDiameter()
     {
-        $tireSize = new VF_TireSize(null,null,16);
-        $this->assertEquals(16,$tireSize->diameter(),'tire size has a diameter');
+        $tireSize = new VF_TireSize(null, null, 16);
+        $this->assertEquals(16, $tireSize->diameter(), 'tire size has a diameter');
     }
-    
+
     function testShouldFormatString()
     {
-        $tireSize = new VF_TireSize(205,55,16);
-        $this->assertEquals( '205/55-16', (string)$tireSize, 'should format a tire size string' );
+        $tireSize = new VF_TireSize(205, 55, 16);
+        $this->assertEquals('205/55-16', (string)$tireSize, 'should format a tire size string');
     }
-    
 }

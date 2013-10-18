@@ -29,7 +29,6 @@ class VF_SearchLevel
             echo $this->__(ucfirst($this->level));
             echo ':</label>';
         }
-
         $prevLevelsIncluding = $this->schema()->getPrevLevelsIncluding($this->level);
         $prevLevelsIncluding = implode(',', $prevLevelsIncluding);
         ?>
@@ -72,20 +71,16 @@ class VF_SearchLevel
         if ($this->level != $this->leafLevel()) {
             return (bool)($entity->getId() == $this->block->getSelected($this->level));
         }
-
         VF_Singleton::getInstance()->setRequest($this->block->getRequest());
         $fit = VF_Singleton::getInstance()->vehicleSelection();
         if (false === $fit) {
             return false;
         }
-
-
         if ('year_start' == $this->yearRangeAlias) {
             return (bool)($entity->getTitle() == $fit->earliestYear());
         } else if ('year_end' == $this->yearRangeAlias) {
             return (bool)($entity->getTitle() == $fit->latestYear());
         }
-
         $level = $fit->getLevel($this->leafLevel());
         if ($level) {
             return (bool)($entity->getTitle() == $level->getTitle());

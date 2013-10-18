@@ -134,7 +134,6 @@ class VF_Search implements VF_Configurable
     function showCategoryChooser()
     {
         $this->getChooser()->setConfig($this->getConfig());
-
         if ($this->isHomepage()) {
             return $this->getChooser()->showCategoryChooserHomepage();
         } else {
@@ -146,7 +145,6 @@ class VF_Search implements VF_Configurable
     function showAllOptionOnCategoryChooser()
     {
         $this->getChooser()->setConfig($this->getConfig());
-
         if ($this->isHomepage()) {
             return $this->getChooser()->showAllOptionHomepage();
         } else {
@@ -187,66 +185,51 @@ class VF_Search implements VF_Configurable
         $submitOnCategoryAction = $this->getConfig()->search->submitOnCategoryAction;
         $submitOnProductAction = $this->getConfig()->search->submitOnProductAction;
         $submitOnHomepageAction = $this->getConfig()->search->submitOnHomepageAction;
-
         if ($this->getConfig()->category->disable) {
             return $this->url('vaf/product/list');
         }
-
         if ($this->isCategoryPage()) {
             if ($submitOnCategoryAction) {
                 return $submitOnCategoryAction;
             }
             return '?';
         }
-
         if ($this->isCmsPage() || ('' != $submitAction && '' == $submitOnProductAction && '' == $submitOnHomepageAction)) {
             if ('refresh' == $submitAction) {
                 return '?';
             }
-
             if ('homepagesearch' == $submitAction) {
                 return $this->url('vaf/product/list');
             }
-
             return $submitAction;
         }
-
         if ('' == $submitAction && '' == $submitOnProductAction && '' == $submitOnHomepageAction) {
             return $this->url('vaf/product/list');
         }
-
         if ($this->isProductPage()) {
             if ('' == $submitOnProductAction && '' != $submitAction) {
                 return $submitAction;
             }
-
             if ('refresh' == $submitOnProductAction) {
                 return '?';
             }
-
             if ('homepagesearch' == $submitOnProductAction) {
                 return $this->url('vaf/product/list');
             }
-
             return $submitOnProductAction;
         }
-
         if ($this->isHomepage()) {
             if ('' == $submitOnHomepageAction && '' != $submitAction) {
                 return $submitAction;
             }
-
             if ('refresh' == $submitOnHomepageAction) {
                 return '?';
             }
-
             if ('homepagesearch' == $submitOnHomepageAction) {
                 return $this->url('vaf/product/list');
             }
-
             return $submitOnHomepageAction;
         }
-
     }
 
     function listEntities($level)
@@ -254,27 +237,23 @@ class VF_Search implements VF_Configurable
         if (!in_array($level, $this->getSchema()->getLevels())) {
             throw new VF_Level_Exception_InvalidLevel('Invalid level [' . $level . ']');
         }
-
         $parent_id = 0;
-
         $parentLevel = $this->getSchema()->getPrevLevel($level);
         if ($parentLevel) {
             $parent_id = $this->getSelected($parentLevel);
         }
         $levelObject = new VF_Level($level);
-
         if ($this->isNotRootAndHasNoParent($level, $parent_id)) {
             return array();
         }
         if (!$parentLevel || !$parent_id) {
-
-            if($this->shouldListAll()) {
+            if ($this->shouldListAll()) {
                 return $levelObject->listAll();
             } else {
                 return $levelObject->listInUse(array());
             }
         }
-        if($this->shouldListAll()) {
+        if ($this->shouldListAll()) {
             return $levelObject->listAll($parent_id);
         } else {
             return $levelObject->listInUse(array($parentLevel => $parent_id));
@@ -406,7 +385,6 @@ class VF_Search implements VF_Configurable
         ob_start();
         $ignore = array('category', 'submitb', 'q', 'category1', 'category2', 'category3', 'category4');
         $ignore = array_merge($ignore, $this->getLevels());
-
         foreach ($this->getRequest()->getParams() as $key => $value) {
             if (is_string($key) && is_string($value) && !in_array($key, $ignore)) {
                 echo '<input type="hidden" name="' . $this->htmlEscape($key) . '" value="' . $this->htmlEscape($value) . '" />';
@@ -428,8 +406,8 @@ class VF_Search implements VF_Configurable
     function shouldShowMyGarageActive()
     {
         return VF_Singleton::getInstance()->getConfig()->mygarage->collapseAfterSelection &&
-            $this->getFlexibleDefinition() !== false &&
-            $this->formId() == 'vafForm';
+        $this->getFlexibleDefinition() !== false &&
+        $this->formId() == 'vafForm';
     }
 
     function getClearText()
@@ -457,7 +435,6 @@ class VF_Search implements VF_Configurable
             <option value="?"><?= $this->htmlEscape($this->getCategoryChooserAllOptionText()) ?></option>
         <?php
         }
-
         foreach ($this->getCategories() as $category) {
             ?>
             <option value="<?= $category['url'] ?>"><?= $category['title'] ?></option>

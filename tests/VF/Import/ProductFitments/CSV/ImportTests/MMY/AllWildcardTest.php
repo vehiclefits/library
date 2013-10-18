@@ -24,15 +24,12 @@ honda, accord, 2001';
         $this->importVehiclesList($this->vehiclesList);
         $this->mappingsImport('sku, make, model, year
 sku, honda, {{all}}, 2000');
-
         $product = new VF_Product();
         $product->setId($this->product_id);
         $fits = $product->getFits();
-
         $this->assertEquals(2, count($fits), 'should blow out options');
         $this->assertEquals('civic', $fits[0]->model);
         $this->assertEquals('accord', $fits[1]->model);
-
     }
 
     function testBlowoutMultipleColumn()
@@ -40,20 +37,14 @@ sku, honda, {{all}}, 2000');
         $this->importVehiclesList($this->vehiclesList);
         $this->mappingsImport('sku, make, model, year
 sku, honda, {{all}}, {{all}}');
-
         $product = new VF_Product();
         $product->setId($this->product_id);
         $fits = $product->getFits();
-
         $this->assertEquals(3, count($fits), 'should blow out options');
         $this->assertEquals('civic', $fits[0]->model);
-
         $this->assertEquals('accord', $fits[1]->model);
         $this->assertEquals('2000', $fits[1]->year);
-
         $this->assertEquals('accord', $fits[2]->model);
         $this->assertEquals('2001', $fits[2]->year);
-
     }
-
 }

@@ -71,7 +71,6 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2001');
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
-
         $_GET['make'] = $vehicle1->getLevel('make')->getId();
         $_GET['requestLevel'] = 'model';
         $this->assertEquals('<option value="' . $vehicle1->getValue('model') . '">Civic</option>', $this->execute(), 'should list models for a make');
@@ -108,19 +107,16 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
 
     function testShouldListModelsNotInUseIfConfigSaysTo()
     {
-        $vehicle = $this->createVehicle(array('make'=>'Honda','model'=>'Civic','year'=>2000));
+        $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
         $_GET['make'] = $vehicle->getValue('make');
         $_GET['requestLevel'] = 'model';
-
         ob_start();
         $_GET['front'] = 1;
-
         $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
         $ajax = new VF_Ajax;
         $ajax->setConfig($config);
         $ajax->execute($this->getSchema());
         $actual = ob_get_clean();
-
         $expected = '<option value="' . $vehicle->getValue('model') . '">Civic</option>';
         $this->assertEquals($expected, $actual, 'should list models not in use if config says to');
     }
@@ -146,16 +142,13 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $_GET['make'] = $vehicle1->getLevel('make')->getId();
         $_GET['requestLevel'] = 'model';
         $_GET['front'] = true;
-
         $ajax = $this->getAjax();
         $config = new Zend_Config(array('search' => array('defaultText' => '-All %s-')));
         $ajax->setConfig($config);
-
         ob_start();
         $ajax->execute($this->getSchema());
         $actual = ob_get_clean();
         $expected = '<option value="0">-All Model-</option><option value="' . $vehicle1->getValue('model') . '">Accord</option><option value="' . $vehicle2->getValue('model') . '">Civic</option>';
-
         $this->assertEquals($expected, $actual, 'should list models for a make');
     }
 

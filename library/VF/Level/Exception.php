@@ -11,5 +11,4 @@ class VF_Level_Exception extends Exception
     {
         $this->message = sprintf('Invalid level [%s]', $levelName);
     }
-
 }

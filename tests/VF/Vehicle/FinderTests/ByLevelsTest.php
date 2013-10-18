@@ -20,7 +20,6 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCase
 {
     /**
@@ -107,7 +106,6 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
     {
         $vehicle = $this->createVehicle(array('make' => 'Honda'));
         $make = $vehicle->getLevel('make');
-
         $vehicles = $this->getFinder()->findByLevels(array('make' => 'Honda'), true);
         $this->assertEquals(1, count($vehicles), 'should find partial vehicle by make');
     }
@@ -116,9 +114,7 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $make = $vehicle->getLevel('make');
-
         $vehicles = $this->getFinder()->findByLevels(array('make' => 'Honda'), true);
-
         $this->assertEquals($make->getId(), $vehicles[0]->getValue('make'), 'partial vehicle should have make ID');
         $this->assertEquals(0, $vehicles[0]->getValue('model'), 'partial vehicle should have no model ID');
     }
@@ -126,16 +122,13 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
     function testShouldEscapeRegex()
     {
         $this->createMMY('.\+', 'Civic', '2000');
-
         $vehicles = $this->getFinder()->findByLevels(array('make' => '.\+'), true);
         $this->assertEquals(1, count($vehicles), 'should escape regex');
     }
 
-
     function testShouldEscapeRegex2()
     {
         $this->createMMY('?[^]$', 'Civic', '2000');
-
         $vehicles = $this->getFinder()->findByLevels(array('make' => '?[^]$'), true);
         $this->assertEquals(1, count($vehicles), 'should escape regex');
     }
@@ -143,7 +136,6 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
     function testShouldEscapeRegex3()
     {
         $this->createMMY('(){}=!', 'Civic', '2000');
-
         $vehicles = $this->getFinder()->findByLevels(array('make' => '(){}=!'), true);
         $this->assertEquals(1, count($vehicles), 'should escape regex');
     }
@@ -151,7 +143,6 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
     function testShouldEscapeRegex4()
     {
         $this->createMMY(':-', 'Civic', '2000');
-
         $vehicles = $this->getFinder()->findByLevels(array('make' => ':-'), true);
         $this->assertEquals(1, count($vehicles), 'should escape regex');
     }
@@ -159,7 +150,6 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
     function testShouldEscapeRegex5()
     {
         $this->createMMY('.\+*?[^]$(){}=!<>|:-', 'Civic', '2000');
-
         $vehicles = $this->getFinder()->findByLevels(array('make' => '.\+*?[^]$(){}=!<>|:-'), true);
         $this->assertEquals(1, count($vehicles), 'should escape regex');
     }
@@ -198,7 +188,7 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
         $vehicles = $this->getFinder()->findByLevels(array(
             'make' => 'Honda',
             'model' => 'Civic'
-        ),false,1);
+        ), false, 1);
         $this->assertEquals(1, count($vehicles), 'should limit # of vehicles found');
     }
 
@@ -217,7 +207,7 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
         $vehicles = $this->getFinder()->findByLevels(array(
             'make' => 'Honda',
             'model' => 'Civic'
-        ),false,1,0);
+        ), false, 1, 0);
         $this->assertEquals('Honda Civic 2000', $vehicles[0]->__toString(), 'should offset limit & find 1st vehicle');
     }
 
@@ -236,7 +226,7 @@ class VF_Vehicle_FinderTests_ByLevelsTest extends VF_Vehicle_FinderTests_TestCas
         $vehicles = $this->getFinder()->findByLevels(array(
             'make' => 'Honda',
             'model' => 'Civic'
-        ),false,1,1);
+        ), false, 1, 1);
         $this->assertEquals('Honda Civic 2001', $vehicles[0]->__toString(), 'should offset limit & find 2nd vehicle');
     }
 }

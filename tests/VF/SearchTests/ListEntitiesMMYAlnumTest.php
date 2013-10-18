@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -28,8 +27,8 @@ class VF_SearchTests_Search_ListEntitiesMMYAlnumTest extends VF_SearchTestCase
         $vehicle = $this->createMMYWithFitment();
         $search = new VF_Search;
         $actual = $search->listEntities('make');
-        $this->assertEquals( 1, count($actual), 'should list makes when no vehicle is selected' );
-        $this->assertEquals( $vehicle->getLevel('make')->getTitle(), $actual[0]->getTitle(), 'should list makes when no vehicle is selected' );
+        $this->assertEquals(1, count($actual), 'should list makes when no vehicle is selected');
+        $this->assertEquals($vehicle->getLevel('make')->getTitle(), $actual[0]->getTitle(), 'should list makes when no vehicle is selected');
     }
 
     function testShouldNotListModelsBeforeMakeIsSelected()
@@ -38,16 +37,16 @@ class VF_SearchTests_Search_ListEntitiesMMYAlnumTest extends VF_SearchTestCase
         $search = new VF_Search();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
-        $this->assertEquals( array(), $actual, 'should not list models before make is selected' );
+        $this->assertEquals(array(), $actual, 'should not list models before make is selected');
     }
-    
+
     function testShouldListModels_WhenVehicleIsSelected()
     {
         $vehicle = $this->createMMYWithFitment();
         $search = new VF_Search;
         $search->setRequest($this->getRequest($vehicle->toTitleArray()));
-        $actual = $search->listEntities( 'model' );
-        $this->assertEquals( 1, count($actual) );
-        $this->assertEquals( $vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when make is selected' );
+        $actual = $search->listEntities('model');
+        $this->assertEquals(1, count($actual));
+        $this->assertEquals($vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when make is selected');
     }
 }

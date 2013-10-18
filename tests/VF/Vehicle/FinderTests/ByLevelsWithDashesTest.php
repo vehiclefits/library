@@ -63,5 +63,4 @@ class VF_Vehicle_FinderTests_ByLevelsWithDashesTest extends VF_Vehicle_FinderTes
         $vehicles = $this->getFinder()->findByLevels(array('make' => 'Ford', 'model' => 'F-150 Super-Duty', 'year' => 2000));
         $this->assertEquals(1, count($vehicles), 'should interchange dashes & spaces');
     }
-
 }

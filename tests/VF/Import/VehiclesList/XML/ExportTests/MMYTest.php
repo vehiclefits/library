@@ -21,9 +21,7 @@ class VF_Import_VehiclesList_XML_MMYTest extends VF_Import_VehiclesList_XML_Test
 </vehicles>';
         $this->csvFile = TEMP_PATH . '/definitions.xml';
         file_put_contents($this->csvFile, $this->csvData);
-
         $this->switchSchema('make,model,year');
-
         $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
     }
@@ -31,7 +29,6 @@ class VF_Import_VehiclesList_XML_MMYTest extends VF_Import_VehiclesList_XML_Test
     function testImportsMakeTitle()
     {
         $exporter = new VF_Import_VehiclesList_XML_Export;
-
         $this->assertEquals('<?xml version="1.0"?>
 <vehicles version="1.0">
     <definition>
@@ -41,5 +38,4 @@ class VF_Import_VehiclesList_XML_MMYTest extends VF_Import_VehiclesList_XML_Test
     </definition>
 </vehicles>', $exporter->export());
     }
-
 }

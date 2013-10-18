@@ -23,9 +23,7 @@ class VF_Import_VehiclesList_XML_ExportTests_EngineTest extends VF_Import_Vehicl
 </vehicles>';
         $this->csvFile = TEMP_PATH . '/definitions.xml';
         file_put_contents($this->csvFile, $this->csvData);
-
         $this->switchSchema('year,make,model,submodel,engine');
-
         $importer = $this->vehiclesListImporter($this->csvFile);
         $importer->import();
     }
@@ -33,7 +31,6 @@ class VF_Import_VehiclesList_XML_ExportTests_EngineTest extends VF_Import_Vehicl
     function testImportsMakeTitle()
     {
         $exporter = new VF_Import_VehiclesList_XML_Export;
-
         $this->assertEquals('<?xml version="1.0"?>
 <vehicles version="1.0">
     <definition>
@@ -51,5 +48,4 @@ class VF_Import_VehiclesList_XML_ExportTests_EngineTest extends VF_Import_Vehicl
     {
         return $this->markTestIncomplete();
     }
-
 }

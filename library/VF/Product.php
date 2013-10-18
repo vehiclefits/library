@@ -66,7 +66,6 @@ class VF_Product
     {
         $select = $this->getReadAdapter()->select();
         $select->from(array('m' => $this->getSchema()->mappingsTable()), array('price'));
-
         foreach ($vehicle->toValueArray() as $parentType => $parentId) {
             if (!in_array($parentType, $this->getSchema()->getLevels())) {
                 throw new VF_Level_Exception($parentType);
@@ -76,9 +75,7 @@ class VF_Product
             }
             $select->where(sprintf('m.`%s_id` = ?', $parentType), $parentId);
         }
-
         $select->where('`entity_id` = ?', $this->getId());
-
         $price = $this->query($select)->fetchColumn();
         return (!$price) ? null : $price;
     }
@@ -98,10 +95,8 @@ class VF_Product
     public static function getJoins()
     {
         $joins = '';
-
         $schema = new VF_Schema();
         $levels = $schema->getLevels();
-
         $c = count($levels);
         for ($i = 0; $i <= $c - 1; $i++) {
             $joins .= sprintf(
@@ -160,7 +155,6 @@ class VF_Product
     {
         $sql = sprintf("DELETE FROM `" . $this->getSchema()->mappingsTable() . "` WHERE `id` = %d", (int)$mapping_id);
         $this->query($sql);
-
         if (file_exists(ELITE_PATH . '/Vafnote')) {
             $sql = sprintf("DELETE FROM `elite_mapping_notes` WHERE `fit_id` = %d", (int)$mapping_id);
             $this->query($sql);
@@ -215,7 +209,6 @@ class VF_Product
         if (empty($template)) {
             $template = '_product_ for _vehicle_';
         }
-
         $find = array('_product_', '_vehicle_');
         $replace = array($name, (string)$this->currentlySelectedFit()->getFirstVehicle());
         return str_replace($find, $replace, $template);
@@ -273,7 +266,6 @@ class VF_Product
         foreach ($params as $param => $value) {
             $select->where($param .= '_id = ?', $value);
         }
-
         $count = $select->query()->fetchColumn();
         return 0 != $count;
     }
@@ -308,7 +300,6 @@ class VF_Product
         $schema = new VF_Schema();
         $vehicleFinder = new VF_Vehicle_Finder($schema);
         $leaf = $schema->getLeafLevel() . '_id';
-
         $newProduct = parent::duplicate();
         foreach ($this->getFits() as $fit) {
             print_r($fit);
@@ -346,7 +337,6 @@ class VF_Product
             ->joinAndSelectLevels()
             ->where('entity_id=?', $productId);
         $result = $this->query($select);
-
         $fits = array();
         while ($row = $result->fetchObject()) {
             if ($row->universal) {

@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Export
 {
 
@@ -46,12 +45,10 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
             $condition = sprintf('%s.id = ' . $this->schema()->mappingsTable() . '.%s_id', $levelTable, $level);
             $select->joinLeft($levelTable, $condition, array($level => 'title'));
         }
-
         $table = array('p' => $this->getProductTable());
         $condition = 'p.' . $this->getProductIdField() . ' = ' . $this->schema()->mappingsTable() . '.entity_id';
-        $columns = array('sku'=>$this->getProductSkuField());
+        $columns = array('sku' => $this->getProductSkuField());
         $select->joinLeft($table, $condition, $columns);
-
         return $this->query($select);
     }
 
@@ -63,7 +60,7 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
 
     function getProductTable()
     {
-        if(isset($this->product_table)) {
+        if (isset($this->product_table)) {
             return $this->product_table;
         }
         $resource = new Mage_Catalog_Model_Resource_Eav_Mysql4_Product;

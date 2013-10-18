@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestCase
 {
 
@@ -32,7 +31,6 @@ class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestC
     function testShouldFindOneByLevelIds()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
-
         $vehicle2 = $this->getFinder()->findOneByLevelIds(array('make_id' => $vehicle->getValue('make')));
         $this->assertEquals($vehicle->toValueArray(), $vehicle2->toValueArray(), 'should find one by level ids');
     }
@@ -104,7 +102,7 @@ class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestC
         $count = $this->getFinder()->countByLevelIds(array(
             'make' => $vehicle1->getValue('make'),
             'model' => $vehicle2->getValue('model'),
-            'year'=>$vehicle2->getValue('year')
+            'year' => $vehicle2->getValue('year')
         ));
         $this->assertEquals(1, $count, 'should not count non-matches');
     }
@@ -124,7 +122,7 @@ class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestC
         $vehicles = $this->getFinder()->findByLevelIds(array(
             'make' => $vehicle1->getValue('make'),
             'model' => $vehicle2->getValue('model')
-        ),false,1);
+        ), false, 1);
         $this->assertEquals(1, count($vehicles), 'should limit # of vehicles found');
     }
 
@@ -143,7 +141,7 @@ class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestC
         $vehicles = $this->getFinder()->findByLevelIds(array(
             'make' => $vehicle1->getValue('make'),
             'model' => $vehicle2->getValue('model')
-        ),false,1,0);
+        ), false, 1, 0);
         $this->assertEquals('Honda Civic 2000', $vehicles[0]->__toString(), 'should offset limit & find 1st vehicle');
     }
 
@@ -162,8 +160,7 @@ class VF_Vehicle_FinderTests_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestC
         $vehicles = $this->getFinder()->findByLevelIds(array(
             'make' => $vehicle1->getValue('make'),
             'model' => $vehicle2->getValue('model')
-        ),false,1,1);
+        ), false, 1, 1);
         $this->assertEquals('Honda Civic 2001', $vehicles[0]->__toString(), 'should offset limit & find 2nd vehicle');
     }
-
 }

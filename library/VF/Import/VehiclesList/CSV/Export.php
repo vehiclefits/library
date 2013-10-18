@@ -4,14 +4,12 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Import_VehiclesList_CSV_Export extends VF_Import_VehiclesList_BaseExport
 {
 
     function export($stream)
     {
         $this->schema = $this->schema();
-
         fwrite($stream, $this->cols());
         fwrite($stream, "\n");
         $this->rows($stream);
@@ -50,5 +48,4 @@ class VF_Import_VehiclesList_CSV_Export extends VF_Import_VehiclesList_BaseExpor
         }
         return $return;
     }
-
 }

@@ -33,12 +33,9 @@ class VF_Import_ValueExploder
         if (!$this->hasWildCards()) {
             return array($input);
         }
-
         $this->result = array();
         $this->i = 0;
-
         $this->replaceAllWithWildcard();
-
         $result = array();
         $finder = new VF_Vehicle_Finder($this->getSchema());
         foreach ($finder->findByLevels($this->input) as $vehicle) {

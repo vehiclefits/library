@@ -29,7 +29,6 @@ class VF_Year extends VF_Year_Abstract
         if (!$this->isValid()) {
             throw new VF_Year_Exception('Trying to work with invalid year [' . $this->year . ']');
         }
-
         if (strlen($this->year) != 2 || !$this->Y2KMode) {
             return $this->year;
         }

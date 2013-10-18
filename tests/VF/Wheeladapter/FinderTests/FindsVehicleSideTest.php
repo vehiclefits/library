@@ -17,28 +17,24 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Wheeladapter_FinderTests_FindsVehicleSideTest extends VF_TestCase
 {
-	function testShouldFindLugCount()
+    function testShouldFindLugCount()
     {
-    	$product = $this->newWheeladapterProduct(1);
+        $product = $this->newWheeladapterProduct(1);
         $product->addVehicleSideBoltPattern($this->boltPattern('4x114.3'));
         $product->addVehicleSideBoltPattern($this->boltPattern('5x114.3'));
-        
-        $this->assertEquals( array(4=>4, 5=>5), $this->wheelAdapterFinder()->listVehicleSideLugCounts(), 'should list lug counts' );
-	}
-	
-	function testShouldFindSideSpread()
+        $this->assertEquals(array(4 => 4, 5 => 5), $this->wheelAdapterFinder()->listVehicleSideLugCounts(), 'should list lug counts');
+    }
+
+    function testShouldFindSideSpread()
     {
-    	$product = $this->newWheeladapterProduct(1);
+        $product = $this->newWheeladapterProduct(1);
         $product->addVehicleSideBoltPattern($this->boltPattern('4x114.3'));
         $product->addVehicleSideBoltPattern($this->boltPattern('4x117.3'));
-        
-        $this->assertEquals( array('114.3'=>114.3, '117.3'=>117.3), $this->wheelAdapterFinder()->listVehicleSideSpread(), 'should list lug counts' );
-	}
-	
+        $this->assertEquals(array('114.3' => 114.3, '117.3' => 117.3), $this->wheelAdapterFinder()->listVehicleSideSpread(), 'should list lug counts');
+    }
 }

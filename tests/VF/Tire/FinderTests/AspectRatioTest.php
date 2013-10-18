@@ -17,22 +17,21 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Tire_FinderTests_AspectRatioTest extends VF_TestCase
 {
-	function testShouldFindAll()
+    function testShouldFindAll()
     {
-        $this->newTireProduct(1, new VF_TireSize(null,55,null));
-        $this->assertEquals( array(55=>55), $this->tireFinder()->aspectRatios(), 'should find possible aspect ratios' );
+        $this->newTireProduct(1, new VF_TireSize(null, 55, null));
+        $this->assertEquals(array(55 => 55), $this->tireFinder()->aspectRatios(), 'should find possible aspect ratios');
     }
 
     function testShouldSort()
     {
-        $this->newTireProduct(1, new VF_TireSize(null,65,null));
-        $this->newTireProduct(2, new VF_TireSize(null,55,null));
-        $this->assertEquals( array(55=>55, 65=>65), $this->tireFinder()->aspectRatios(), 'should sort aspect ratios' );
+        $this->newTireProduct(1, new VF_TireSize(null, 65, null));
+        $this->newTireProduct(2, new VF_TireSize(null, 55, null));
+        $this->assertEquals(array(55 => 55, 65 => 65), $this->tireFinder()->aspectRatios(), 'should sort aspect ratios');
     }
 }

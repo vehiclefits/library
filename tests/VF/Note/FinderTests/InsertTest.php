@@ -54,7 +54,6 @@ class VF_Note_FinderTests_InsertTest extends VF_TestCase
         $product_id = $this->insertProduct('sku');
         $fitmentId = $this->insertMappingMMY($vehicle, $product_id);
         $this->noteFinder()->insertNoteRelationship($fitmentId, $noteId);
-
         $this->assertEquals(1, count($this->noteFinder()->getNotes($fitmentId)), 'should insert note relationship for a fitment');
     }
 }

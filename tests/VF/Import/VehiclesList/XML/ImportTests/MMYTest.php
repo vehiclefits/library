@@ -21,7 +21,6 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYTest extends VF_Import_VehiclesL
 </vehicles>';
         $this->xmlFile = TEMP_PATH . '/definitions.xml';
         file_put_contents($this->xmlFile, $this->xmlData);
-
         $this->switchSchema('make,model,year');
     }
 
@@ -122,7 +121,6 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYTest extends VF_Import_VehiclesL
 
 </vehicles>');
         $importer->import();
-
         $importer = $this->getDefinitionsData('<?xml version="1.0" encoding="UTF-8"?>
 <vehicles>
     <definition id="31738">
@@ -137,5 +135,4 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYTest extends VF_Import_VehiclesL
         $this->assertEquals(72, $this->levelFinder()->find('make', 72)->getId(), 'imports the make #');
         $this->assertEquals('FMC2', $this->levelFinder()->find('make', 72)->getTitle(), 'changes the makes title');
     }
-
 }

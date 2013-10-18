@@ -18,5 +18,4 @@ class VF_SingletonTests_RequestTest extends VF_Import_ProductFitments_CSV_Import
         $request = $singleton->getRequest(); // make sure it doesn't run Magento specific code here
         $this->assertNull($request); // we won't get here if it did.
     }
-
 }

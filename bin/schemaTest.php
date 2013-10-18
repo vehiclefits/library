@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -37,7 +36,6 @@ class VF_Schema_CLITest extends VF_TestCase
 
     function tearDown()
     {
-
     }
 
     /**
@@ -51,15 +49,15 @@ class VF_Schema_CLITest extends VF_TestCase
 
     function testShouldCreateSchemaOverCommandLine()
     {
-        $command = __DIR__.'/vf schema --force --levels="year,make,model"';
+        $command = __DIR__ . '/vf schema --force --levels="year,make,model"';
         exec($command);
         $schema = new VF_Schema;
-        $this->assertEquals(array('year','make','model'), $schema->getLevels(), 'should create default schema of MMY');
+        $this->assertEquals(array('year', 'make', 'model'), $schema->getLevels(), 'should create default schema of MMY');
     }
 
     function testShouldCreateLevelTable()
     {
-        $command = __DIR__.'/vf schema --force --levels="year,make,model"';
+        $command = __DIR__ . '/vf schema --force --levels="year,make,model"';
         exec($command);
         $expectedTable = 'elite_level_1_make';
         $tables = $this->getReadAdapter()->listTables();
@@ -68,11 +66,11 @@ class VF_Schema_CLITest extends VF_TestCase
 
     function testShouldAddSecondSchema()
     {
-        $command = __DIR__.'/vf schema --force --levels="year,make,model"';
+        $command = __DIR__ . '/vf schema --force --levels="year,make,model"';
         exec($command);
-        $command = __DIR__.'/vf schema --add --levels="foo,bar"';
+        $command = __DIR__ . '/vf schema --add --levels="foo,bar"';
         exec($command);
         $schema = new VF_Schema(2);
-        $this->assertEquals(array('foo','bar'), $schema->getLevels(), 'should create second schema');
+        $this->assertEquals(array('foo', 'bar'), $schema->getLevels(), 'should create second schema');
     }
 }

@@ -11,7 +11,6 @@ class VF_Import_VehiclesList_XML_ImportTests_MMY_PerformanceTest extends VF_Impo
     function doSetUp()
     {
         $this->switchSchema('make,model,year');
-
         $this->xmlFile = $this->xmlFile();
     }
 
@@ -19,7 +18,6 @@ class VF_Import_VehiclesList_XML_ImportTests_MMY_PerformanceTest extends VF_Impo
     {
         // should import ~500 vehicles in <= 5 seconds
         $this->setMaxRunningTime(5);
-
         $importer = $this->vehiclesListImporter($this->xmlFile);
         $importer->import();
     }
@@ -28,5 +26,4 @@ class VF_Import_VehiclesList_XML_ImportTests_MMY_PerformanceTest extends VF_Impo
     {
         return dirname(__FILE__) . '/PerformanceTest.xml';
     }
-
 }

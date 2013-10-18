@@ -17,94 +17,88 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Wheeladapter_Finder
 {
-	function listVehicleSideLugCounts()
+    function listVehicleSideLugCounts()
     {
-		return $this->listValues('elite_product_wheel','lug_count');   
+        return $this->listValues('elite_product_wheel', 'lug_count');
     }
-    
+
     function listVehicleSideSpread()
     {
-        return $this->listValues('elite_product_wheel','bolt_distance');
+        return $this->listValues('elite_product_wheel', 'bolt_distance');
     }
-    
+
     function listWheelSideLugCounts()
     {
-        return $this->listValues('elite_product_wheeladapter','lug_count');
+        return $this->listValues('elite_product_wheeladapter', 'lug_count');
     }
-    
+
     function listWheelSideSpread()
     {
-        return $this->listValues('elite_product_wheeladapter','bolt_distance');
+        return $this->listValues('elite_product_wheeladapter', 'bolt_distance');
     }
-    
-    function listValues( $table, $column )
+
+    function listValues($table, $column)
     {
-		$select = $this->getReadAdapter()->select()
-            ->from($table, 'distinct(' . $column . ') as ' . $column )
+        $select = $this->getReadAdapter()->select()
+            ->from($table, 'distinct(' . $column . ') as ' . $column)
             ->order($column);
         $result = $select->query();
         $return = array();
-        while($row = $result->fetch())
-        {
-            $return[ (string)$row[$column] ] = $row[$column];
+        while ($row = $result->fetch()) {
+            $return[(string)$row[$column]] = $row[$column];
         }
         return $return;
     }
-    
+
     /**
-    * @param VF_Wheel_BoltPattern_Single $wheelBolt Wheel Side Bolt
-    * @param VF_Wheel_BoltPattern_Single $vehicleBolt Vehicle Side Bolt
-    * @return array of matching product ids
-    */
-    function getProductIds( $wheelBolt, $vehicleBolt )
+     * @param VF_Wheel_BoltPattern_Single $wheelBolt Wheel Side Bolt
+     * @param VF_Wheel_BoltPattern_Single $vehicleBolt Vehicle Side Bolt
+     * @return array of matching product ids
+     */
+    function getProductIds($wheelBolt, $vehicleBolt)
     {
-		if($vehicleBolt && !$wheelBolt)
-		{
-			return $this->getVehicleSideProductIds($vehicleBolt);
-		}
-		if($wheelBolt && !$vehicleBolt)
-		{
-			return $this->getWheelSideProductIds($wheelBolt);
-		}		
-		return array_intersect( $this->getVehicleSideProductIds($vehicleBolt), $this->getWheelSideProductIds($wheelBolt) );
+        if ($vehicleBolt && !$wheelBolt) {
+            return $this->getVehicleSideProductIds($vehicleBolt);
+        }
+        if ($wheelBolt && !$vehicleBolt) {
+            return $this->getWheelSideProductIds($wheelBolt);
+        }
+        return array_intersect($this->getVehicleSideProductIds($vehicleBolt), $this->getWheelSideProductIds($wheelBolt));
     }
-    
-    function getVehicleSideProductIds( VF_Wheel_BoltPattern_Single $bolt)
+
+    function getVehicleSideProductIds(VF_Wheel_BoltPattern_Single $bolt)
     {
         $select = $this->getReadAdapter()->select()
-            ->from('elite_product_wheel','distinct(entity_id) entity_id')
-            ->where('lug_count = ?', $bolt->getLugCount() )
-            ->where('bolt_distance = ?', $bolt->getDistance() );
+            ->from('elite_product_wheel', 'distinct(entity_id) entity_id')
+            ->where('lug_count = ?', $bolt->getLugCount())
+            ->where('bolt_distance = ?', $bolt->getDistance());
         $result = $select->query();
         $return = array();
-        while($row = $result->fetch())
-        {
-            array_push($return,$row['entity_id']);
+        while ($row = $result->fetch()) {
+            array_push($return, $row['entity_id']);
         }
         return $return;
     }
-    
-    function getWheelSideProductIds( VF_Wheel_BoltPattern_Single $bolt)
+
+    function getWheelSideProductIds(VF_Wheel_BoltPattern_Single $bolt)
     {
         $select = $this->getReadAdapter()->select()
-            ->from('elite_product_wheeladapter','distinct(entity_id) entity_id')
-            ->where('lug_count = ?', $bolt->getLugCount() )
-            ->where('bolt_distance = ?', $bolt->getDistance() );
+            ->from('elite_product_wheeladapter', 'distinct(entity_id) entity_id')
+            ->where('lug_count = ?', $bolt->getLugCount())
+            ->where('bolt_distance = ?', $bolt->getDistance());
         $result = $select->query();
         $return = array();
-        while($row = $result->fetch())
-        {
-            array_push($return,$row['entity_id']);
+        while ($row = $result->fetch()) {
+            array_push($return, $row['entity_id']);
         }
         return $return;
     }
-    
+
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {

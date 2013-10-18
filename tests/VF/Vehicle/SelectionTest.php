@@ -26,7 +26,6 @@ class VF_Vehicle_SelectionTest extends VF_TestCase
     {
         $vehicle1 = $this->createVehicle(array('make' => 'Honda', 'model' => 'civic', 'year' => 2000));
         $vehicle2 = $this->createVehicle(array('make' => 'Honda', 'model' => 'civic', 'year' => 2001));
-
         $selection = new VF_Vehicle_Selection($vehicle1);
         $this->assertFalse($selection->contains($vehicle2));
     }
@@ -80,5 +79,4 @@ class VF_Vehicle_SelectionTest extends VF_TestCase
         $this->assertTrue($selection->contains($vehicle3) );
 */
     }
-
 }

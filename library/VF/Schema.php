@@ -28,10 +28,8 @@ class VF_Schema implements VF_Configurable
             'value' => $levels
         ));
         $schema->setId($schema->getReadAdapter()->lastInsertId());
-
         $schemaGenerator = new VF_Schema_Generator();
         $schemaGenerator->execute(explode(',', $levels), false, $schema->id());
-
         return $schema;
     }
 
@@ -84,17 +82,14 @@ class VF_Schema implements VF_Configurable
     function getLevels()
     {
         $levels = isset(self::$levels[$this->id()]) ? self::$levels[$this->id()] : null;
-
         if (is_array($levels) && count($levels)) {
             return $levels;
         }
-
         $select = $this->getReadAdapter()->select()
             ->from('elite_schema', 'value')
             ->where('`key`=?', 'levels')
             ->where('id=?', $this->id());
         $levels = $select->query()->fetchColumn();
-
         $levels = explode(',', $levels);
         foreach ($levels as $k => $level) {
             $levels[$k] = trim($level);

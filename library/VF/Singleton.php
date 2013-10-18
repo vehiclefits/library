@@ -57,7 +57,6 @@ class VF_Singleton implements VF_Configurable
     {
         $search = $this->flexibleSearch();
         $mapping_id = $search->storeFitInSession();
-
         if ($this->shouldEnableVaftireModule()) {
             $tireSearch = new VF_Tire_FlexibleSearch($search);
             $tireSearch->storeTireSizeInSession();
@@ -88,7 +87,6 @@ class VF_Singleton implements VF_Configurable
         }
         return true;
     }
-
 
     function shouldEnableVafwheeladapterModule()
     {
@@ -133,14 +131,12 @@ class VF_Singleton implements VF_Configurable
         if ($this->_request instanceof Zend_Controller_Request_Abstract) {
             return $this->_request;
         }
-
         // get Prestashop request
-        if(defined('_PS_VERSION_')) {
+        if (defined('_PS_VERSION_')) {
             return new Zend_Controller_Request_Http;
         }
-
         // get Magento request
-        if(class_exists('Mage',false)) {
+        if (class_exists('Mage', false)) {
             if ($controller = Mage::app()->getFrontController()) {
                 return $controller->getRequest();
             } else {
@@ -240,7 +236,7 @@ class VF_Singleton implements VF_Configurable
     /** @return Zend_Db_Adapter_Abstract */
     function getReadAdapter()
     {
-        if(!isset($this->dbAdapter)) {
+        if (!isset($this->dbAdapter)) {
             throw new Exception('No database adapter is set');
         }
         return $this->dbAdapter;
@@ -286,7 +282,6 @@ class VF_Singleton implements VF_Configurable
     {
         $search = new VF_FlexibleSearch($this->schema(), $this->getRequest());
         $search->setConfig($this->getConfig());
-
         if ($this->shouldEnableVafWheelModule()) {
             $search = new VF_Wheel_FlexibleSearch($search);
         }
@@ -296,18 +291,17 @@ class VF_Singleton implements VF_Configurable
         if ($this->shouldEnableVafwheeladapterModule()) {
             $search = new VF_Wheeladapter_FlexibleSearch($search);
         }
-
         return $search;
     }
 
     function getBaseUrl($https = null)
     {
-        if(isset($this->base_url)) {
+        if (isset($this->base_url)) {
             return $this->base_url;
         }
         throw new Exception('base URL has not been injected into the singleton');
     }
-    
+
     function setBaseURL($url)
     {
         $this->base_url = $url;
@@ -315,7 +309,7 @@ class VF_Singleton implements VF_Configurable
 
     function processUrl()
     {
-        if(isset($this->process_url)) {
+        if (isset($this->process_url)) {
             return $this->process_url;
         }
         throw new Exception('process URL has not been injected into the singleton');
@@ -328,7 +322,7 @@ class VF_Singleton implements VF_Configurable
 
     function homepageSearchURL()
     {
-        if(isset($this->homepagesearch_url)) {
+        if (isset($this->homepagesearch_url)) {
             return $this->homepagesearch_url;
         }
         throw new Exception;

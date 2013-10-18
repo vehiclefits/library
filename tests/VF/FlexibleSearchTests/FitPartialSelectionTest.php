@@ -20,10 +20,8 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
             'year' => 'loading'
         );
         $helper = $this->getHelper(array(), $requestParams);
-
         $this->assertFalse($helper->flexibleSearch()->getValueForSelectedLevel('model'));
     }
-
 
     function testShouldBeNumericWhenLoading()
     {
@@ -34,7 +32,6 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
             'year' => 'loading'
         );
         $helper = $this->getHelper(array(), $requestParams);
-
         $this->assertTrue($helper->flexibleSearch()->isNumericRequest());
     }
 
@@ -47,10 +44,8 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
             'year' => 'loading'
         );
         $helper = $this->getHelper(array(), $requestParams);
-
         $this->assertEquals($vehicle->getValue('make'), $helper->flexibleSearch()->getValueForSelectedLevel('make'));
     }
-
 
     function testShouldReturnDefinition()
     {
@@ -61,7 +56,6 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
             'year' => 'loading'
         );
         $helper = $this->getHelper(array(), $requestParams);
-
         $this->assertEquals($vehicle->getLevel('make')->getId(), $helper->vehicleSelection()->getValue('make'));
         $this->assertEquals(0, $helper->vehicleSelection()->getValue('model'));
         $this->assertEquals(0, $helper->vehicleSelection()->getValue('year'));
@@ -78,7 +72,6 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
         );
         $helper = $this->getHelper(array(), $requestParams);
         $helper->storeFitInSession();
-
         $this->assertEquals($vehicle->getLevel('make')->getId(), $_SESSION['make'], 'should store make in session');
         $this->assertFalse($_SESSION['model']);
         $this->assertFalse($_SESSION['year']);
@@ -96,7 +89,6 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
         );
         $helper = $this->getHelper(array(), $requestParams);
         $helper->storeFitInSession();
-
         $this->assertEquals(array(1), $helper->getProductIds());
     }
 
@@ -106,7 +98,6 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
         $_SESSION = $vehicle->toValueArray();
         $helper = $this->getHelper(array(), $vehicle->toValueArray());
         $helper->storeFitInSession();
-
         $requestParams = array(
             'make' => $vehicle->getLevel('make')->getId(),
             'model' => 'loading',
@@ -114,7 +105,6 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
         );
         $helper = $this->getHelper(array(), $requestParams);
         $helper->storeFitInSession();
-
         $this->assertEquals($vehicle->getLevel('make')->getId(), $_SESSION['make']);
         $this->assertFalse($_SESSION['model']);
         $this->assertFalse($_SESSION['year']);
@@ -124,10 +114,7 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
     {
         $vehicle1 = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
         $vehicle2 = $this->createVehicle(array('make' => 'Acura', 'model' => 'Integra', 'year' => '2000'));
-
         $helper = $this->getHelper(array(), $vehicle1->toValueArray());
-
         $this->assertEquals($vehicle1->getLevel('make')->getId(), $helper->flexibleSearch()->getFlexibleDefinition()->getValue('make'));
     }
-
 }

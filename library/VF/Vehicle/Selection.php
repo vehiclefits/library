@@ -44,7 +44,6 @@ class VF_Vehicle_Selection
         return $earliestYear;
     }
 
-
     function latestYear()
     {
         $latestYear = null;
@@ -78,7 +77,6 @@ class VF_Vehicle_Selection
         if ($this->isEmpty()) {
             return;
         }
-
         $method = array($this->getFirstVehicle(), $methodName);
         return call_user_func_array($method, $arguments);
     }

@@ -17,41 +17,39 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_TireSizeTests_FormattedStringTest extends VF_TestCase
 {
-    
+
     function testShouldCreateFromFormattedString()
     {
         $tireSize = VF_TireSize::create('205/55-16');
-        $this->assertEquals( '205/55-16', (string)$tireSize, 'should format a tire size string' );
+        $this->assertEquals('205/55-16', (string)$tireSize, 'should format a tire size string');
     }
-    
+
     /**
-    * @expectedException VF_TireSize_InvalidFormatException
-    */
+     * @expectedException VF_TireSize_InvalidFormatException
+     */
     function testShouldThrowExceptionForMissingSectionWidth()
     {
         $tireSize = VF_TireSize::create('/55-16');
     }
-    
+
     /**
-    * @expectedException VF_TireSize_InvalidFormatException
-    */
+     * @expectedException VF_TireSize_InvalidFormatException
+     */
     function testShouldThrowExceptionForMissingAspectRatio()
     {
         $tireSize = VF_TireSize::create('205/-16');
     }
-    
+
     /**
-    * @expectedException VF_TireSize_InvalidFormatException
-    */
+     * @expectedException VF_TireSize_InvalidFormatException
+     */
     function testShouldThrowExceptionForMissingOutsideDiameter()
     {
         $tireSize = VF_TireSize::create('205/55-');
     }
-    
 }

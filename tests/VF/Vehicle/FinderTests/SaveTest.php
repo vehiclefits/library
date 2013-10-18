@@ -49,7 +49,6 @@ class VF_Vehicle_FinderTests_SaveTest extends VF_TestCase
         $vehicle1 = $this->createVehicle(array('year' => '2000', 'make' => 'Honda', 'model' => 'Civic'));
         $vehicle2 = $this->createVehicle(array('year' => '2001', 'make' => 'Honda', 'model' => 'Civic'));
         $vehicle3 = $this->createVehicle(array('year' => '2002', 'make' => 'Acura', 'model' => 'Integra'));
-
         $this->assertFalse($this->vehicleExists(array('year' => '2002', 'make' => 'Honda')), 'should not put make "under" wrong years');
     }
 
@@ -57,7 +56,6 @@ class VF_Vehicle_FinderTests_SaveTest extends VF_TestCase
     {
         $vehicle1 = $this->createVehicle(array('year' => '2000', 'make' => 'Honda', 'model' => 'Civic'));
         $vehicle2 = $this->createVehicle(array('year' => '2001', 'make' => 'Honda', 'model' => 'Accord'));
-
         $this->assertFalse($this->vehicleExists(array('year' => '2001', 'make' => 'Honda', 'model' => 'Civic')), 'should not put model "under" wrong years');
     }
 }

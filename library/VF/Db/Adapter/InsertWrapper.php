@@ -42,7 +42,6 @@ class VF_Db_Adapter_InsertWrapper
     function insert($table, array $bind)
     {
         $sql = $this->insertSql($table, $bind);
-
         // execute the statement and return the number of affected rows
         $stmt = $this->wrappedAdapter->query($sql, array_values($bind));
         $result = $stmt->rowCount();
@@ -62,7 +61,6 @@ class VF_Db_Adapter_InsertWrapper
         $cols = array();
         $vals = array();
         $this->extractAndQuoteCols($bind, $cols, $vals);
-
         // build the statement
         $sql = "INSERT INTO "
             . $this->wrappedAdapter->quoteIdentifier($table, true)

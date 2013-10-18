@@ -28,11 +28,9 @@ class VF_Level_Finder_UpdaterTest extends VF_TestCase
         $model->setTitle('Civic');
         $model->save();
         $model = $this->findEntityById($model->getId(), $model->getType());
-
         $model->setTitle('Accord');
         $model->save();
         $model = $this->findEntityById($model->getId(), $model->getType());
-
         $this->assertSame('Accord', $model->getTitle(), 'saved entity should have correct title value');
     }
 
@@ -41,11 +39,8 @@ class VF_Level_Finder_UpdaterTest extends VF_TestCase
         $make = new VF_Level('make');
         $make->setTitle('Honda');
         $make = $this->saveAndReload($make);
-
         $make->setTitle('Acura');
         $make = $this->saveAndReload($make);
-
         $this->assertSame('Acura', $make->getTitle(), 'saved entity should have correct title value');
     }
-
 }

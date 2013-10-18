@@ -53,6 +53,4 @@ class VF_LevelTests_LevelsTest extends VF_TestCase
         $entity = new VF_Level('year');
         $this->assertEquals(self::ENTITY_TYPE_MODEL, $entity->getPrevLevel(), 'getPrevLevel should return "model" for a entity of type "year"');
     }
-
-
 }

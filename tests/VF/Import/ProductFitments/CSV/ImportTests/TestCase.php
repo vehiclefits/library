@@ -57,16 +57,13 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
         if (is_null($schema)) {
             $schema = new VF_Schema;
         }
-
         $sql = sprintf(
             "SELECT `entity_id` from `test_catalog_product_entity` WHERE `sku` = %s",
             $this->getReadAdapter()->quote($sku)
         );
         $r = $this->query($sql);
         $product_id = $r->fetchColumn();
-
         $r->closeCursor();
-
         $sql = sprintf(
             "SELECT `%s_id` from `elite_1_mapping` WHERE `entity_id` = %d AND `universal` = 0",
             $schema->getLeafLevel(),
@@ -75,7 +72,6 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
         $r = $this->query($sql);
         $leaf_id = $r->fetchColumn();
         $r->closeCursor();
-
         if (!$leaf_id) {
             return false;
         }
@@ -95,7 +91,6 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
         $r = $this->query($sql);
         $product_id = $r->fetchColumn();
         $r->closeCursor();
-
         $sql = sprintf(
             "SELECT `id` from `elite_1_mapping` WHERE `entity_id` = %d",
             $product_id
@@ -103,18 +98,15 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
         $r = $this->query($sql);
         $id = $r->fetchColumn();
         $r->closeCursor();
-
         return $id;
     }
 
     function exportProductFitments()
     {
         $stream = fopen("php://temp", 'w');
-
         $exporter = new VF_Import_ProductFitments_CSV_ExportTests_TestSub();
         $exporter->export($stream);
         rewind($stream);
-
         $data = stream_get_contents($stream);
         return $data;
     }

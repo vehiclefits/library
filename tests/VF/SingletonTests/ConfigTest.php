@@ -71,5 +71,4 @@ class VF_SingletonTest_ConfigTest extends VF_TestCase
         $config = $this->getHelper()->getConfig();
         $this->assertTrue($config->tire instanceof Zend_Config, 'tire section should exist in default configuration');
     }
-
 }

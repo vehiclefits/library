@@ -16,17 +16,15 @@ class VF_Ajax implements VF_Configurable
     {
         $this->alphaNumeric = $alphaNumeric;
         $this->schema = $schema;
-
         $levels = $schema->getLevels();
         $c = count($levels);
-
         $levelFinder = new VF_Level_Finder($schema);
         if (isset($_GET['front'])) {
             $product = isset($_GET['product']) ? $_GET['product'] : null;
             if ($alphaNumeric) {
                 $children = $levelFinder->listInUseByTitle(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
             } else {
-                if($this->shouldListAll()) {
+                if ($this->shouldListAll()) {
                     $children = $levelFinder->listAll(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
                 } else {
                     $children = $levelFinder->listInUse(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
@@ -35,7 +33,6 @@ class VF_Ajax implements VF_Configurable
         } else {
             $children = $levelFinder->listAll($this->requestLevel(), $this->requestLevels());
         }
-
         echo $this->renderChildren($children);
     }
 
@@ -70,7 +67,6 @@ class VF_Ajax implements VF_Configurable
         if (count($children) > 1 && $label) {
             echo '<option value="0">' . $label . '</option>';
         }
-
         foreach ($children as $child) {
             if ($this->alphaNumeric) {
                 echo '<option value="' . $child->getTitle() . '">' . htmlentities($child->getTitle(), ENT_QUOTES, 'UTF-8') . '</option>';
@@ -105,7 +101,6 @@ class VF_Ajax implements VF_Configurable
     function getConfig()
     {
         if (!$this->config instanceof Zend_Config) {
-
             $this->config = VF_Singleton::getInstance()->getConfig();
         }
         return $this->config;

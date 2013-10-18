@@ -22,24 +22,19 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         if (!(int)$id) {
             return;
         }
-
         if ($this->identityMap()->has($level, $id)) {
             return $this->identityMap()->get($level, $id);
         }
-
         $select = $this->getReadAdapter()->select()
             ->from($this->getTable($level))
             ->where('id =? ', $id)
             ->limit(1);
-
         $row = $select->query()->fetchObject();
         if (!is_object($row)) {
             throw new VF_Level_Exception_NotFound('error initializing model with level [' . $level . '] and id [' . $id . ']');
         }
-
         $level = new VF_Level($level, $id, $this->schema);
         $level->setTitle($row->title);
-
         $this->identityMap()->add($level);
         return $level;
     }
@@ -72,13 +67,11 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
             ->from(array('l' => $entity->getTable()))
             ->order('title')
             ->group('l.title');
-
         if (is_numeric($parent_id) && $parent_id > 0 && $entity->getPrevLevel()) {
             $select
                 ->joinLeft(array('d' => $this->getSchema()->definitionTable()), 'l.id = d.' . $entity->getType() . '_id', array())
                 ->where('d.' . $entity->getPrevLevel() . '_id = ?', $parent_id);
         }
-
         if (is_array($parent_id) && $entity->getPrevLevel()) {
             $select->joinLeft(array('d' => $this->getSchema()->definitionTable()), 'l.id = d.' . $entity->getType() . '_id', array());
             foreach ($parent_id as $level => $each_parent_id) {
@@ -88,9 +81,7 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
                 $select->where('d.' . $level . '_id = ?', $each_parent_id);
             }
         }
-
         $result = $select->query();
-
         $this->objs[$entity->getType()][$entity->getId()] = array();
         foreach ($result->fetchAll(Zend_Db::FETCH_OBJ) as $row) {
             $obj = $this->find($entity->getType(), $row->id);
@@ -120,9 +111,7 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         if (isset($this->objs_in_use[$entity->getType()][$entity->getId()])) {
             return $this->objs_in_use[$entity->getType()][$entity->getId()];
         }
-
         $result = $this->doListInUse($entity, $parents, $product_id);
-
         $this->objs_in_use[$entity->getType()][$entity->getId()] = array();
         while ($row = $result->fetchObject()) {
             $obj = $entity->createEntity($entity->getType(), 0);
@@ -140,11 +129,9 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
     {
         $subQuery = $this->getReadAdapter()->select();
         $subQuery->from($this->getSchema()->mappingsTable() . ' as fitment', array($entity->getType() . '_id'));
-
         if ($product_id) {
             $subQuery->where('`entity_id` = ?', $product_id);
         }
-
         foreach ($parents as $parentType => $parentId) {
             if (!in_array($parentType, $this->getSchema()->getLevels())) {
                 throw new VF_Level_Exception($parentType);
@@ -153,16 +140,12 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
                 continue;
             }
             $subQuery->where(sprintf('fitment.`%s_id` = ?', $parentType), $parentId);
-
         }
         $subQuery->group($entity->getType() . '_id');
-
         $idSet = array();
         foreach ($subQuery->query()->fetchAll() as $id) {
             array_push($idSet, $id[$entity->getType() . '_id']);
         }
-
-
         $select = $this->getReadAdapter()->select();
         $select
             ->from(array('m' => $this->getSchema()->levelTable($entity->getType())), array('id', 'title'))
@@ -172,9 +155,7 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         } else {
             $select->where('m.id IN (0)');
         }
-
         $select->order('m.title ' . $entity->getSortOrder());
-
         return $this->query($select);
     }
 
@@ -197,13 +178,10 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         if ($identityMap->has($type, $title)) {
             return $identityMap->get($type, $title);
         }
-
         $inflectedType = $this->inflect($type);
-
         $query = $this->getReadAdapter()->select()
             ->from(array('l' => 'elite_level_' . $this->getSchema()->id() . '_' . $inflectedType))
             ->where('`title` LIKE binary ?', $title);
-
         $result = $this->query($query);
         $id = $result->fetchColumn(0);
         if (!$id) {

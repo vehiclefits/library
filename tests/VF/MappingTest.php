@@ -42,10 +42,8 @@ class VF_MappingTest extends VF_TestCase
     function testAlreadyHasMapping()
     {
         $vehicle = $this->createMMY();
-
         $mapping = new VF_Mapping(1, $vehicle);
         $mapping_id1 = $mapping->save();
-
         $mapping = new VF_Mapping(1, $vehicle);
         $mapping_id2 = $mapping->save();
         $this->assertEquals($mapping_id1, $mapping_id2);

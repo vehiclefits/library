@@ -9,10 +9,8 @@ class VF_Import_ProductFitments_CSV_ImportTests_YMM_SimpleTest extends VF_Import
     protected function doSetUp()
     {
         $this->switchSchema('year,make,model');
-
         $this->csvData = 'sku, make, model, year
 sku, honda, civic, 2000';
-
         $this->insertProduct(self::SKU);
     }
 
@@ -35,7 +33,6 @@ sku, honda, civic, 2000';
         $importer->import();
         $this->assertEquals(1, $importer->getCountMappings());
     }
-
 //    function testSkippedCountIs1IfFitAlreadyExists()
 //    {
 //        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass( $this->csvFile );
@@ -45,5 +42,4 @@ sku, honda, civic, 2000';
 //        $importer->import();
 //        $this->assertEquals( 1, $importer->getCountSkippedMappings() );
 //    }
-
 }

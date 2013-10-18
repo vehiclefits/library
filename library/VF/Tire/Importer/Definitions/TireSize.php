@@ -17,47 +17,41 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Tire_Importer_Definitions_TireSize extends VF_Import_VehiclesList_CSV_Import
 {
     function importRow($row)
-    {   
+    {
         $this->row_number++;
         $this->oldImportRow($row);
     }
-    
+
     /**
-    * @param array $row
-    * @param VF_Vehicle|boolean the vehicle, false if none (for example, when setting a product as universal)
-    */
-    function doImportRow( $row, $vehicle )
+     * @param array $row
+     * @param VF_Vehicle|boolean the vehicle, false if none (for example, when setting a product as universal)
+     */
+    function doImportRow($row, $vehicle)
     {
-        if(!$vehicle)
-        {
+        if (!$vehicle) {
             return;
         }
         $tireVehicle = new VF_Tire_Vehicle($vehicle);
         $tireSize = $this->tireSize($row);
-        if(!$tireSize)
-        {
+        if (!$tireSize) {
             return false;
         }
         $tireVehicle->addTireSize($tireSize);
     }
-    
+
     /** @return VF_TireSize|boolean tire size, or false if formatting was invalid */
     function tireSize($row)
     {
-        try
-        {
-            $tireSizeString = $this->getFieldValue( 'tire_size', $row );
+        try {
+            $tireSizeString = $this->getFieldValue('tire_size', $row);
             $tireSize = VF_TireSize::create($tireSizeString);
-        }
-        catch( VF_TireSize_InvalidFormatException $e )
-        {
+        } catch (VF_TireSize_InvalidFormatException $e) {
             return false;
         }
         return $tireSize;

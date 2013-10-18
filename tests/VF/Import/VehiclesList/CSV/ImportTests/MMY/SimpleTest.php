@@ -12,7 +12,6 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_SimpleTest extends VF_Import_Te
     function doSetUp()
     {
         $this->switchSchema('make,model,year');
-
         $this->csvData = 'make, model, year
 honda, civic, 2000
 honda, civic, 2001
@@ -35,9 +34,8 @@ acura, integra, 2000';
     function testSameMakeDifferentModel()
     {
         $this->importVehiclesList("make, model, year\n" .
-            "makeA,modelA,2000\n" .
-            "makeB,modelA,2000");
-
+        "makeA,modelA,2000\n" .
+        "makeB,modelA,2000");
         $this->assertTrue($this->vehicleExists(array('make' => 'makeA', 'model' => 'modelA', 'year' => '2000')), 'should import first vehicle');
         $this->assertTrue($this->vehicleExists(array('make' => 'makeB', 'model' => 'modelA', 'year' => '2000')), 'should import second vehicle');
     }
@@ -59,5 +57,4 @@ acura, integra, 2000';
         $this->importVehiclesList($this->csvData);
         $this->assertTrue($this->vehicleExists(array('year' => '2002')), 'should import year 2002');
     }
-
 }

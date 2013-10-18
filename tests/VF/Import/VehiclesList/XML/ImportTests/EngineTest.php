@@ -23,7 +23,6 @@ class VF_Import_VehiclesList_XML_ImportTests_EngineTest extends VF_Import_Vehicl
 </vehicles>';
         $this->csvFile = TEMP_PATH . '/definitions.xml';
         file_put_contents($this->csvFile, $this->csvData);
-
         $this->switchSchema('year,make,model,submodel,engine');
     }
 
@@ -68,8 +67,6 @@ class VF_Import_VehiclesList_XML_ImportTests_EngineTest extends VF_Import_Vehicl
         $importer->import();
         $this->assertTrue($this->vehicleExists(array('engine' => '4 Cylinder')), 'should import a engine title');
     }
-
-
 //    function testImportsMakeId()
 //    {
 //        $importer = $this->vehiclesListImporter( $this->csvFile );
@@ -94,5 +91,4 @@ class VF_Import_VehiclesList_XML_ImportTests_EngineTest extends VF_Import_Vehicl
 //        $level = new VF_Level('year',8);
 //        $this->assertTrue( $level->getTitle() == '2000', 'imports the yearID #' );
 //    }
-
 }

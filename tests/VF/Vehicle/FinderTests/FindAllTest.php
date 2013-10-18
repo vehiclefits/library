@@ -14,9 +14,9 @@ class VF_Vehicle_FinderTests_FindAllTest extends VF_Vehicle_FinderTests_TestCase
     function testFindOneVehicle()
     {
         $expectedVehicle = $this->createVehicle(array(
-            'make'=>'Honda',
-            'model'=>'Civic',
-            'year'=>'2000'
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
         ));
         $vehicles = $this->getFinder()->findAll();
         $this->assertEquals($expectedVehicle->__toString(), $vehicles[0]->__toString(), 'should list the one vehicle');
@@ -39,32 +39,32 @@ class VF_Vehicle_FinderTests_FindAllTest extends VF_Vehicle_FinderTests_TestCase
     function testShouldOffsetLimitTo2ndVehicle()
     {
         $vehicle1 = $this->createVehicle(array(
-            'make'=>'Honda',
-            'model'=>'Civic',
-            'year'=>'2000'
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
         ));
         $vehicle2 = $this->createVehicle(array(
-            'make'=>'Honda',
-            'model'=>'Civic',
-            'year'=>'2001'
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
         ));
-        $vehicles = $this->getFinder()->findAll(1,1);
+        $vehicles = $this->getFinder()->findAll(1, 1);
         $this->assertEquals($vehicle2->__toString(), $vehicles[0]->__toString(), 'should list the 2nd vehicle');
     }
 
     function testShouldOffsetLimitTo1stVehicle()
     {
         $vehicle1 = $this->createVehicle(array(
-            'make'=>'Honda',
-            'model'=>'Civic',
-            'year'=>'2000'
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000'
         ));
         $vehicle2 = $this->createVehicle(array(
-            'make'=>'Honda',
-            'model'=>'Civic',
-            'year'=>'2001'
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2001'
         ));
-        $vehicles = $this->getFinder()->findAll(1,0);
+        $vehicles = $this->getFinder()->findAll(1, 0);
         $this->assertEquals($vehicle1->__toString(), $vehicles[0]->__toString(), 'should list the 1st vehicle');
     }
 
@@ -72,16 +72,16 @@ class VF_Vehicle_FinderTests_FindAllTest extends VF_Vehicle_FinderTests_TestCase
     {
         $this->createVehicles(5);
         $count = $this->getFinder()->countAll();
-        $this->assertEquals(5,$count,'should count all vehicles');
+        $this->assertEquals(5, $count, 'should count all vehicles');
     }
 
     function createVehicles($count)
     {
-        for($i=1; $i<=$count; $i++) {
+        for ($i = 1; $i <= $count; $i++) {
             $this->createVehicle(array(
-                'make'=>'Honda',
-                'model'=>'Civic',
-                'year'=>uniqid()
+                'make' => 'Honda',
+                'model' => 'Civic',
+                'year' => uniqid()
             ));
         }
     }

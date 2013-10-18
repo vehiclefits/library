@@ -36,7 +36,6 @@ class VF_Level_IdentityMap
 
     function remove($level)
     {
-
     }
 
     function has($level, $id)

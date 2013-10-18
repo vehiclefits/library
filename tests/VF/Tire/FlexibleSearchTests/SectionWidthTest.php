@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -25,25 +24,23 @@ class VF_Tire_FlexibleSearchTests_SectionWidthTest extends VF_TestCase
 {
     function testShouldGetFromRequest()
     {
-        $flexibleSearch = $this->flexibleTireSearch(array('section_width'=>'205', 'aspect_ratio'=>'55', 'diameter'=>'16'));
-        $this->assertEquals( 205, $flexibleSearch->sectionWidth(), 'should get section width from request' );
+        $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16'));
+        $this->assertEquals(205, $flexibleSearch->sectionWidth(), 'should get section width from request');
     }
-    
+
     function testShouldStoreInSession()
     {
-        $flexibleSearch = $this->flexibleTireSearch(array('section_width'=>'205', 'aspect_ratio'=>'55', 'diameter'=>'16'));
+        $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16'));
         VF_Singleton::getInstance()->storeFitInSession();
-        $this->assertEquals( 205, $this->flexibleTireSearch()->sectionWidth(), 'should store section width in session' );
+        $this->assertEquals(205, $this->flexibleTireSearch()->sectionWidth(), 'should store section width in session');
     }
-    
+
     function testShouldClearFromSession()
     {
-        $flexibleSearch = $this->flexibleTireSearch(array('section_width'=>'205', 'aspect_ratio'=>'55', 'diameter'=>'16'));
+        $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16'));
         VF_Singleton::getInstance()->storeFitInSession();
-        
-        $flexibleSearch = $this->flexibleTireSearch(array('section_width'=>'0', 'aspect_ratio'=>'0', 'diameter'=>'0'));
+        $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '0', 'aspect_ratio' => '0', 'diameter' => '0'));
         VF_Singleton::getInstance()->storeFitInSession();
-        
-        $this->assertNull( $this->flexibleTireSearch()->sectionWidth(), 'should clear section width from session' );
+        $this->assertNull($this->flexibleTireSearch()->sectionWidth(), 'should clear section width from session');
     }
 }

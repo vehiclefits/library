@@ -86,7 +86,6 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
                 array_push($new_combinations, $combination);
             }
         }
-
         return $new_combinations;
     }
 
@@ -103,8 +102,8 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
     function updateProductIdsInTempTable()
     {
         $sql = 'UPDATE elite_import i, ' . $this->getProductTable() . ' p' .
-               ' SET i.product_id = p.' . $this->getProductIdField() .
-               ' WHERE i.sku = p.' . $this->getProductSkuField();
+            ' SET i.product_id = p.' . $this->getProductIdField() .
+            ' WHERE i.sku = p.' . $this->getProductSkuField();
         $this->query($sql);
     }
 
@@ -112,18 +111,15 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
     {
         $select = 'SELECT count(`sku`) FROM elite_import WHERE `sku` NOT IN (select `sku` from ' . $this->getProductTable() . ')';
         $this->nonexistant_sku_count = $this->getReadAdapter()->query($select)->fetchColumn();
-
         $select = 'SELECT DISTINCT(`sku`) FROM elite_import WHERE `sku` NOT IN (select `sku` from ' . $this->getProductTable() . ') LIMIT 10';
         foreach ($this->getReadAdapter()->query($select)->fetchAll() as $row) {
             array_push($this->nonexistant_skus, $row['sku']);
         }
-
         $select = 'SELECT `sku`, `line` FROM elite_import WHERE `sku` NOT IN (select `sku` from ' . $this->getProductTable() . ') GROUP BY `line`';
         $result = $this->getReadAdapter()->query($select);
         while ($row = $result->fetch()) {
             $this->log('Line(' . $row['line'] . ') Non Existant SKU \'' . $row['sku'] . '\'', Zend_Log::NOTICE);
         }
-
         $select = 'SELECT COUNT(DISTINCT(`line`)) FROM elite_import WHERE `sku` NOT IN (select `sku` from ' . $this->getProductTable() . ')';
         $this->nonexistant_sku_row_count = $this->getReadAdapter()->query($select)->fetchColumn();
     }
@@ -137,7 +133,6 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
                 $condition .= ' && ';
             }
         }
-
         $select = $this->getReadAdapter()->select()
             ->from(array('i' => 'elite_import'), 'count(*)')
             ->joinLeft(array('m' => $this->schema()->mappingsTable()), $condition, array())
@@ -154,7 +149,6 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
                 $condition .= ' && ';
             }
         }
-
         $this->query('UPDATE elite_import i, ' . $this->schema()->mappingsTable() . ' m
                       SET i.mapping_id = m.id
                       WHERE ' . $condition . ' && i.product_id = m.entity_id');
@@ -194,7 +188,6 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
         if (false === strpos($skuText, '*') && false === strpos($skuText, ',')) {
             return array($skuText);
         }
-
         $skus = $this->explodeSkusByComma($skuText);
         $skus = $this->explodeSkusByWildcard($skus);
         return $skus;
@@ -223,14 +216,12 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
     function explodeSkusByWildcard($skus)
     {
         $return = array();
-
         foreach ($skus as $sku) {
             $sku = str_replace('*', '%', $sku);
             $result = $this->getReadAdapter()->select()
                 ->from($this->getProductTable())
                 ->where($this->getProductSkuField() . ' LIKE ?', $sku)
                 ->query();
-
             foreach ($result->fetchAll() as $matchedSku) {
                 array_push($return, $matchedSku[$this->getProductSkuField()]);
             }
@@ -242,7 +233,6 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
     {
         $this->skipped_mappings++;
         $sku = $this->sku($row);
-
         $this->nonexistant_sku_count++;
         if (!in_array($sku, $this->nonexistant_skus)) {
             array_push($this->nonexistant_skus, $sku);
@@ -279,5 +269,4 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
         }
         return $this->fieldPositions;
     }
-
 }

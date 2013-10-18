@@ -86,5 +86,4 @@ class VF_SingletonTest_SettingsTest extends VF_TestCase
         $helper = $this->getHelper(array('search' => array('loadingText' => '')));
         $this->assertEquals('', $helper->getLoadingText());
     }
-
 }

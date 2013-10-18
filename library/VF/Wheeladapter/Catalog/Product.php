@@ -17,62 +17,56 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Wheeladapter_Catalog_Product extends VF_Wheel_Catalog_Product
 {
 
     function getVehicleSideBoltPatterns()
     {
-	return $this->getBoltPatterns();
+        return $this->getBoltPatterns();
     }
 
     function addVehicleSideBoltPattern(VF_Wheel_BoltPattern $boltPattern)
     {
-	return $this->addBoltPattern($boltPattern);
+        return $this->addBoltPattern($boltPattern);
     }
 
     function getWheelSideBoltPattern()
     {
-	if(!$this->getId())
-	{
-	    return false;
-	}
-	$select = $this->getReadAdapter()->select()
-			->from('elite_product_wheeladapter')
-			->where('entity_id=?', $this->getId())
-			->limit(1);
-	$result = $select->query();
-
-	$row = $result->fetchObject();
-	if (!$row)
-	{
-	    return false;
-	}
-	return VF_Wheel_BoltPattern::create($row->lug_count . 'x' . $row->bolt_distance);
+        if (!$this->getId()) {
+            return false;
+        }
+        $select = $this->getReadAdapter()->select()
+            ->from('elite_product_wheeladapter')
+            ->where('entity_id=?', $this->getId())
+            ->limit(1);
+        $result = $select->query();
+        $row = $result->fetchObject();
+        if (!$row) {
+            return false;
+        }
+        return VF_Wheel_BoltPattern::create($row->lug_count . 'x' . $row->bolt_distance);
     }
 
     function setWheelSideBoltPattern(VF_Wheel_BoltPattern $boltPattern)
     {
-	$sql = sprintf(
-			"REPLACE INTO `elite_product_wheeladapter` ( `entity_id`, `lug_count`, `bolt_distance` ) VALUES ( %d, %d, %s )",
-			$this->getId(),
-			(int) $boltPattern->getLugCount(),
-			(float) $boltPattern->getDistance()
-	);
-	$this->query($sql);
+        $sql = sprintf(
+            "REPLACE INTO `elite_product_wheeladapter` ( `entity_id`, `lug_count`, `bolt_distance` ) VALUES ( %d, %d, %s )",
+            $this->getId(),
+            (int)$boltPattern->getLugCount(),
+            (float)$boltPattern->getDistance()
+        );
+        $this->query($sql);
     }
 
     function unsetWheelSideBoltPattern()
     {
-	$sql = sprintf(
-			"DELETE FROM `elite_product_wheeladapter` WHERE `entity_id` = %d",
-			$this->getId()
-	);
-	$this->query($sql);
+        $sql = sprintf(
+            "DELETE FROM `elite_product_wheeladapter` WHERE `entity_id` = %d",
+            $this->getId()
+        );
+        $this->query($sql);
     }
-
 }

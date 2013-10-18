@@ -31,16 +31,13 @@ class VF_AjaxTests_FilterByProductAlnumTest extends VF_TestCase
     {
         $vehicle1 = $this->createMMY('Honda', 'Civic', '2000');
         $vehicle2 = $this->createMMY('Honda', 'Accord', '2001');
-
         $this->insertMappingMMY($vehicle1, 1);
         $this->insertMappingMMY($vehicle2, 2);
-
         $_GET['requestLevel'] = 'model';
         $_GET['product'] = 1;
         $_GET['make'] = $vehicle1->getLevel('make');
         $this->assertEquals('<option value="' . $vehicle1->getLevel('model') . '">Civic</option>', $this->execute(), 'should list model for correct product only');
     }
-
 
     function execute()
     {

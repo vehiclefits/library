@@ -9,7 +9,6 @@ class VF_Note_Export
     function export()
     {
         $finder = new VF_Note_Finder();
-
         $result = '"id","code","message"';
         $result .= "\n";
         foreach ($finder->getAllNotes() as $note) {

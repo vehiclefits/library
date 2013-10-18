@@ -33,7 +33,6 @@ class VF_LevelTests_EditTest extends VF_TestCase
         $this->assertFalse($this->vehicleExists(array('model' => 'a')), 'should edit not copy the old model');
     }
 
-
     function testShouldEditNotCopyModel2()
     {
         $vehicle = $this->createMMY('Honda', 'a', '2000');

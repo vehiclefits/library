@@ -62,7 +62,6 @@ class VF_Schema_GeneratorTest extends VF_TestCase
     {
         $this->schemaGenerator()->execute(array('make', 'model', 'year'));
         $schema = VF_Schema::create('foo,bar');
-
         $expectedTable = 'elite_level_' . $schema->id() . '_foo';
         $tables = $this->getReadAdapter()->listTables();
         $this->assertTrue(in_array($expectedTable, $tables), 'should create table for new schema `elite_level_x_foo`');

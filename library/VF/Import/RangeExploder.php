@@ -27,12 +27,10 @@ class VF_Import_RangeExploder
             unset($values[$level . '_end']);
             list($start, $end) = $this->explodeRangesTwoColumns($start_value, $end_value);
         }
-
         $this->fixYears($start, $end);
         for ($currentValue = $start; $currentValue <= $end; $currentValue++) {
             $values[$level][] = str_pad($currentValue, 2, '0', STR_PAD_LEFT);
         }
-
         return $values;
     }
 
@@ -41,15 +39,12 @@ class VF_Import_RangeExploder
         if ($start > $end) {
             $newStart = $start;
             $newEnd = $end;
-
             $start = $newEnd;
             $end = $newStart;
         }
-
         if ($start && !$end) {
             $end = $start;
         }
-
         if (!$start && $end) {
             $start = $end;
         }
@@ -58,12 +53,10 @@ class VF_Import_RangeExploder
     function explodeRangesOneColumn($val)
     {
         $range = $this->yearRange($val);
-
         if (!$range->isValid()) {
             $this->error = 'Invalid Year Range: [' . $val . ']';
             return false;
         }
-
         $start = $range->start();
         $end = $range->end();
         return array($start, $end);
@@ -73,12 +66,10 @@ class VF_Import_RangeExploder
     {
         $startYear = $this->year($start_value);
         $endYear = $this->year($end_value);
-
         if (!$startYear->isValid() && !$endYear->isValid()) {
             $this->error = 'Invalid Year Range: [' . $start_value . '] & [' . $end_value . ']';
             return false;
         }
-
         $start = $this->yearValue($startYear);
         $end = $this->yearValue($endYear);
         return array($start, $end);

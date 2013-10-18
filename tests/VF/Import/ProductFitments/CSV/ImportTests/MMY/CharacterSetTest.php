@@ -26,12 +26,9 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_CharacterSetTest extends VF_
     {
         $this->getReadAdapter()->query('SET GLOBAL character_set_server=UTF8;');
         $this->getReadAdapter()->query('SET character_set_database=utf8;');
-
         $this->switchSchema('make,model,year', true);
-
         $this->csvData = 'sku, make, model, year
 sku, honda, civic, 2000';
-
         $this->insertProduct(self::SKU);
     }
 
@@ -59,11 +56,8 @@ sku, honda, civic, 2000';
     {
         $importer = $this->mappingsImporterFromData($this->csvData);
         $importer->import();
-
         $importer = $this->mappingsImporterFromData($this->csvData);
         $importer->import();
-
         $this->assertEquals(0, $importer->getCountMappings());
     }
-
 }

@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTests_TestCase
 {
     function testShouldFindVehicleWithJustTheMake()
@@ -15,13 +14,11 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
             'model' => 'Civic',
             'year' => '2000'
         ));
-
         // search for a 'partial' vehicle
         $actualValues = $this->getFinder()->findOneByLevelIds(array(
             'make' => $vehicle->getValue('make')
         ), VF_Vehicle_Finder::INCLUDE_PARTIALS)
             ->toValueArray();
-
         $expectedValues = array(
             'make' => $vehicle->getValue('make'),
             'model' => 0,
@@ -38,12 +35,10 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
             'model' => 'Civic',
             'year' => '2000'
         ));
-
         // search for a 'partial' vehicle
         $actualVehicles = $this->getFinder()->findByLevelIds(array(
             'make' => $vehicle->getValue('make')
         ), VF_Vehicle_Finder::INCLUDE_PARTIALS);
-
         $this->assertEquals(1, count($actualVehicles), 'should return only a partial vehicle, even if there are full vehicles');
     }
 
@@ -53,13 +48,11 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
         $vehicle = $this->createVehicle(array(
             'make' => 'Honda'
         ));
-
         // search for a 'partial' vehicle
         $actualValues = $this->getFinder()->findOneByLevelIds(array(
             'make' => $vehicle->getValue('make')
         ), VF_Vehicle_Finder::INCLUDE_PARTIALS)
             ->toValueArray();
-
         $expectedValues = array(
             'make' => $vehicle->getValue('make'),
             'model' => 0,
@@ -73,7 +66,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
         $vehicle = $this->createVehicle(array(
             'make' => 'Honda'
         ));
-
         $vehicles = $this->getFinder()->findByLevelIds(array(
             'make' => $vehicle->getValue('make')
         ), VF_Vehicle_Finder::INCLUDE_PARTIALS);
@@ -84,7 +76,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $make = $vehicle->getLevel('make');
-
         $params = array('make' => $make->getId());
         $vehicles = $this->getFinder()->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
         $this->assertEquals(1, count($vehicles), 'should find one vehicle');
@@ -93,7 +84,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     function testPartialVehicleShouldHaveMakeID()
     {
         $vehicle = $this->createVehicle(array('make' => 'Honda'));
-
         $params = array('make' => $vehicle->getValue('make'));
         $vehicles = $this->getFinder()->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
         $this->assertEquals($vehicle->getValue('make'), $vehicles[0]->getValue('make'), 'partial vehicle should have make ID');
@@ -105,7 +95,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
             'make' => 'Honda'
         ));
         $make = $vehicle->getLevel('make');
-
         $params = array(
             'make' => $make->getId(),
             'model' => 0,
@@ -123,7 +112,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
             'make' => 'Honda'
         ));
         $make = $vehicle->getLevel('make');
-
         $params = array(
             'make' => $make->getId(),
             'model' => null,
@@ -141,7 +129,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
             'make' => 'Honda'
         ));
         $make = $vehicle->getLevel('make');
-
         $params = array(
             'make' => $make->getId(),
             'model' => "",
@@ -160,7 +147,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
             'make' => 'Honda'
         ));
         $make = $vehicle->getLevel('make');
-
         $params = array(
             'make' => $make->getId(),
             'model' => "",
@@ -173,7 +159,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     function testZeroShouldExcludeFullVehicle()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
-
         $params = array('make' => $vehicle->getValue('make'), 'model' => 0, 'year' => 0);
         $vehicles = $this->getFinder()->findByLevelIds($params);
         $this->assertEquals(1, count($vehicles), 'zero should exclude full vehicles');
@@ -182,7 +167,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     function testShouldExcludeFullVehicle()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
-
         $params = array('make' => $vehicle->getValue('make'));
         $vehicles = $this->getFinder()->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
         $this->assertEquals(1, count($vehicles), 'zero should exclude full vehicles');
@@ -191,7 +175,6 @@ class VF_Vehicle_FinderTests_Partial_ByLevelIdsTest extends VF_Vehicle_FinderTes
     function testShouldFindPartial()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
-
         $params = array('make' => $vehicle->getValue('make'));
         $vehicle = $this->getFinder()->findOneByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
         $this->assertEquals(0, $vehicle->getValue('model'));

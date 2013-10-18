@@ -17,10 +17,8 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NoUniversalRegressionTest ex
     {
         $this->mappingsImport(
             'year, sku, make, model' . "\n" .
-                '2002,sku,honda,civic');
-
+            '2002,sku,honda,civic');
         $fit = $this->getFitForSku(self::SKU);
         $this->assertEquals('honda', $fit->getLevel('make')->getTitle());
     }
-
 }

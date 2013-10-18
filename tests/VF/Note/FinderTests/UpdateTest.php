@@ -13,6 +13,4 @@ class VF_Note_FinderTests_UpdateTest extends VF_TestCase
         $note = $this->noteFinder()->findByCode('code');
         $this->assertEquals('new message', $note->message, 'should update a note');
     }
-
-
 }

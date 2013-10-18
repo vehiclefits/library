@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Vehicle_FinderTests_DistinctTest extends VF_Vehicle_FinderTests_TestCase
 {
     function doSetUp()
@@ -27,11 +26,9 @@ class VF_Vehicle_FinderTests_DistinctTest extends VF_Vehicle_FinderTests_TestCas
 
     function testShouldFindCardsMadeIn2002()
     {
-        $levels = array('make','model');
-        $where = array('year'=>'2002');
-
+        $levels = array('make', 'model');
+        $where = array('year' => '2002');
         $vehicles = $this->getFinder()->findDistinct($levels, $where);
-
         $this->assertEquals(1, count($vehicles));
         $this->assertEquals('Ford F150', $vehicles[0]->__toString(), 'should find cars made in 2002');
     }
@@ -40,12 +37,9 @@ class VF_Vehicle_FinderTests_DistinctTest extends VF_Vehicle_FinderTests_TestCas
     {
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
         $this->insertMappingMMY($vehicle, 1);
-
         $levels = array('make');
-        $where = array('product_id'=>1);
-
+        $where = array('product_id' => 1);
         $vehicles = $this->getFinder()->findDistinct($levels, $where);
-
         $this->assertEquals(1, count($vehicles));
         $this->assertEquals('Honda', $vehicles[0]->__toString(), 'should find makes assigned to product');
     }

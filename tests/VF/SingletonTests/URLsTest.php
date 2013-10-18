@@ -20,7 +20,7 @@ class VF_SingletonTest_URLsTest extends VF_TestCase
     {
         $singleton = new VF_Singleton();
         $singleton->setProcessURL('foo');
-        $this->assertEquals('foo',$singleton->processUrl(), 'should set process URL');
+        $this->assertEquals('foo', $singleton->processUrl(), 'should set process URL');
     }
 
     /**
@@ -37,7 +37,7 @@ class VF_SingletonTest_URLsTest extends VF_TestCase
     {
         $singleton = new VF_Singleton();
         $singleton->setBaseURL('foo');
-        $this->assertEquals('foo',$singleton->getBaseUrl(), 'should set base URL');
+        $this->assertEquals('foo', $singleton->getBaseUrl(), 'should set base URL');
     }
 
     /**
@@ -54,6 +54,6 @@ class VF_SingletonTest_URLsTest extends VF_TestCase
     {
         $singleton = new VF_Singleton();
         $singleton->setHomepageSearchURL('foo');
-        $this->assertEquals('foo',$singleton->homepageSearchURL(), 'should set homepage search URL');
+        $this->assertEquals('foo', $singleton->homepageSearchURL(), 'should set homepage search URL');
     }
 }

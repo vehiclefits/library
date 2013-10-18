@@ -35,7 +35,6 @@ class VF_Note_Catalog_Product
         return $codes;
     }
 
-
     function notes(VF_Vehicle $vehicle)
     {
         $mappingId = $this->getMappingId($vehicle);

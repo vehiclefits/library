@@ -126,17 +126,14 @@ class VF_Level implements VF_Configurable
         if ('' == trim($this->getTitle())) {
             throw new Exception('Must have a non blank title to save ' . $this->getType());
         }
-
         $levelId = $this->findEntityIdByTitle();
         if ($levelId) {
             $this->id = $levelId;
             return $levelId;
         }
-
         if ($requestedSaveId && $this->requestedIdCorrespondsToExistingRecord($requestedSaveId)) {
             $this->id = $requestedSaveId;
         }
-
         if ($this->getId()) {
             $sql = sprintf(
                 "UPDATE %s SET `title` = %s WHERE id = %d",
@@ -147,7 +144,6 @@ class VF_Level implements VF_Configurable
             $this->query($sql);
             return $this->id;
         }
-
         $data = array('title' => $this->getTitle());
         if ($requestedSaveId) {
             $data['id'] = $requestedSaveId;
@@ -242,5 +238,4 @@ class VF_Level implements VF_Configurable
     {
         return VF_Singleton::getInstance()->getReadAdapter();
     }
-
 }

@@ -17,33 +17,30 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Wheeladapter_FlexibleSearchTests_WheelSideSpreadTest extends VF_TestCase
 {
-	function testShouldGetFromRequest()
+    function testShouldGetFromRequest()
     {
-        $flexibleSearch = $this->flexibleWheeladapterSearch(array('wheel_stud_spread'=>114.3));
-        $this->assertEquals( 114.3, $flexibleSearch->wheelSideStudSpread(), 'should get wheel side stud spread from request' );
+        $flexibleSearch = $this->flexibleWheeladapterSearch(array('wheel_stud_spread' => 114.3));
+        $this->assertEquals(114.3, $flexibleSearch->wheelSideStudSpread(), 'should get wheel side stud spread from request');
     }
-    
+
     function testShouldStoreInSession()
     {
-        $flexibleSearch = $this->flexibleWheeladapterSearch(array('wheel_stud_spread'=>'114.3'));
+        $flexibleSearch = $this->flexibleWheeladapterSearch(array('wheel_stud_spread' => '114.3'));
         VF_Singleton::getInstance()->storeFitInSession();
-        $this->assertEquals( 114.3, $this->flexibleWheeladapterSearch()->wheelSideStudSpread(), 'should store wheel side stud spread in session' );
+        $this->assertEquals(114.3, $this->flexibleWheeladapterSearch()->wheelSideStudSpread(), 'should store wheel side stud spread in session');
     }
-    
+
     function testShouldClearFromSession()
     {
-        $flexibleSearch = $this->flexibleWheeladapterSearch(array('wheel_stud_spread'=>'114.3'));
+        $flexibleSearch = $this->flexibleWheeladapterSearch(array('wheel_stud_spread' => '114.3'));
         VF_Singleton::getInstance()->storeFitInSession();
-        
-        $flexibleSearch = $this->flexibleWheeladapterSearch(array('wheel_stud_spread'=>'0'));
+        $flexibleSearch = $this->flexibleWheeladapterSearch(array('wheel_stud_spread' => '0'));
         VF_Singleton::getInstance()->storeFitInSession();
-        
-        $this->assertNull( $this->flexibleWheeladapterSearch()->wheelSideStudSpread(), 'should clear wheel side stud spread from session' );
+        $this->assertNull($this->flexibleWheeladapterSearch()->wheelSideStudSpread(), 'should clear wheel side stud spread from session');
     }
 }

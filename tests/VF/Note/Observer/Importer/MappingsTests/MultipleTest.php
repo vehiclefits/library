@@ -31,17 +31,14 @@ sku, honda, civic, 2001, "code1,code2",');
     {
         $this->insertProduct('sku1');
         $this->insertProduct('sku2');
-
         $csvData = 'sku, make, model, year, notes
                     sku2, honda, civic, 2000, "code1,code2",
                     sku1, honda, civic, 2000, "code1,code2",';
-
         $this->createNoteDefinition('code1', 'foo');
         $this->createNoteDefinition('code2', 'bar');
         $this->import('sku, make, model, year, notes
 sku, honda, civic, 2000, "code1,code2",
 sku, honda, civic, 2001, "code1,code2",');
-
         //print_r($this->getReadAdapter()->query('select * from elite_mapping')->fetchAll());
         $count = $this->getReadAdapter()->query('select count(*) from elite_mapping_notes')->fetchColumn();
         $this->assertEquals(4, $count);

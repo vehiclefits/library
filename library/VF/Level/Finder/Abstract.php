@@ -27,7 +27,6 @@ class VF_Level_Finder_Abstract implements VF_Configurable
     function getConfig()
     {
         if (!$this->config instanceof Zend_Config) {
-
             $this->config = VF_Singleton::getInstance()->getConfig();
         }
         return $this->config;

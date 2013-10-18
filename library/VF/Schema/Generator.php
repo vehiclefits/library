@@ -24,9 +24,7 @@ class VF_Schema_Generator
         if (1 >= count($levels)) {
             throw new VF_Level_Exception('Schema requires at least two levels');
         }
-
         $sql = $this->generator($levels);
-
         foreach (explode(';', $sql) as $sql) {
             $sql = trim($sql);
             if (!empty($sql)) {
@@ -55,37 +53,27 @@ class VF_Schema_Generator
         }
         $return .= $this->createMappingsTable();
         $return .= $this->addUniqueOnMappingsTable();
-
         $return .= $this->createDefinitionTable();
         $return .= $this->addUniqueOnDefinitionsTable();
-
         if ($this->id != 1) {
             return $return;
         }
-
         $return .= $this->createSchemaTable();
         $return .= $this->createVersionTable();
-
         $generator = new VF_Wheel_Schema_Generator();
         $return .= $generator->generator($levels);
-
         $generator = new VF_Wheeladapter_Schema_Generator();
         $return .= $generator->generator($levels);
-
         $generator = new VF_Tire_Schema_Generator();
         $return .= $generator->generator($levels);
-
         if (file_exists(ELITE_PATH . '/Vafpaint')) {
             $generator = new Elite_Vafpaint_Model_Schema_Generator();
             $return .= $generator->generator($levels);
         }
-
         $generator = new VF_Note_SchemaGenerator();
         $return .= $generator->generator($levels);
-
         $generator = new VF_Import_Schema_Generator();
         $return .= $generator->generator($levels);
-
         if (file_exists(ELITE_PATH . '/Vafgarage')) {
             $generator = new Elite_Vafgarage_Model_Schema_Generator();
             $return .= $generator->generator($levels);
@@ -94,7 +82,6 @@ class VF_Schema_Generator
             $generator = new Elite_Vafdiagram_Model_Schema_Generator();
             $return .= $generator->generator($levels);
         }
-
         return $return;
     }
 
@@ -132,16 +119,15 @@ class VF_Schema_Generator
     protected function createLevel($i)
     {
         $return = sprintf(
-            'CREATE TABLE IF NOT EXISTS `elite_level_%d_%s` (',
-            $this->id(),
-            $this->getLevel($i)
-        ) . self::NEWLINE;
+                'CREATE TABLE IF NOT EXISTS `elite_level_%d_%s` (',
+                $this->id(),
+                $this->getLevel($i)
+            ) . self::NEWLINE;
         $return .= '`id` int(255) NOT NULL AUTO_INCREMENT,' . self::NEWLINE;
         $return .= '`title` varchar(255) NOT NULL,' . self::NEWLINE;
         $return .= 'PRIMARY KEY (`id`),' . self::NEWLINE;
         $return .= 'KEY `title` (`title`)' . self::NEWLINE;
         $return .= ') ENGINE=InnoDB DEFAULT CHARSET=utf8;' . self::NEWLINE;
-
         return $return;
     }
 
@@ -195,10 +181,8 @@ class VF_Schema_Generator
         $return .= 'KEY `universal` (`universal`),';
         $return .= $this->keys();
         $return .= ') ENGINE=InnoDB CHARSET=utf8;';
-
         $return .= sprintf('ALTER TABLE `elite_%d_mapping` ADD `price` FLOAT NOT NULL ;', $this->id());
         $return .= sprintf('ALTER TABLE `elite_%d_mapping` ADD INDEX ( `entity_id` ) ;', $this->id());
-
         return $return;
     }
 
@@ -231,7 +215,6 @@ class VF_Schema_Generator
             $level = str_replace(' ', '_', $level);
             $levels[] = sprintf('`%s_id`', $level);
         }
-
         $levels[] = 'entity_id';
         $levels = implode(',', $levels);
         return sprintf("ALTER TABLE `elite_%d_mapping` ADD UNIQUE ( %s );", $this->id(), $levels);
@@ -244,7 +227,6 @@ class VF_Schema_Generator
             "INSERT INTO `elite_schema` ( `id`, `key`, `value` ) VALUES ( 1, 'levels', %s );",
             $this->getReadAdapter()->quote($this->levelsDelimByComma())
         );
-
         return $return;
     }
 

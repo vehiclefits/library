@@ -18,11 +18,9 @@ class VF_Note_Observer_Importer_MappingsTests_PreviousFitmentTest extends VF_Not
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $fitmentId = $this->insertMappingMMY($vehicle, $this->product_id);
-
         $this->createNoteDefinition('code', 'message');
         $this->import('sku,make,model,year,notes' . "\n" .
-            'sku,Honda,Civic,2000,code');
-
+        'sku,Honda,Civic,2000,code');
         $fitId = $this->getFitIdForSku('sku');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals(1, count($notes), 'fitment notes should supercede previous fitment');

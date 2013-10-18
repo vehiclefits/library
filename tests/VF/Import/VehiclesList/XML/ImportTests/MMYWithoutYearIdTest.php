@@ -21,7 +21,6 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYWithoutYearIdTest extends VF_Imp
 </vehicles>';
         $this->csvFile = TEMP_PATH . '/definitions.xml';
         file_put_contents($this->csvFile, $this->csvData);
-
         $this->switchSchema('make,model,year');
     }
 
@@ -66,5 +65,4 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYWithoutYearIdTest extends VF_Imp
         $importer->import();
         $this->assertEquals(5, $this->levelFinder()->find('model', 5)->getId(), 'imports the modelID #');
     }
-
 }

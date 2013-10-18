@@ -61,7 +61,6 @@ abstract class VF_Import_Abstract
             unset($this->fieldPositions[$label]);
             $this->fieldPositions[trim($label)] = $position;
         }
-
         return $this->fieldPositions;
     }
 
@@ -114,11 +113,9 @@ abstract class VF_Import_Abstract
             $this->getProductTable(),
             $this->getReadAdapter()->quote($sku)
         );
-
         $result = $this->query($sql);
         $product_row = $result->fetchObject();
         $result->closeCursor();
-
         if (!$product_row) {
             return false;
         }
@@ -141,10 +138,9 @@ abstract class VF_Import_Abstract
 
     function getProductTable()
     {
-        if(isset($this->product_table)) {
+        if (isset($this->product_table)) {
             return $this->product_table;
         }
-
         // Magento
         $resource = new Mage_Catalog_Model_Resource_Eav_Mysql4_Product;
         $table = $resource->getTable('catalog/product');
@@ -167,7 +163,7 @@ abstract class VF_Import_Abstract
         $this->product_sku_field = $product_sku_field;
         return $this;
     }
-    
+
     function getProductIdField()
     {
         return isset($this->product_id_field) ? $this->product_id_field : 'entity_id';

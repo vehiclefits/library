@@ -17,46 +17,45 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Wheel_BoltPatternTest extends VF_TestCase
 {
-    
+
     function testSingleToString()
     {
         $bolt = VF_Wheel_BoltPattern::create('4x114.3');
-        $this->assertEquals( '4x114.3', $bolt->__toString() );
+        $this->assertEquals('4x114.3', $bolt->__toString());
     }
-    
+
     function testSingleLugCount()
     {
         $bolt = VF_Wheel_BoltPattern::create('4x114.3');
-        $this->assertEquals( 4, $bolt->getLugCount() );
+        $this->assertEquals(4, $bolt->getLugCount());
     }
-    
+
     function testSingleBoltDistance()
     {
         $bolt = VF_Wheel_BoltPattern::create('4x114.3');
-        $this->assertEquals( 114.3, $bolt->getDistance() );
+        $this->assertEquals(114.3, $bolt->getDistance());
     }
-    
+
     function testOffset()
     {
         $bolt = VF_Wheel_BoltPattern::create('4x114.3', 38.5);
-        $this->assertEquals( 38.5, $bolt->getOffset() );
+        $this->assertEquals(38.5, $bolt->getOffset());
     }
-    
+
     function testOffsetThresholdMinimum()
     {
         $bolt = VF_Wheel_BoltPattern::create('4x114.3', 20);
-        $this->assertEquals( 15, $bolt->offsetMin() );
+        $this->assertEquals(15, $bolt->offsetMin());
     }
-    
+
     function testOffsetThresholdMaximum()
     {
         $bolt = VF_Wheel_BoltPattern::create('4x114.3', 20);
-        $this->assertEquals( 25, $bolt->offsetMax() );
+        $this->assertEquals(25, $bolt->offsetMax());
     }
 }

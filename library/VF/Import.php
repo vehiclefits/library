@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
 {
     const E_WARNING = 1;
@@ -22,13 +21,11 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
         $this->insertFitmentsFromTempTable();
         $this->insertVehicleRecords();
         $this->cleanupTempTable();
-
         $this->runDeprecatedImports();
     }
 
     function runDeprecatedImports()
     {
-
     }
 
     function cleanupTempTable()
@@ -94,7 +91,6 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
 
     function insertFitmentsFromTempTable()
     {
-
     }
 
     /** @return array Field positions keyed by the field's names */
@@ -107,11 +103,10 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
         if (false == $this->fieldPositions) {
             throw new VF_Import_VehiclesList_CSV_Exception_FieldHeaders('Field headers missing');
         }
-
         foreach ($this->schema()->getLevels() as $level) {
             if (!$this->allowMissingFields() &&
                 !isset($this->fieldPositions[$level]) && (
-                !isset($this->fieldPositions[$level . '_start']) && !isset($this->fieldPositions[$level . '_end'])) &&
+                    !isset($this->fieldPositions[$level . '_start']) && !isset($this->fieldPositions[$level . '_end'])) &&
                 !isset($this->fieldPositions[$level . '_range'])
             ) {
                 throw new VF_Import_VehiclesList_CSV_Exception_FieldHeaders('Unable to locate field header for [' . $level . '], perhaps not using comma delimiter' . print_r($this->fieldPositions, 1));
@@ -140,5 +135,4 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
     {
         $this->config = $config;
     }
-
 }

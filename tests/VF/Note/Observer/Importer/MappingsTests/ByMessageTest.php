@@ -17,7 +17,6 @@ class VF_Note_Observer_Importer_MappingsTests_ByMessageTest extends VF_Note_Obse
         $this->import('"year_start","year_end","make","model","sku","notes","note_message"
 1990,2009,"Acura","Integra","sku1",code1
 ');
-
         $fitId = $this->getFitIdForSku('sku1');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals(0, count($notes));
@@ -29,7 +28,6 @@ class VF_Note_Observer_Importer_MappingsTests_ByMessageTest extends VF_Note_Obse
         $this->import('"year_start","year_end","make","model","sku","notes","note_message"
 1990,2009,"Acura","Integra","sku1",code1,
 ');
-
         $fitId = $this->getFitIdForSku('sku1');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals(0, count($notes), 'should ignore rows with blank messages');
@@ -39,8 +37,7 @@ class VF_Note_Observer_Importer_MappingsTests_ByMessageTest extends VF_Note_Obse
     {
         $this->insertProduct('sku');
         $this->import('sku, make, model, year, note_message' . "\n" .
-            'sku, honda, civic, 2000, "This is my message"');
-
+        'sku, honda, civic, 2000, "This is my message"');
         $fitId = $this->getFitIdForSku('sku');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals('This is my message', $notes[0]->message);
@@ -50,8 +47,7 @@ class VF_Note_Observer_Importer_MappingsTests_ByMessageTest extends VF_Note_Obse
     {
         $this->insertProduct('sku');
         $this->import('sku, make, model, year, note_message' . "\n" .
-            'sku, honda, civic, 2000, "This is my message"');
-
+        'sku, honda, civic, 2000, "This is my message"');
         $fitId = $this->getFitIdForSku('sku');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals('code-1', $notes[0]->code);
@@ -62,8 +58,7 @@ class VF_Note_Observer_Importer_MappingsTests_ByMessageTest extends VF_Note_Obse
         $this->noteFinder()->insert('myCode', 'This is my message');
         $this->insertProduct('sku');
         $this->import('sku, make, model, year, note_message' . "\n" .
-            'sku, honda, civic, 2000, "This is my message"');
-
+        'sku, honda, civic, 2000, "This is my message"');
         $fitId = $this->getFitIdForSku('sku');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals('myCode', $notes[0]->code);
@@ -74,8 +69,7 @@ class VF_Note_Observer_Importer_MappingsTests_ByMessageTest extends VF_Note_Obse
         $this->noteFinder()->insert('myCode', 'This is my message  ');
         $this->insertProduct('sku');
         $this->import('sku, make, model, year, note_message' . "\n" .
-            'sku, honda, civic, 2000, "  This is my message"');
-
+        'sku, honda, civic, 2000, "  This is my message"');
         $fitId = $this->getFitIdForSku('sku');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals('myCode', $notes[0]->code);
@@ -87,10 +81,8 @@ class VF_Note_Observer_Importer_MappingsTests_ByMessageTest extends VF_Note_Obse
         $this->import('"year_start","year_end","make","model","sku","notes","note_message"
 1990,2009,"Acura","Integra","sku2",,"this is my message"
 ');
-
         $fitId = $this->getFitIdForSku('sku2');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals(1, count($notes), 'should handle rows with blank note code');
     }
-
 }

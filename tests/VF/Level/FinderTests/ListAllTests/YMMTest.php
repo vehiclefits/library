@@ -15,7 +15,6 @@ class VF_Level_FinderTests_ListAllTests_YMMTest extends VF_TestCase
     {
         $vehicle1 = $this->createVehicle(array('year' => 2000, 'make' => 'Honda', 'model' => 'Civic'));
         $vehicle2 = $this->createVehicle(array('year' => 2001, 'make' => 'Honda', 'model' => 'Civic'));
-
         $actual = $this->levelFinder()->listAll('make', $vehicle1->getValue('year'));
         $this->assertEquals(1, count($actual), 'should find distinct makes');
     }
@@ -24,7 +23,6 @@ class VF_Level_FinderTests_ListAllTests_YMMTest extends VF_TestCase
     {
         $vehicle1 = $this->createVehicle(array('year' => 2000, 'make' => 'Honda', 'model' => 'Civic'));
         $vehicle2 = $this->createVehicle(array('year' => 2000, 'make' => 'Honda', 'model' => 'Accord'));
-
         $actual = $this->levelFinder()->listAll('make', $vehicle1->getValue('year'));
         $this->assertEquals(1, count($actual), 'should find distinct makes');
     }
@@ -33,7 +31,6 @@ class VF_Level_FinderTests_ListAllTests_YMMTest extends VF_TestCase
     {
         $vehicle1 = $this->createVehicle(array('year' => 2001, 'make' => 'Honda', 'model' => 'Civic'));
         $vehicle2 = $this->createVehicle(array('year' => 2000, 'make' => 'Honda', 'model' => 'Civic'));
-
         $actual = $this->levelFinder()->listAll('make');
         $this->assertEquals(1, count($actual), 'should find distinct makes only');
     }

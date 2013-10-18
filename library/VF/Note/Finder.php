@@ -49,12 +49,10 @@ class VF_Note_Finder
     function getAllNotes($mapping_id = 0)
     {
         $sql = "SELECT * FROM elite_note";
-
         if ($mapping_id) {
             $sql .= sprintf(" INNER JOIN elite_mapping_notes on elite_mapping_notes.note_id = elite_note.id AND elite_mapping_notes.fit_id = %d", $mapping_id);
         }
         $result = $this->query($sql);
-
         $return = array();
         while ($note = $result->fetchObject()) {
             array_push($return, $note);
@@ -83,7 +81,6 @@ class VF_Note_Finder
             $this->getReadAdapter()->quote($code),
             $this->getReadAdapter()->quote($message)
         );
-
         $this->query($sql);
         return $this->getReadAdapter()->lastInsertId();
     }

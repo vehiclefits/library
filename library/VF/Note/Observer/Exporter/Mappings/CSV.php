@@ -17,7 +17,6 @@ class VF_Note_Observer_Exporter_Mappings_CSV extends VF_Note_Observer_Exporter_M
             ->from('elite_mapping_notes')
             ->where('fit_id = ?', $row->id)
             ->joinLeft('elite_note', 'elite_note.id = elite_mapping_notes.note_id', array('code'));
-
         $noteCodes = array();
         $result = $select->query();
         while ($noteRow = $result->fetch()) {

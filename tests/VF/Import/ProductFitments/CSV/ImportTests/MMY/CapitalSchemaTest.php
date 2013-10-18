@@ -11,7 +11,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_CapitalSchemaTest extends VF
         $this->switchSchema('Make,Model,Year');
         $this->csvData = 'sku, Make, Model, Year
 sku, honda, civic, 2000';
-
         $this->insertProduct(self::SKU);
     }
 
@@ -20,7 +19,6 @@ sku, honda, civic, 2000';
         $this->mappingsImport($this->csvData);
         $fit = $this->getFitForSku(self::SKU);
         $this->assertEquals('honda', $fit->getLevel('Make')->getTitle());
-
         $this->schemaGenerator()->dropExistingTables();
     }
 }

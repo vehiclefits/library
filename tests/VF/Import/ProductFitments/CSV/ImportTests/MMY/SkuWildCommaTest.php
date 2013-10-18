@@ -11,7 +11,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_SkuWildCommaTest extends VF_
         $this->switchSchema('make,model,year');
         $this->csvData = 'sku, make, model, year
 "aaa*,bbb*", honda, civic, 2000';
-
         $this->insertProduct('aaa1');
         $this->insertProduct('aaa2');
         $this->insertProduct('bbb1');
@@ -47,13 +46,10 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_SkuWildCommaTest extends VF_
         $this->assertEquals('honda', $fit->getLevel('make')->getTitle());
     }
 
-
     function testShouldNotMatchZZZ()
     {
         $this->mappingsImport($this->csvData);
         $fit = $this->getFitForSku('ZZZ');
         $this->assertFalse($fit);
     }
-
-
 }

@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -25,13 +24,13 @@ class VF_Wheel_Catalog_Product
 {
     /** @var VF_Product */
     protected $wrappedProduct;
-    
-    function __construct(VF_Product $productToWrap )
+
+    function __construct(VF_Product $productToWrap)
     {
         $this->wrappedProduct = $productToWrap;
     }
-    
-    function addBoltPattern( VF_Wheel_BoltPattern $boltPattern )
+
+    function addBoltPattern(VF_Wheel_BoltPattern $boltPattern)
     {
         $sql = sprintf(
             "REPLACE INTO `elite_product_wheel` ( `entity_id`, `lug_count`, `bolt_distance`, `offset` ) VALUES ( %d, %d, %s, %s )",
@@ -43,38 +42,33 @@ class VF_Wheel_Catalog_Product
         $this->query($sql);
         $this->insertMappings($boltPattern);
     }
-    
+
     function getBoltPatterns()
     {
-	if(!$this->getId())
-	{
-	    return array();
-	}
+        if (!$this->getId()) {
+            return array();
+        }
         $select = $this->getReadAdapter()->select()
             ->from('elite_product_wheel')
-            ->where('entity_id=?',$this->getId());
+            ->where('entity_id=?', $this->getId());
         $result = $select->query();
-            
         $return = array();
-        while( $row = $result->fetchObject() )
-        {
-            $bolt = VF_Wheel_BoltPattern::create($row->lug_count.'x'.$row->bolt_distance, $row->offset);
-            array_push($return,$bolt);
+        while ($row = $result->fetchObject()) {
+            $bolt = VF_Wheel_BoltPattern::create($row->lug_count . 'x' . $row->bolt_distance, $row->offset);
+            array_push($return, $bolt);
         }
         $result->closeCursor();
-        
         return $return;
     }
-    
+
     function removeBoltPatterns()
     {
-        $this->getReadAdapter()->query(sprintf("DELETE FROM `elite_product_wheel` WHERE `entity_id` = %d",$this->getId()));
+        $this->getReadAdapter()->query(sprintf("DELETE FROM `elite_product_wheel` WHERE `entity_id` = %d", $this->getId()));
     }
-    
-    function insertMappings( VF_Wheel_BoltPattern $boltPattern )
+
+    function insertMappings(VF_Wheel_BoltPattern $boltPattern)
     {
-        if( $boltPattern->getOffset() )
-        {
+        if ($boltPattern->getOffset()) {
             $q = sprintf(
                 "
                 SELECT DISTINCT(`leaf_id`) as leaf_id
@@ -89,9 +83,7 @@ class VF_Wheel_Catalog_Product
                 (float)$boltPattern->offsetMin(),
                 (float)$boltPattern->offsetMax()
             );
-        }
-        else
-        {
+        } else {
             $q = sprintf(
                 "
                 SELECT DISTINCT(`leaf_id`) as leaf_id
@@ -103,37 +95,33 @@ class VF_Wheel_Catalog_Product
                 (float)$boltPattern->getLugCount()
             );
         }
-        
-        $result = $this->query( $q );
-        
+        $result = $this->query($q);
         $years = array();
-        
-        $rows = $result->fetchAll( Zend_Db::FETCH_OBJ );
-        foreach($rows as $row)
-        {
-            $vehicle = $this->definition( $row->leaf_id );
+        $rows = $result->fetchAll(Zend_Db::FETCH_OBJ);
+        foreach ($rows as $row) {
+            $vehicle = $this->definition($row->leaf_id);
             $this->insertMapping($vehicle);
         }
     }
-    
+
     function definition($vehicle_id)
     {
-        $vehicleFinder = new VF_Vehicle_Finder( new VF_Schema() );
+        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
         return $vehicleFinder->findById($vehicle_id);
     }
-    
-    function __call($methodName,$arguments)
+
+    function __call($methodName, $arguments)
     {
-        $method = array($this->wrappedProduct,$methodName);
-        return call_user_func_array( $method, $arguments );
+        $method = array($this->wrappedProduct, $methodName);
+        return call_user_func_array($method, $arguments);
     }
-    
+
     /** @return Zend_Db_Statement_Interface */
-    protected function query( $sql )
+    protected function query($sql)
     {
-        return $this->getReadAdapter()->query( $sql );
+        return $this->getReadAdapter()->query($sql);
     }
-    
+
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {

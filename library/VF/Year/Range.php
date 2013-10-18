@@ -91,5 +91,4 @@ class VF_Year_Range extends VF_Year_Abstract
     {
         return explode('-', $this->range);
     }
-
 }

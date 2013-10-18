@@ -18,7 +18,6 @@ class VF_Import_VehiclesList_Xml_Import extends VF_Import
     {
         $this->log('Import Started', Zend_Log::INFO);
         $this->getReadAdapter()->beginTransaction();
-
         try {
             $this->doImport();
         } catch (Exception $e) {
@@ -26,7 +25,6 @@ class VF_Import_VehiclesList_Xml_Import extends VF_Import
             $this->log('Import Cancelled & Reverted Due To Critical Error: ' . $e->getMessage() . $e->getTraceAsString(), Zend_log::CRIT);
             throw $e;
         }
-
         $this->getReadAdapter()->commit();
         $this->log('Import Completed', Zend_Log::INFO);
     }
@@ -34,16 +32,13 @@ class VF_Import_VehiclesList_Xml_Import extends VF_Import
     function insertRowsIntoTempTable()
     {
         $this->cleanupTempTable();
-
         $xmlDocument = simplexml_load_file($this->file);
-
         foreach ($xmlDocument->definition as $vehicleInput) {
             $this->row_number++;
             $values = $this->getLevelsArray($vehicleInput);
             if (!$values) {
                 continue;
             }
-
             $this->insertIntoTempTable($values);
         }
     }
@@ -55,7 +50,6 @@ class VF_Import_VehiclesList_Xml_Import extends VF_Import
             $combination[$level] = $values[$level];
             $combination[$level . '_id'] = $values[$level . '_id'];
         }
-
         $this->getReadAdapter()->insert('elite_import', $combination);
     }
 

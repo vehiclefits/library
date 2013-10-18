@@ -20,7 +20,7 @@ class VF_SchemaTests_SchemaSpaceInLevelNameTest extends VF_Import_TestCase
     function testImport()
     {
         $this->importVehiclesList('make,model type, year' . "\n" .
-            'Honda, Civic EX, 2000');
+        'Honda, Civic EX, 2000');
     }
 
     function testGetFits()
@@ -28,7 +28,6 @@ class VF_SchemaTests_SchemaSpaceInLevelNameTest extends VF_Import_TestCase
         $product = $this->newVFProduct(1);
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model type' => 'Civic', 'year' => 2000));
         $product->addVafFit($vehicle->toValueArray());
-
         $actual = $product->getFits();
         $this->assertEquals(1, count($actual));
         $fit = $actual[0];

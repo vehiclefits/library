@@ -82,5 +82,4 @@ class VF_Level_FinderTests_FindTest extends VF_TestCase
         $this->assertEquals($vehicle1->getValue('year'), $year_reloaded->getId());
         $this->assertEquals($vehicle2->getValue('year'), $year_reloaded2->getId(), 'should load multiple year');
     }
-
 }

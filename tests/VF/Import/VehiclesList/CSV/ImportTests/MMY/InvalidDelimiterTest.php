@@ -36,10 +36,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_InvalidDelimiterTest extends VF
     {
         $csvData = "make\tmodel\tyear
 honda\tcivic\t2002";
-
-
         $importer = $this->vehiclesListImporter($csvData);
         $importer->import();
     }
-
 }

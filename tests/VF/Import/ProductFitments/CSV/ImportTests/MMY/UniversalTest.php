@@ -35,7 +35,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
         $this->assertTrue($this->getVFProductForSku('sku')->isUniversal());
     }
 
-
     function testMakesProductUniversal_YearRange()
     {
         $this->mappingsImport('sku, make, model, year_start, year_end, universal
@@ -48,7 +47,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
     {
         $this->mappingsImport('sku, make, model, year, universal
 "sku","","","","1"');
-
         $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
         $vehicles = $vehicleFinder->findAll();
         $this->assertEquals(0, count($vehicles));
@@ -58,7 +56,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
     {
         $this->mappingsImport('sku, make, model, year, universal
 "sku","","","","1"');
-
         $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
         $count = $this->getReadAdapter()->query('select count(*) from elite_1_definition')->fetchColumn();
         $this->assertEquals(0, $count);
@@ -69,14 +66,11 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
         $importer = $this->mappingsImporterFromData('sku, make, model, year, universal
 "sku","","","","1"');
         $importer->import();
-
         $writer = new Zend_Log_Writer_Mock();
         $logger = new Zend_Log($writer);
         $logger->addFilter(new Zend_Log_Filter_Priority(Zend_Log::NOTICE));
         $importer->setLog($logger);
-
         $importer->import();
-
         $this->assertEquals(0, count($writer->events));
     }
 
@@ -85,7 +79,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
         $importer = $this->mappingsImporterFromData('sku, make, model, year, universal
 "sku","","","","1"');
         $importer->import();
-
         $this->assertEquals(0, $importer->invalidVehicleCount());
     }
 
@@ -94,11 +87,9 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
         $product = $this->getVFProductForSku(self::SKU);
         $product->setUniversal(true);
         $this->assertTrue($product->isUniversal(), 'product should start as universal');
-
         $importer = $this->mappingsImporterFromData('sku, make, model, year, universal
 "sku","","","","0"');
         $importer->import();
-
         $this->assertFalse($product->isUniversal(), 'should mark product as not universal w/ import');
     }
 
@@ -108,8 +99,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
         $importer = $this->mappingsImporterFromData('sku, make, model, year_start, year_end, universal
 "sku","","","","1"');
         $importer->import();
-
         $this->assertEquals(0, $importer->invalidVehicleCount());
     }
-
 }

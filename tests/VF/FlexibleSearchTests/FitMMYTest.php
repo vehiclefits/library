@@ -24,8 +24,8 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
 
     function testShouldGetFlexibleDefinition()
     {
-        $vehicle1 = $this->createVehicle(array('make'=>'Honda1', 'model'=>'Civic', 'year'=>'2000'));
-        $vehicle2 = $this->createVehicle(array('make'=>'Honda2', 'model'=>'Civic', 'year'=>'2000'));
+        $vehicle1 = $this->createVehicle(array('make' => 'Honda1', 'model' => 'Civic', 'year' => '2000'));
+        $vehicle2 = $this->createVehicle(array('make' => 'Honda2', 'model' => 'Civic', 'year' => '2000'));
         $_SESSION = $vehicle2->toValueArray();
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest());
         $this->assertEquals($vehicle2->toValueArray(), $flexibleSearch->getFlexibleDefinition()->toValueArray());
@@ -92,10 +92,8 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $_SESSION = array('make' => null, 'model' => null, 'year' => null);
         $vehicle = $this->createMMY();
         $helper = $this->getHelper(array('search' => array('storeVehicleInSession' => '')), $vehicle->toValueArray());
-
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest($vehicle->toValueArray()));
         $flexibleSearch->storeFitInSession();
-
         unset($_SESSION['garage']);
         $this->assertNotEquals($vehicle->toValueArray(), $_SESSION, 'should get global configuration');
     }

@@ -17,42 +17,34 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 class VF_Tire_Catalog_TireProduct_ExportTest extends VF_TestCase
 {
-	function testExportHeaders()
-	{
-	    $tireSize = new VF_TireSize(205, 55, 16);
-
-	    $id = $this->insertProduct( 'sku123' );
-
-	    $product = $this->newTireProduct();
-	    $product->setId($id);
-	    $product->setTireSize($tireSize);
-
-	    $stream = fopen("php://temp", 'w');
-	    $export = new VF_Tire_Catalog_TireProduct_ExportTestSub;
-	    $export->export($stream);
-
-	    rewind($stream);
-
-	    $data = stream_get_contents($stream);
-
-	    $expected = '"sku","section_width","aspect_ratio","diameter"
+    function testExportHeaders()
+    {
+        $tireSize = new VF_TireSize(205, 55, 16);
+        $id = $this->insertProduct('sku123');
+        $product = $this->newTireProduct();
+        $product->setId($id);
+        $product->setTireSize($tireSize);
+        $stream = fopen("php://temp", 'w');
+        $export = new VF_Tire_Catalog_TireProduct_ExportTestSub;
+        $export->export($stream);
+        rewind($stream);
+        $data = stream_get_contents($stream);
+        $expected = '"sku","section_width","aspect_ratio","diameter"
 "sku123","205","55","16"
 ';
-
-	    $this->assertEquals( $expected, $data );
-	}
+        $this->assertEquals($expected, $data);
+    }
 }
 
 class VF_Tire_Catalog_TireProduct_ExportTestSub extends VF_Tire_Catalog_TireProduct_Export
 {
     function getProductTable()
     {
-	return 'test_catalog_product_entity';
+        return 'test_catalog_product_entity';
     }
 }

@@ -49,7 +49,6 @@ class VF_Vehicle_FinderTests_ByLevelTest extends VF_Vehicle_FinderTests_TestCase
     {
         $vehicle1 = $this->createMMY('honda', 'civic', '2000');
         $vehicle2 = $this->createMMY('honda', 'civic2', '2000');
-
         $this->getFinder()->findByLevel('year', $vehicle1->getLevel('year')->getId());
     }
 
@@ -75,5 +74,4 @@ class VF_Vehicle_FinderTests_ByLevelTest extends VF_Vehicle_FinderTests_TestCase
     {
         $vehicle = $this->getFinder()->findByLevel('make', 5);
     }
-
 }

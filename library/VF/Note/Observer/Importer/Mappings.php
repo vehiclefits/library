@@ -40,7 +40,6 @@ class VF_Note_Observer_Importer_Mappings
         if (!$this->hasNotesColumn()) {
             return;
         }
-
         $notes = $this->getRowValue('notes');
         $notes = explode(',', $notes);
         foreach ($notes as $noteCode) {
@@ -55,7 +54,6 @@ class VF_Note_Observer_Importer_Mappings
         if (!$this->hasNoteMessageColumn()) {
             return;
         }
-
         $message = $this->getRowValue('note_message');
         if (!$message) {
             return;

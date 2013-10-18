@@ -21,7 +21,6 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_CLI
 {
     protected $opt;
@@ -30,12 +29,10 @@ class VF_CLI
     function __construct()
     {
         $this->bootstrap();
-
         # Define the command line arguments this tool accepts
         $this->opt = new Zend_Console_Getopt($this->options + array(
             'config|c=s' => 'PHP config file to initialize with',
         ));
-
         $this->requireConfig();
         $this->injectDb();
     }
@@ -66,10 +63,10 @@ class VF_CLI
     {
         VF_Singleton::getInstance()->setReadAdapter(
             new VF_TestDbAdapter(array(
-                                      'dbname'   => getenv('PHP_VAF_DB_NAME'),
-                                      'username' => getenv('PHP_VAF_DB_USERNAME'),
-                                      'password' => getenv('PHP_VAF_DB_PASSWORD')
-                                 ))
+                'dbname' => getenv('PHP_VAF_DB_NAME'),
+                'username' => getenv('PHP_VAF_DB_USERNAME'),
+                'password' => getenv('PHP_VAF_DB_PASSWORD')
+            ))
         );
     }
 

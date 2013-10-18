@@ -10,14 +10,11 @@ class VF_Note_ExportTest extends VF_TestCase
     {
         $finder = new VF_Note_Finder();
         $noteId = $finder->insert('code1', 'message1');
-
         $export = new VF_Note_Export;
         $csv = $export->export();
-
         $expected = '"id","code","message"
 "' . $noteId . '","code1","message1"
 ';
-
         $this->assertEquals($expected, $csv);
     }
 }

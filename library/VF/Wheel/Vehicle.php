@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -25,21 +24,21 @@ class VF_Wheel_Vehicle
 {
     /** @var VF_Vehicle */
     protected $wrappedVehicle;
-    
-    function __construct(VF_Vehicle $vehicle )
+
+    function __construct(VF_Vehicle $vehicle)
     {
         $this->wrappedVehicle = $vehicle;
     }
-    
-    function __call($methodName,$arguments)
+
+    function __call($methodName, $arguments)
     {
-        $method = array($this->wrappedVehicle,$methodName);
-        return call_user_func_array( $method, $arguments );
+        $method = array($this->wrappedVehicle, $methodName);
+        return call_user_func_array($method, $arguments);
     }
-    
-    function addBoltPattern( VF_Wheel_BoltPattern_Single $boltPattern )
+
+    function addBoltPattern(VF_Wheel_BoltPattern_Single $boltPattern)
     {
-        $this->query( sprintf(
+        $this->query(sprintf(
             "REPLACE INTO `elite_definition_wheel` ( `leaf_id`, `lug_count`, `bolt_distance`, `offset` ) VALUES ( %d, %d, %s, %s )",
             $this->getId(),
             (int)$boltPattern->getLugCount(),
@@ -47,11 +46,11 @@ class VF_Wheel_Vehicle
             (float)$boltPattern->getOffset()
         ));
     }
-    
+
     /** @return VF_Wheel_BoltPattern_Single */
     function boltPattern()
     {
-        $r = $this->query( sprintf(
+        $r = $this->query(sprintf(
             "
             SELECT lug_count, bolt_distance, offset
             FROM elite_definition_wheel
@@ -61,13 +60,13 @@ class VF_Wheel_Vehicle
         ));
         return $r->fetchObject();
     }
-    
+
     /** @return Zend_Db_Statement_Interface */
-    protected function query( $sql )
+    protected function query($sql)
     {
-        return $this->getReadAdapter()->query( $sql );
+        return $this->getReadAdapter()->query($sql);
     }
-    
+
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {

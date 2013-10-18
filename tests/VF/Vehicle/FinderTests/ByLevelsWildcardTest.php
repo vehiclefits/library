@@ -12,5 +12,4 @@ class VF_Vehicle_FinderTests_ByLevelsWildcardTest extends VF_Vehicle_FinderTests
         $vehicles = $this->getFinder()->findByLevels(array('make' => 'Honda', 'model' => 'F-*', 'year' => 2000));
         $this->assertEquals(1, count($vehicles));
     }
-
 }

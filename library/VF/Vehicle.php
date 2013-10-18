@@ -78,7 +78,6 @@ class VF_Vehicle implements VF_Configurable
             return new VF_Level($level, 0, $this->schema());
         }
         $id = $this->getValue($level);
-
         $levelFinder = new VF_Level_Finder($this->schema());
         $object = $levelFinder->find($level, $id);
         if (false == $object) {
@@ -119,7 +118,6 @@ class VF_Vehicle implements VF_Configurable
             }
             return trim($template);
         }
-
         $string = array();
         foreach ($levels as $level) {
             if ($this->levelIsOutsideFlexibleSelection($level)) {
@@ -134,7 +132,6 @@ class VF_Vehicle implements VF_Configurable
     function toValueArray()
     {
         $array = array();
-
         foreach ($this->getLevelObjs() as $level) {
             if (!is_object($level)) {
                 break;
@@ -154,7 +151,6 @@ class VF_Vehicle implements VF_Configurable
     function toTitleArray($levels = array())
     {
         $array = array();
-
         $levels = count($levels) ? $levels : $this->getLevelObjs();
         foreach ($levels as $level) {
             if (is_string($level) && strlen($level) > 0) {
@@ -206,13 +202,11 @@ class VF_Vehicle implements VF_Configurable
             $bind[str_replace(' ', '_', $level->getType()) . '_id'] = $level->getId();
             $bind[str_replace(' ', '_', $level->getType())] = $level->getTitle();
         }
-
         $finder = new VF_Vehicle_Finder($this->schema);
         if ($finder->vehicleExists($this->toTitleArray())) {
             $vehicle = $finder->findOneByLevels($this->toTitleArray());
             return $this->row->id = $vehicle->getId();
         }
-
         // doesnt exist, insert it
         $insertAdapter = new VF_Db_Adapter_InsertWrapper($this->getReadAdapter());
         $insertAdapter->insert($this->schema()->definitionTable(), $bind);
@@ -222,12 +216,10 @@ class VF_Vehicle implements VF_Configurable
     function unlink()
     {
         $where = $this->whereForUnlink();
-
         $result = $this->query('SELECT * FROM ' . $this->schema()->definitionTable() . ' WHERE ' . $where)->fetchAll();
         foreach ($result as $row) {
             $this->unlinkVehicle($row);
         }
-
     }
 
     function unlinkVehicle($vehicleRow)
@@ -235,7 +227,6 @@ class VF_Vehicle implements VF_Configurable
         $where = $this->whereForUnlink();
         $this->query('DELETE FROM ' . $this->schema()->definitionTable() . ' WHERE ' . $where);
         $this->query('DELETE FROM ' . $this->schema()->mappingsTable() . ' WHERE ' . $where);
-
         foreach (array_reverse($this->getLevelObjs()) as $level) {
             $countInUse = $this->query('SELECT count(*) from ' . $this->schema()->definitionTable() . ' WHERE ' . $level->getType() . '_id = ' . $vehicleRow[$level->getType() . '_id'])->fetchColumn();
             if (!$countInUse) {
@@ -287,7 +278,6 @@ class VF_Vehicle implements VF_Configurable
         if ($this->hasLoadedLevel($level)) {
             return (int)$this->getLevel($level)->getId();
         }
-
         $var = str_replace(' ', '_', $level) . '_id';
         return isset($this->row->$var) ? $this->row->$var : 0;
     }

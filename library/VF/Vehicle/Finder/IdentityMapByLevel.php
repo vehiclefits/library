@@ -52,7 +52,6 @@ class VF_Vehicle_Finder_IdentityMapByLevel
 
     function remove($vehicle)
     {
-
     }
 
     function has($level, $id)

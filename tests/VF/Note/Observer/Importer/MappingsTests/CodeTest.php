@@ -17,8 +17,7 @@ class VF_Note_Observer_Importer_MappingsTests_CodeTest extends VF_Note_Observer_
         $this->createNoteDefinition('abc', 'foo');
         $this->createNoteDefinition('xyz', 'bar');
         $this->import('sku, make, model, year, notes' . "\n" .
-            'sku, honda, civic, 2000, "abc,xyz"');
-
+        'sku, honda, civic, 2000, "abc,xyz"');
         $fitId = $this->getFitIdForSku('sku');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals('foo', $notes[0]->message);
@@ -30,12 +29,10 @@ class VF_Note_Observer_Importer_MappingsTests_CodeTest extends VF_Note_Observer_
         $this->createNoteDefinition(1, 'foo');
         $this->createNoteDefinition(2, 'bar');
         $this->import('sku, make, model, year, notes' . "\n" .
-            'sku, honda, civic, 2000, "1,2"');
-
+        'sku, honda, civic, 2000, "1,2"');
         $fitId = $this->getFitIdForSku('sku');
         $notes = $this->noteFinder()->getNotes($fitId);
         $this->assertEquals('foo', $notes[0]->message);
         $this->assertEquals('bar', $notes[1]->message);
     }
-
 }

@@ -26,7 +26,6 @@ class VF_Select extends Zend_Db_Select
                 // assume they passed in a literal string
                 break;
         }
-
         if (array() == $levels) {
             $levels = $this->getSchema()->getLevels();
         }

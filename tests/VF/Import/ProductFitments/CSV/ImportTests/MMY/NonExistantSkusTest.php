@@ -15,7 +15,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
     {
         $importer = $this->mappingsImporterFromData(
             'sku, make, model, year' . "\n" .
-                'nonexistantsku, honda, civic, 2000');
+            'nonexistantsku, honda, civic, 2000');
         $importer->import();
         $this->assertEquals(array('nonexistantsku'), $importer->nonExistantSkus(), 'should report a single missing SKU');
     }
@@ -24,7 +24,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
     {
         $importer = $this->mappingsImporterFromData(
             'sku, make, model, year' . "\n" .
-                'nonexistantsku, honda, civic, 2000');
+            'nonexistantsku, honda, civic, 2000');
         $importer->import();
         $count = $this->getReadAdapter()->query('select count(*) from elite_1_mapping where entity_id=0')->fetchColumn();
         $this->assertEquals(0, $count);
@@ -39,8 +39,8 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
     {
         $importer = $this->mappingsImporterFromData(
             'sku, make, model, year' . "\n" .
-                'nonexistantsku, honda, civic, 2000' . "\n" .
-                'nonexistantsku, honda, civic, 2001');
+            'nonexistantsku, honda, civic, 2000' . "\n" .
+            'nonexistantsku, honda, civic, 2001');
         $importer->import();
         $this->assertEquals(array('nonexistantsku'), $importer->nonExistantSkus(), 'when multiple rows with the same SKU, should report one missing SKU');
     }
@@ -49,8 +49,8 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
     {
         $importer = $this->mappingsImporterFromData(
             'sku, make, model, year' . "\n" .
-                'nonexistantsku, honda, civic, 2000' . "\n" .
-                'nonexistantsku, honda, civic, 2001');
+            'nonexistantsku, honda, civic, 2000' . "\n" .
+            'nonexistantsku, honda, civic, 2001');
         $importer->import();
         $this->assertEquals(2, $importer->nonExistantSkusCount(), 'should count the errors not the SKUs');
     }
@@ -59,15 +59,12 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
     {
         $importer = $this->mappingsImporterFromData(
             'sku,make,model,year' . "\n" .
-                'sku1,honda,civic,2000');
-
+            'sku1,honda,civic,2000');
         $writer = new Zend_Log_Writer_Mock();
         $logger = new Zend_Log($writer);
         $logger->addFilter(new Zend_Log_Filter_Priority(Zend_Log::NOTICE));
         $importer->setLog($logger);
-
         $importer->import();
-
         $event = $writer->events[0];
         $this->assertEquals('Line(1) Non Existant SKU \'sku1\'', $event['message']);
     }
@@ -76,16 +73,13 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
     {
         $importer = $this->mappingsImporterFromData(
             'sku,make,model,year' . "\n" .
-                'sku1,honda,civic,2000' . "\n" .
-                'sku2,honda,civic,2000');
-
+            'sku1,honda,civic,2000' . "\n" .
+            'sku2,honda,civic,2000');
         $writer = new Zend_Log_Writer_Mock();
         $logger = new Zend_Log($writer);
         $logger->addFilter(new Zend_Log_Filter_Priority(Zend_Log::NOTICE));
         $importer->setLog($logger);
-
         $importer->import();
-
         $event = $writer->events[1];
         $this->assertEquals('Line(2) Non Existant SKU \'sku2\'', $event['message']);
     }
@@ -94,13 +88,11 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
     {
         $importer = $this->mappingsImporterFromData(
             'sku,make,model,year_range' . "\n" .
-                'sku1,honda,civic,2000-2001');
-
+            'sku1,honda,civic,2000-2001');
         $writer = new Zend_Log_Writer_Mock();
         $logger = new Zend_Log($writer);
         $logger->addFilter(new Zend_Log_Filter_Priority(Zend_Log::NOTICE));
         $importer->setLog($logger);
-
         $importer->import();
         $this->assertEquals(1, count($writer->events));
     }
@@ -109,7 +101,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
     {
         $data = 'sku, make, model, year_start,year_end
 nonexistantsku, honda, civic, 2000,2001';
-
         $importer = $this->mappingsImporterFromData($data);
         $importer->import();
         $this->assertEquals(1, $importer->rowsWithNonExistantSkus(), 'row count with invalid SKUs should be 1 even if multiple years');
@@ -119,10 +110,9 @@ nonexistantsku, honda, civic, 2000,2001';
     {
         $vehicle = $this->createMMY('Doesnt Fit', 'Doesnt Fit', 'doesnt fit');
         $this->insertMappingMMY($vehicle, 1);
-
         $importer = $this->mappingsImporterFromData('sku, make, model, year' . "\n" .
-            'nonexist, honda, civic, 2000
-            nonexist2, honda, civic, 2001');
+        'nonexist, honda, civic, 2000
+        nonexist2, honda, civic, 2001');
         $importer->import();
         $this->assertEquals(2, $importer->nonExistantSkusCount(), 'non existant sku should NOT affect skipped count');
     }
@@ -130,15 +120,12 @@ nonexistantsku, honda, civic, 2000,2001';
     function testTwoNonExistantSku2()
     {
         return $this->markTestIncomplete();
-
         $vehicle = $this->createMMY('Doesnt Fit', 'Doesnt Fit', 'doesnt fit');
         $this->insertMappingMMY($vehicle, 1);
-
         $importer = $this->mappingsImporterFromData('sku, make, model, year' . "\n" .
-            'nonexist, acura, civic, 2000
-            nonexist, honda, civic, 2000');
+        'nonexist, acura, civic, 2000
+        nonexist, honda, civic, 2000');
         $importer->import();
         $this->assertEquals(1, $importer->nonExistantSkusCount(), 'should only count one non-existant sku');
     }
-
 }

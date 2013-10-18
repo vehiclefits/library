@@ -17,7 +17,6 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -26,65 +25,60 @@ class VF_Tire_Finder
     function sectionWidths()
     {
         $select = $this->getReadAdapter()->select()
-            ->from('elite_product_tire','distinct(section_width) section_width')
+            ->from('elite_product_tire', 'distinct(section_width) section_width')
             ->order('section_width');
         $result = $select->query();
         $return = array();
-        while($row = $result->fetch())
-        {
-            $return[ $row['section_width'] ] = $row['section_width'];
+        while ($row = $result->fetch()) {
+            $return[$row['section_width']] = $row['section_width'];
         }
         return $return;
     }
-    
+
     function aspectRatios()
     {
         $select = $this->getReadAdapter()->select()
-            ->from('elite_product_tire','distinct(aspect_ratio) aspect_ratio')
+            ->from('elite_product_tire', 'distinct(aspect_ratio) aspect_ratio')
             ->order('aspect_ratio');
         $result = $select->query();
         $return = array();
-        while($row = $result->fetch())
-        {
-            $return[ $row['aspect_ratio'] ] = $row['aspect_ratio'];
+        while ($row = $result->fetch()) {
+            $return[$row['aspect_ratio']] = $row['aspect_ratio'];
         }
         return $return;
     }
-    
+
     function diameters()
     {
         $select = $this->getReadAdapter()->select()
-            ->from('elite_product_tire','distinct(diameter) diameter')
+            ->from('elite_product_tire', 'distinct(diameter) diameter')
             ->order('diameter');
         $result = $select->query();
         $return = array();
-        while($row = $result->fetch())
-        {
-            $return[ $row['diameter'] ] = $row['diameter'];
+        while ($row = $result->fetch()) {
+            $return[$row['diameter']] = $row['diameter'];
         }
         return $return;
     }
-    
-    function productIds( VF_TireSize $tireSize, $tireType = null )
+
+    function productIds(VF_TireSize $tireSize, $tireType = null)
     {
         $select = $this->getReadAdapter()->select()
-            ->from('elite_product_tire','distinct(entity_id) entity_id')
-            ->where('section_width = ?', $tireSize->sectionWidth() )
-            ->where('aspect_ratio = ?', $tireSize->aspectRatio() )
-            ->where('diameter = ?', $tireSize->diameter() );
-        if(!is_null($tireType))
-        {
-			$select->where('tire_type = ?',$tireType);
+            ->from('elite_product_tire', 'distinct(entity_id) entity_id')
+            ->where('section_width = ?', $tireSize->sectionWidth())
+            ->where('aspect_ratio = ?', $tireSize->aspectRatio())
+            ->where('diameter = ?', $tireSize->diameter());
+        if (!is_null($tireType)) {
+            $select->where('tire_type = ?', $tireType);
         }
         $result = $select->query();
         $return = array();
-        while($row = $result->fetch())
-        {
-            array_push($return,$row['entity_id']);
+        while ($row = $result->fetch()) {
+            array_push($return, $row['entity_id']);
         }
         return $return;
     }
-    
+
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {

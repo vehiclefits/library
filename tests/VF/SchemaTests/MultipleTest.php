@@ -53,6 +53,5 @@ class VF_SchemaTests_MultipleTest extends VF_TestCase
         $schemaID = $schema->id();
         $new_schema = new VF_Schema($schemaID);
         $this->assertEquals(array('foo', 'bar'), $new_schema->getLevels(), 'should look up schema specified by ID passed to constructor');
-
     }
 }

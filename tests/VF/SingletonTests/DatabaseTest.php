@@ -23,7 +23,6 @@ class VF_SingletonTest_DatabaseTest extends VF_TestCase
             'username' => VAF_DB_USERNAME,
             'password' => VAF_DB_PASSWORD
         ));
-
         $singleton = new VF_Singleton();
         $singleton->setReadAdapter($database);
         $this->assertSame($database, $singleton->getReadAdapter(), 'should return injected database');

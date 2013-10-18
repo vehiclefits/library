@@ -27,7 +27,6 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
     {
         $civic2000 = $this->createMMY('Honda', 'Civic', '2000');
         $civic2001 = $this->createMMY('Honda', 'Civic', '2001');
-
         $request = new Zend_Controller_Request_Http();
         $request->setParams(array(
             'make' => $civic2000->getValue('make'),
@@ -35,13 +34,10 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_start' => $civic2000->getLevel('year')->getId(),
             'year_end' => $civic2000->getLevel('year')->getId()
         ));
-
         $search = new VF_Search;
         $search->setRequest($request);
-
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display($search, 'year', null, null, 'year_start');
-
         $this->assertTrue($searchlevel->getSelected($civic2000->getLevel('year')));
         $this->assertFalse($searchlevel->getSelected($civic2001->getLevel('year')));
     }
@@ -50,7 +46,6 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
     {
         $civic2000 = $this->createMMY('Honda', 'Civic', '2000');
         $civic2001 = $this->createMMY('Honda', 'Civic', '2001');
-
         $request = new Zend_Controller_Request_Http();
         $request->setParams(array(
             'make' => $civic2000->getValue('make'),
@@ -58,13 +53,10 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_start' => $civic2001->getLevel('year')->getId(),
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
-
         $search = new VF_Search;
         $search->setRequest($request);
-
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display($search, 'year', null, null, 'year_start');
-
         $this->assertTrue($searchlevel->getSelected($civic2001->getLevel('year')));
         $this->assertFalse($searchlevel->getSelected($civic2000->getLevel('year')));
     }
@@ -73,7 +65,6 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
     {
         $civic2000 = $this->createMMY('Honda', 'Civic', '2000');
         $civic2001 = $this->createMMY('Honda', 'Civic', '2001');
-
         $request = new Zend_Controller_Request_Http();
         $request->setParams(array(
             'make' => $civic2000->getValue('make'),
@@ -81,13 +72,10 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_start' => $civic2000->getLevel('year')->getId(),
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
-
         $search = new VF_Search;
         $search->setRequest($request);
-
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display($search, 'year', null, null, 'year_start');
-
         $this->assertTrue($searchlevel->getSelected($civic2000->getLevel('year')));
         $this->assertFalse($searchlevel->getSelected($civic2001->getLevel('year')));
     }
@@ -96,7 +84,6 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
     {
         $civic2000 = $this->createMMY('Honda', 'Civic', '2000');
         $civic2001 = $this->createMMY('Honda', 'Civic', '2001');
-
         $request = new Zend_Controller_Request_Http();
         $request->setParams(array(
             'make' => $civic2000->getValue('make'),
@@ -104,17 +91,13 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_start' => $civic2000->getLevel('year')->getId(),
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
-
         $search = new VF_Search;
         $search->setRequest($request);
-
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display($search, 'year', null, null, 'year_end');
-
         $this->assertFalse($searchlevel->getSelected($civic2000->getLevel('year')));
         $this->assertTrue($searchlevel->getSelected($civic2001->getLevel('year')));
     }
-
 }
 
 class VF_SearchLevel_TestSub2 extends VF_SearchLevel

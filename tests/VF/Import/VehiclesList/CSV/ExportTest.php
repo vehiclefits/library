@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Import_VehiclesList_CSV_ExportTest extends VF_Import_TestCase
 {
 
@@ -31,9 +30,7 @@ acura,integra,2004');
         $exporter = $this->getVehiclesListExport();
         $exporter->export($stream);
         rewind($stream);
-
         $data = stream_get_contents($stream);
         return $data;
     }
-
 }

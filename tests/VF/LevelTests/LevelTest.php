@@ -81,7 +81,6 @@ class VF_LevelTests_LevelTest extends VF_TestCase
     {
         $make = $this->newMake('039');
         $id = $make->save();
-
         $entity = $this->findMakeById($id);
         $this->assertSame('039', $entity->getTitle());
     }
@@ -92,10 +91,8 @@ class VF_LevelTests_LevelTest extends VF_TestCase
         $make->save();
         $make = $this->newMake('039');
         $id1 = $make->save();
-
         $make = $this->newMake('39');
         $id2 = $make->save();
-
         $this->assertNotSame($id1, $id2);
     }
 
@@ -103,7 +100,6 @@ class VF_LevelTests_LevelTest extends VF_TestCase
     {
         $make = $this->newMake(' 039 ');
         $id = $make->save();
-
         $make = $this->levelFinder()->findEntityByTitle('make', '039');
         $this->assertEquals($id, $make->getId(), 'should trim whitespace');
     }
@@ -112,6 +108,4 @@ class VF_LevelTests_LevelTest extends VF_TestCase
     {
         return new VF_Level_Finder();
     }
-
-
 }

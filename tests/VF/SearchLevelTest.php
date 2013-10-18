@@ -29,16 +29,12 @@ class VF_SearchLevelTest extends VF_TestCase
     function testMakeSelected()
     {
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
-
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getId());
-
         $search = new VF_Search;
         $search->setRequest($request);
-
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'make');
-
         $entity = $this->levelFinder()->find('make', $vehicle->getValue('make'));
         $this->assertTrue($searchlevel->getSelected($entity));
     }
@@ -47,19 +43,14 @@ class VF_SearchLevelTest extends VF_TestCase
     function testModelSelected()
     {
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
-
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getId());
-
         $search = new VF_Search;
         $search->setRequest($request);
-
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'year');
-
         $request->setParam('make', $vehicle->getLevel('make')->getId());
         $request->setParam('model', $vehicle->getLevel('model')->getId());
-
         $entity = $this->levelFinder()->find('year', $vehicle->getValue('year'));
         $this->assertFalse($searchlevel->getSelected($entity));
     }
@@ -67,18 +58,14 @@ class VF_SearchLevelTest extends VF_TestCase
     function testYearSelected()
     {
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
-
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getId());
         $request->setParam('model', $vehicle->getLevel('model')->getId());
         $request->setParam('year', $vehicle->getLevel('year')->getId());
-
         $search = new VF_Search;
         $search->setRequest($request);
-
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'year');
-
         $entity = $this->levelFinder()->find('year', $vehicle->getValue('year'));
         $this->assertTrue($searchlevel->getSelected($entity));
     }
@@ -86,23 +73,17 @@ class VF_SearchLevelTest extends VF_TestCase
     function testYearAlnumSelected()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
-
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $request->setParam('model', $vehicle->getLevel('model')->getTitle());
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
-
         $search = new VF_Search;
         $search->setRequest($request);
-
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'year');
-
-
         $entity = $vehicle->getLevel('year');
         $this->assertTrue($searchlevel->getSelected($entity));
     }
-
 }
 
 class VF_SearchLevel_TestSub extends VF_SearchLevel

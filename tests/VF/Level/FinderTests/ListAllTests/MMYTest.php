@@ -33,11 +33,9 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
         $vehicle1 = $this->createMMY('A', 'A', '1');
         $vehicle2 = $this->createMMY('A', 'B', '1');
         $vehicle3 = $this->createMMY('A', 'C', '1');
-
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-
         $model = new VF_Level('model');
         $actual = $model->listAll();
         $this->assertEquals('A', $actual[0]->getTitle(), 'should sort items');
@@ -50,11 +48,9 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
         $vehicle1 = $this->createMMY('A', 'A', '1');
         $vehicle2 = $this->createMMY('A', 'B', '1');
         $vehicle3 = $this->createMMY('A', 'C', '1');
-
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-
         $actual = $this->levelFinder()->listAll('model');
         $this->assertEquals('A', $actual[0]->getTitle(), 'should sort items');
         $this->assertEquals('B', $actual[1]->getTitle(), 'should sort items');
@@ -66,11 +62,9 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
         $vehicle1 = $this->createMMY('A', 'A', '1');
         $vehicle2 = $this->createMMY('A', 'B', '1');
         $vehicle3 = $this->createMMY('A', 'C', '1');
-
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-
         $model = new VF_Level('model');
         $actual = $model->listAll();
         $actual = $model->listAll();
@@ -84,11 +78,9 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
         $vehicle1 = $this->createMMY('A', 'A', '1');
         $vehicle2 = $this->createMMY('A', 'B', '1');
         $vehicle3 = $this->createMMY('B', 'Z', 'Z');
-
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-
         $model = new VF_Level('model');
         $actual = $model->listAll($vehicle1->getLevel('make')->getId());
         $this->assertEquals('A', $actual[0]->getTitle(), 'should sort items');
@@ -103,5 +95,4 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
         $actual = $bar->listAll($vehicle->getValue('foo'));
         $this->assertEquals('456', $actual[0]->getTitle(), 'should list children levels in 2nd schema');
     }
-
 }

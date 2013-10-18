@@ -12,14 +12,11 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_LevelSkuWildCommaTest extend
     protected function doSetUp()
     {
         $this->switchSchema('make,model,year');
-
         $this->f150 = $this->createMMY('Ford', 'F-150', '2000');
         $this->f250 = $this->createMMY('Ford', 'F-250', '2000');
         $this->foo = $this->createMMY('Ford', 'foo', '2000');
-
         $this->csvData = 'sku, make, model, year
 "aaa*,bbb*", Ford, "F-*,foo", 2000';
-
         $this->product_1 = $this->insertProduct('aaa1');
         $this->product_2 = $this->insertProduct('aaa2');
         $this->product_3 = $this->insertProduct('bbb1');
@@ -89,5 +86,4 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_LevelSkuWildCommaTest extend
         $fits = $this->newVFProduct($this->product_3)->getFits();
         $this->assertEquals('foo', $fits[2]->model, 'level enumeration and sku wildcard should inter-operate');
     }
-
 }

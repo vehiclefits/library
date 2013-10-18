@@ -9,7 +9,6 @@ class VF_Import_AbstractTest extends VF_TestCase
     protected function doSetUp()
     {
         $this->switchSchema('make,model,year');
-
     }
 
     function testShouldGetProductId()
@@ -32,7 +31,6 @@ class VF_Import_AbstractTestSubClass extends VF_Import_Abstract
 {
     function __construct()
     {
-
     }
 
     function getProductTable()

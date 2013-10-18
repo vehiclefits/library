@@ -4,7 +4,6 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 {
     const ENTITY_TYPE_MAKE = 'make';
@@ -44,22 +43,17 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
             'password' => VAF_DB_PASSWORD
         ));
         VF_Singleton::getInstance()->setReadAdapter($database);
-
         VF_Schema::$levels = null;
-
         $_SESSION = array();
         $_GET = array();
         $_REQUEST = array();
         $_POST = array();
         $_FILES = array();
-
         $this->resetIdentityMaps();
         $this->dropAndRecreateMockProductTable();
-
-        if(class_exists('Mage',false)) {
+        if (class_exists('Mage', false)) {
             Mage::resetRegistry();
         }
-
         $this->doSetUp();
     }
 
@@ -80,7 +74,6 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     protected function doTearDown()
     {
-
     }
 
     function tearDown()
@@ -102,13 +95,10 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
             } catch (Zend_Db_Statement_Exception $e) {
             }
         }
-
         $schemaGenerator = new VF_Schema_Generator();
         $schemaGenerator->dropExistingTables();
         $schemaGenerator->execute(explode(',', $levels));
-
         VF_Schema::reset();
-
         $this->startTransaction();
     }
 
@@ -319,7 +309,6 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         if ($id) {
             return $id;
         }
-
         $entity = new VF_Level($level);
         if (!is_null($config)) {
             $entity->setConfig($config);
@@ -329,7 +318,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return $id;
     }
 
-    protected function insertProduct($sku, $table='test_catalog_product_entity', $skuColumn = 'sku')
+    protected function insertProduct($sku, $table = 'test_catalog_product_entity', $skuColumn = 'sku')
     {
         $this->query(sprintf("INSERT INTO $table ( `$skuColumn` ) values ( '%s' )", $sku));
         return $this->getReadAdapter()->lastInsertId();
@@ -471,7 +460,6 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     function flexibleTireSearch($requestParams = array())
     {
         $this->setRequestParams($requestParams);
-
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $this->getRequest($requestParams));
         $tireFlexibleSearch = new VF_Tire_FlexibleSearch($flexibleSearch);
         return $tireFlexibleSearch;
@@ -481,7 +469,6 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     function flexibleWheeladapterSearch($requestParams = array())
     {
         $this->setRequestParams($requestParams);
-
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $this->getRequest($requestParams));
         $tireFlexibleSearch = new VF_Wheeladapter_FlexibleSearch($flexibleSearch);
         return $tireFlexibleSearch;
@@ -495,7 +482,6 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         } else {
             $request = VF_Singleton::getInstance()->getRequest();
         }
-
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $request);
         $flexibleSearch = new VF_Wheel_FlexibleSearch($flexibleSearch);
         return $flexibleSearch;
@@ -506,9 +492,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         try {
             $this->query("DROP TABLE `test_catalog_product_entity`");
         } catch (Exception $e) {
-
         }
-
         $this->query("CREATE TABLE IF NOT EXISTS `test_catalog_product_entity` (
           `entity_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `entity_type_id` smallint(8) unsigned NOT NULL DEFAULT '0',
@@ -525,19 +509,15 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
           KEY `FK_CATALOG_PRODUCT_ENTITY_ATTRIBUTE_SET_ID` (`attribute_set_id`),
           KEY `sku` (`sku`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product Entities' AUTO_INCREMENT=1 ;");
-
         try {
             $this->query("DROP TABLE `ps_product`");
         } catch (Exception $e) {
-
         }
-
         $this->query("CREATE TABLE `ps_product` (
           `id_product` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `reference` varchar(32) NOT NULL DEFAULT 'simple',
           PRIMARY KEY (`id_product`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Product Entities' AUTO_INCREMENT=1 ;");
-
     }
 
     function getProductForSku($sku)
@@ -549,10 +529,8 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         $r = $this->query($sql);
         $product_id = $r->fetchColumn();
         $r->closeCursor();
-
         $product = new Elite_Vaf_Model_Catalog_Product();
         $product->setId($product_id);
-
         return $product;
     }
 
@@ -565,10 +543,8 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         $r = $this->query($sql);
         $product_id = $r->fetchColumn();
         $r->closeCursor();
-
         $product = new VF_Product();
         $product->setId($product_id);
-
         return $product;
     }
 
@@ -685,7 +661,6 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         }
         return $helper;
     }
-
 }
 
 class Elite_Vaf_Model_TestSubClass extends VF_Level
@@ -726,5 +701,4 @@ class Elite_Vaf_Model_TestSubClass extends VF_Level
         }
         return new VF_Level($level, $id);
     }
-
 }

@@ -17,76 +17,68 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
-
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class VF_Wheel_FlexibleSearch extends VF_FlexibleSearch_Wrapper implements VF_FlexibleSearch_Interface
 {
 
     function doGetProductIds()
     {
-	if (!$this->lugCount() || !$this->studSpread())
-	{
-	    return $this->wrappedFlexibleSearch->doGetProductIds();
-	}
-
-	$finder = new VF_Wheel_Finder();
-	$productIds = $finder->getProductIds($this->boltPattern());
-	if (array() == $productIds)
-	{
-	    return array(0);
-	}
-	return $productIds;
+        if (!$this->lugCount() || !$this->studSpread()) {
+            return $this->wrappedFlexibleSearch->doGetProductIds();
+        }
+        $finder = new VF_Wheel_Finder();
+        $productIds = $finder->getProductIds($this->boltPattern());
+        if (array() == $productIds) {
+            return array(0);
+        }
+        return $productIds;
     }
 
     function boltPattern()
     {
-	return VF_Wheel_BoltPattern::create($this->boltString());
+        return VF_Wheel_BoltPattern::create($this->boltString());
     }
 
     function boltString()
     {
-	return $this->lugCount() . 'x' . $this->studSpread();
+        return $this->lugCount() . 'x' . $this->studSpread();
     }
 
     function storeSizeInSession()
     {
-	if ($this->shouldClear())
-	{
-	    $this->clear();
-	}
-	if (!$this->lugCount() || !$this->studSpread())
-	{
-	    return;
-	}
-	$this->clearSelection();
-	$tireSearch = new VF_Tire_FlexibleSearch($this);
-	$tireSearch->clear();
-	$_SESSION['lug_count'] = $this->lugCount();
-	$_SESSION['stud_spread'] = $this->studSpread();
+        if ($this->shouldClear()) {
+            $this->clear();
+        }
+        if (!$this->lugCount() || !$this->studSpread()) {
+            return;
+        }
+        $this->clearSelection();
+        $tireSearch = new VF_Tire_FlexibleSearch($this);
+        $tireSearch->clear();
+        $_SESSION['lug_count'] = $this->lugCount();
+        $_SESSION['stud_spread'] = $this->studSpread();
     }
 
     function shouldClear()
     {
-	return 0 == (int) $this->lugCount() && 0 == (int) $this->studSpread();
+        return 0 == (int)$this->lugCount() && 0 == (int)$this->studSpread();
     }
 
     function clear()
     {
-	unset($_SESSION['lug_count']);
-	unset($_SESSION['stud_spread']);
+        unset($_SESSION['lug_count']);
+        unset($_SESSION['stud_spread']);
     }
 
     function lugCount()
     {
-	return $this->getParam('lug_count');
+        return $this->getParam('lug_count');
     }
 
     function studSpread()
     {
-	return $this->getParam('stud_spread');
+        return $this->getParam('stud_spread');
     }
-
 }

@@ -24,10 +24,8 @@ class VF_Import_Combiner
                 return array();
             }
         }
-
         $combinations = $this->getPowerSetCombinations($values);
         $combinations = $this->explodeWildcardCombinations($combinations);
-
         return $combinations;
     }
 
@@ -40,7 +38,6 @@ class VF_Import_Combiner
         } else {
             $values[$level] = $this->convertValueToArray($values[$level]);
         }
-
         return $values;
     }
 
@@ -49,7 +46,6 @@ class VF_Import_Combiner
         $combiner = new VF_Import_ArrayCombiner();
         $combiner->setTraits($values);
         $combinations = $combiner->getCombinations();
-
         // put them back in correct order (root through leaf level)
         foreach ($combinations as $key => $combination) {
             $combinations[$key] = array();

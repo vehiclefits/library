@@ -69,5 +69,4 @@ class VF_Level_Finder extends VF_Level_Finder_Abstract
     {
         return new VF_Level_Finder_Selector($this->schema);
     }
-
 }
