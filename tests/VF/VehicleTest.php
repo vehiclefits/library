@@ -61,15 +61,6 @@ class VF_VehicleTest extends VF_TestCase
         $this->assertEquals('Honda Civic', $vehicle->__toString(), 'should convert vehicle to string');
     }
 
-    function testLevelIdsTruncateAfter()
-    {
-        $vehicle = $this->createMMY('Honda', 'Civic', '2000');
-        $truncateAfter = $vehicle->levelIdsTruncateAfter('model');
-        $this->assertEquals($vehicle->getValue('make'), $truncateAfter['make']);
-        $this->assertEquals($vehicle->getValue('model'), $truncateAfter['model']);
-        $this->assertFalse(isset($truncateAfter['year']));
-    }
-
     function testShouldNotSaveTwice()
     {
         $id1 = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
