@@ -48,7 +48,7 @@ $schemaGenerator->dropExistingTables();
 
     <iframe id="myframe" src="/vf-install.php" width="500" height="500"></iframe>
     
-    <script type="text/javascript" src="/skin/adminhtml/default/default/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/skin/adminhtml/default/default/vf/jquery-1.7.1.min.js"></script>
     <script type="text/javascript" src="qunit/qunit.js"></script>
     <script type="text/javascript" src="common.js"></script>
     <script type="text/javascript">

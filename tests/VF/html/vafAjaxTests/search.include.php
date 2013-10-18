@@ -26,7 +26,7 @@ class Elite_Vaf_Block_Search_AjaxTestSub extends Elite_Vaf_Block_Search
     function toHtml()
     {
         VF_Singleton::getInstance()->setRequest( new Zend_Controller_Request_Http() );
-        require(getenv('PHP_MAGE_PATH').'/app/design/frontend/default/default/template/vf/vaf/search.phtml');
+        require(getenv('PHP_MAGE_PATH').'/app/design/frontend/base/default/template/vf/vaf/search.phtml');
     }
 
     function url( $url )

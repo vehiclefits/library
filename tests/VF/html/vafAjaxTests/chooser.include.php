@@ -25,7 +25,7 @@ class Elite_Vaf_Block_Search_Choosevehicle_AjaxTestSub extends Elite_Vaf_Block_S
 {
     function toHtml()
     {
-        require(getenv('PHP_MAGE_PATH').'/app/design/frontend/default/default/template/vf/vaf/search.phtml');
+        require(getenv('PHP_MAGE_PATH').'/app/design/frontend/base/default/template/vf/vaf/search.phtml');
     }
 
     function __()
