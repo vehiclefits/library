@@ -23,7 +23,7 @@ class VF_AjaxTests_MultipleSchemaTest extends VF_TestCase
         $ajax = new VF_Ajax();
         $ajax->execute($schema);
         $actual = ob_get_clean();
-        $this->assertEquals('<option value="' . $vehicle->getValue('foo') . '">123</option>', $actual, 'should list root levels from 2nd schema');
+        $this->assertEquals('<option value="123">123</option>', $actual, 'should list root levels from 2nd schema');
     }
 
     function testShouldListChildLevel_WhenCalledFromFrontend()
@@ -35,11 +35,11 @@ class VF_AjaxTests_MultipleSchemaTest extends VF_TestCase
         ob_start();
         $_GET['front'] = 1;
         $_GET['requestLevel'] = 'bar';
-        $_GET['foo'] = $vehicle->getValue('bar');
+        $_GET['foo'] = '123';
         $ajax = new VF_Ajax();
         $ajax->execute($schema);
         $actual = ob_get_clean();
-        $this->assertEquals('<option value="' . $vehicle->getValue('bar') . '">456</option>', $actual, 'should list child levels from 2nd schema');
+        $this->assertEquals('<option value="456">456</option>', $actual, 'should list child levels from 2nd schema');
     }
 
     function testShouldListChildLevel_WhenCalledFromBackend()

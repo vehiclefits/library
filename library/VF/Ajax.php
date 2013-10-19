@@ -12,7 +12,7 @@ class VF_Ajax implements VF_Configurable
     /** @var Zend_Config */
     protected $config;
 
-    function execute(VF_Schema $schema, $alphaNumeric = false)
+    function execute(VF_Schema $schema, $alphaNumeric = true)
     {
         $this->alphaNumeric = $alphaNumeric;
         $this->schema = $schema;
@@ -22,7 +22,18 @@ class VF_Ajax implements VF_Configurable
         if (isset($_GET['front'])) {
             $product = isset($_GET['product']) ? $_GET['product'] : null;
             if ($alphaNumeric) {
-                $children = $levelFinder->listInUseByTitle(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
+                if ($this->shouldListAll()) {
+                    $levelsToSelect = array($this->requestLevel());
+                    $where = $this->requestLevels();
+                    $vehicleFinder = new VF_Vehicle_Finder($schema);
+                    $vehicles = $vehicleFinder->findDistinct($levelsToSelect, $where);
+                    $children = array();
+                    foreach($vehicles as $vehicle) {
+                        array_push($children, $vehicle->getLevel($this->requestLevel()));
+                    }
+                } else {
+                    $children = $levelFinder->listInUseByTitle(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
+                }
             } else {
                 if ($this->shouldListAll()) {
                     $children = $levelFinder->listAll(new VF_Level($this->requestLevel()), $this->requestLevels(), $product);
@@ -68,7 +79,7 @@ class VF_Ajax implements VF_Configurable
             echo '<option value="0">' . $label . '</option>';
         }
         foreach ($children as $child) {
-            if ($this->alphaNumeric) {
+            if ($this->alphaNumeric && isset($_GET['front'])) {
                 echo '<option value="' . $child->getTitle() . '">' . htmlentities($child->getTitle(), ENT_QUOTES, 'UTF-8') . '</option>';
             } else {
                 echo '<option value="' . $child->getId() . '">' . htmlentities($child->getTitle(), ENT_QUOTES, 'UTF-8') . '</option>';

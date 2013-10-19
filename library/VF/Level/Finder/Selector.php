@@ -166,7 +166,7 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         if (!$levelId) {
             return false;
         }
-        $level = new VF_Level($type, $levelId);
+        $level = new VF_Level($type, $levelId, $this->getSchema());
         $level->setTitle($title);
         return $level;
     }

@@ -32,26 +32,26 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $this->insertMappingMMY($vehicle);
         $_GET['requestLevel'] = 'make';
-        $this->assertEquals('<option value="' . $vehicle->getValue('make') . '">Honda</option>', $this->execute(), 'should list makes');
+        $this->assertEquals('<option value="Honda">Honda</option>', $this->execute(), 'should list makes');
     }
 
     function testShouldListModels()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $this->insertMappingMMY($vehicle);
-        $_GET['make'] = $vehicle->getLevel('make')->getId();
+        $_GET['make'] = 'Honda';
         $_GET['requestLevel'] = 'model';
-        $this->assertEquals('<option value="' . $vehicle->getValue('model') . '">Civic</option>', $this->execute(), 'should list models for a make');
+        $this->assertEquals('<option value="Civic">Civic</option>', $this->execute(), 'should list models for a make');
     }
 
     function testShouldListYears()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $this->insertMappingMMY($vehicle);
-        $_GET['make'] = $vehicle->getLevel('make')->getId();
-        $_GET['model'] = $vehicle->getLevel('model')->getId();
+        $_GET['make'] = 'Honda';
+        $_GET['model'] = 'Civic';
         $_GET['requestLevel'] = 'year';
-        $this->assertEquals('<option value="' . $vehicle->getValue('year') . '">2000</option>', $this->execute(), 'should list years for a model');
+        $this->assertEquals('<option value="2000">2000</option>', $this->execute(), 'should list years for a model');
     }
 
     function testShouldListYearsInUse()
@@ -59,10 +59,11 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $this->createMMY('Honda', 'Civic', '2001');
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $this->insertMappingMMY($vehicle);
-        $_GET['make'] = $vehicle->getLevel('make')->getId();
-        $_GET['model'] = $vehicle->getLevel('model')->getId();
+        $_GET['make'] = 'Honda';
+        $_GET['model'] = 'Civic';
         $_GET['requestLevel'] = 'year';
-        $this->assertEquals('<option value="' . $vehicle->getValue('year') . '">2000</option>', $this->execute(), 'should list years for a model');
+        $this->assertEquals('<option value="2000">2000</option>', $this->execute(), 'should list years for a model');
+        // @todo assert regexp not contains "2001"
     }
 
     function testShouldListDistinctModelsWhenMultipleYears()
@@ -71,9 +72,9 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2001');
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
-        $_GET['make'] = $vehicle1->getLevel('make')->getId();
+        $_GET['make'] = 'Honda';
         $_GET['requestLevel'] = 'model';
-        $this->assertEquals('<option value="' . $vehicle1->getValue('model') . '">Civic</option>', $this->execute(), 'should list models for a make');
+        $this->assertEquals('<option value="Civic">Civic</option>', $this->execute(), 'should list models for a make');
     }
 
     function testShouldSortMake()
@@ -92,15 +93,15 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2001');
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
-        $_GET['make'] = $vehicle1->getLevel('make')->getId();
+        $_GET['make'] = 'Honda';
         $_GET['requestLevel'] = 'model';
-        $this->assertEquals('<option value="0">-please select-</option><option value="' . $vehicle1->getValue('model') . '">Accord</option><option value="' . $vehicle2->getValue('model') . '">Civic</option>', $this->execute(), 'should list models for a make');
+        $this->assertEquals('<option value="0">-please select-</option><option value="Accord">Accord</option><option value="Civic">Civic</option>', $this->execute(), 'should list models for a make');
     }
 
     function testShouldNotListModelsNotInUse()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2001');
-        $_GET['make'] = $vehicle->getLevel('make')->getId();
+        $_GET['make'] = 'Honda';
         $_GET['requestLevel'] = 'model';
         $this->assertEquals('', $this->execute(), 'should not list models not in use');
     }
@@ -108,7 +109,7 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
     function testShouldListModelsNotInUseIfConfigSaysTo()
     {
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
-        $_GET['make'] = $vehicle->getValue('make');
+        $_GET['make'] = 'Honda';
         $_GET['requestLevel'] = 'model';
         ob_start();
         $_GET['front'] = 1;
@@ -117,7 +118,7 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $ajax->setConfig($config);
         $ajax->execute($this->getSchema());
         $actual = ob_get_clean();
-        $expected = '<option value="' . $vehicle->getValue('model') . '">Civic</option>';
+        $expected = '<option value="Civic">Civic</option>';
         $this->assertEquals($expected, $actual, 'should list models not in use if config says to');
     }
 
@@ -127,10 +128,10 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2001');
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
-        $_GET['make'] = $vehicle1->getLevel('make')->getId();
+        $_GET['make'] = 'Honda';
         $_GET['requestLevel'] = 'model';
         $_GET['front'] = true;
-        $this->assertEquals('<option value="0">-please select-</option><option value="' . $vehicle1->getValue('model') . '">Accord</option><option value="' . $vehicle2->getValue('model') . '">Civic</option>', $this->execute(), 'should list models for a make');
+        $this->assertEquals('<option value="0">-please select-</option><option value="Accord">Accord</option><option value="Civic">Civic</option>', $this->execute(), 'should list models for a make');
     }
 
     function testShouldListMultipleModels_WithCustomDefaultOption()
@@ -139,7 +140,7 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2001');
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
-        $_GET['make'] = $vehicle1->getLevel('make')->getId();
+        $_GET['make'] = 'Honda';
         $_GET['requestLevel'] = 'model';
         $_GET['front'] = true;
         $ajax = $this->getAjax();
@@ -148,7 +149,7 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         ob_start();
         $ajax->execute($this->getSchema());
         $actual = ob_get_clean();
-        $expected = '<option value="0">-All Model-</option><option value="' . $vehicle1->getValue('model') . '">Accord</option><option value="' . $vehicle2->getValue('model') . '">Civic</option>';
+        $expected = '<option value="0">-All Model-</option><option value="Accord">Accord</option><option value="Civic">Civic</option>';
         $this->assertEquals($expected, $actual, 'should list models for a make');
     }
 
@@ -160,10 +161,10 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $_GET['make'] = $vehicle1->getLevel('make')->getId();
-        $_GET['model'] = $vehicle1->getLevel('model')->getId();
+        $_GET['make'] = 'Honda';
+        $_GET['model'] = 'Civic';
         $_GET['requestLevel'] = 'year';
-        $this->assertEquals('<option value="0">-please select-</option><option value="' . $vehicle1->getValue('year') . '">2000</option><option value="' . $vehicle2->getValue('year') . '">2001</option><option value="' . $vehicle3->getValue('year') . '">2002</option>', $this->execute(), 'should list models for a make');
+        $this->assertEquals('<option value="0">-please select-</option><option value="2000">2000</option><option value="2001">2001</option><option value="2002">2002</option>', $this->execute(), 'should list models for a make');
     }
 
     function execute()
