@@ -198,7 +198,8 @@ class VF_Vehicle_Finder implements VF_Configurable
     function findDistinct($levelsToSelect, $where = array())
     {
         $select = $this->select();
-        if (isset($where['product_id'])) {
+        $findInUse = isset($where['in_use']) && true === $where['in_use'];
+        if (isset($where['product_id']) || $findInUse) {
             $select->from('elite_' . $this->schema->id() . '_mapping', $levelsToSelect);
         } else {
             $select->from('elite_' . $this->schema->id() . '_definition', $levelsToSelect);
