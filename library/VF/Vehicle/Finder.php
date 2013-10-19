@@ -195,6 +195,17 @@ class VF_Vehicle_Finder implements VF_Configurable
         return $return;
     }
 
+    function findDistinctAsStrings($levelToSelect, $where = array())
+    {
+        $vehicles = $this->findDistinct(array($levelToSelect), $where = array());
+        $strings = array();
+        foreach($vehicles as $vehicle) {
+            $string = $vehicle->getLevel($levelToSelect)->getTitle();
+            array_push($strings, $string);
+        }
+        return $strings;
+    }
+
     function findDistinct($levelsToSelect, $where = array())
     {
         $select = $this->select();

@@ -54,4 +54,10 @@ class VF_Vehicle_FinderTests_DistinctTest extends VF_Vehicle_FinderTests_TestCas
         $this->assertEquals(1, count($vehicles));
         $this->assertEquals('Honda', $vehicles[0]->__toString(), 'should find makes assigned to product');
     }
+
+    function testShouldFindAsLevelArray()
+    {
+        $titles = $this->getFinder()->findDistinctAsStrings('make');
+        $this->assertEquals(array('Ford', 'Honda'), $titles, 'should find as array of strings');
+    }
 }
