@@ -14,7 +14,7 @@ class VF_SearchLevelTest extends VF_TestCase
     {
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
         $request = new Zend_Controller_Request_Http();
-        $request->setParam('make', $vehicle->getLevel('make')->getId());
+        $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel();
@@ -28,13 +28,13 @@ class VF_SearchLevelTest extends VF_TestCase
     {
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
         $request = new Zend_Controller_Request_Http();
-        $request->setParam('make', $vehicle->getLevel('make')->getId());
+        $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
-        $request->setParam('make', $vehicle->getLevel('make')->getId());
-        $request->setParam('model', $vehicle->getLevel('model')->getId());
+        $request->setParam('make', $vehicle->getLevel('make')->getTitle());
+        $request->setParam('model', $vehicle->getLevel('model')->getTitle());
         $entity = $this->levelFinder()->find('year', $vehicle->getValue('year'));
         $this->assertFalse($searchlevel->isLevelSelected($entity));
     }
@@ -43,9 +43,9 @@ class VF_SearchLevelTest extends VF_TestCase
     {
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
         $request = new Zend_Controller_Request_Http();
-        $request->setParam('make', $vehicle->getLevel('make')->getId());
-        $request->setParam('model', $vehicle->getLevel('model')->getId());
-        $request->setParam('year', $vehicle->getLevel('year')->getId());
+        $request->setParam('make', $vehicle->getLevel('make')->getTitle());
+        $request->setParam('model', $vehicle->getLevel('model')->getTitle());
+        $request->setParam('year', $vehicle->getLevel('year')->getTitle());
         $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel();
