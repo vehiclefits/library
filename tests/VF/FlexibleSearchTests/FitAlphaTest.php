@@ -46,7 +46,8 @@ class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
             'model' => 'Civic',
             'year' => '2000'
         ));
-        $this->assertEquals($vehicle->getLevel('make')->getId(), $helper->vehicleSelection()->getValue('make'));
+        $vehicles = $helper->vehicleSelection();
+        $this->assertEquals($vehicle->getLevel('make')->getId(), $vehicles[0]->getValue('make'));
     }
 
     function testPassModelByTitle()
@@ -57,7 +58,8 @@ class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
             'model' => 'Civic',
             'year' => '2000'
         ));
-        $this->assertEquals($vehicle->getLevel('model')->getId(), $helper->vehicleSelection()->getValue('model'));
+        $vehicles = $helper->vehicleSelection();
+        $this->assertEquals($vehicle->getLevel('model')->getId(), $vehicles[0]->getValue('model'));
     }
 
     function testPassYearByTitle()
@@ -68,7 +70,8 @@ class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
             'model' => 'Civic',
             'year' => '2000'
         ));
-        $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->vehicleSelection()->getValue('year'));
+        $vehicles = $helper->vehicleSelection();
+        $this->assertEquals($vehicle->getLevel('year')->getId(), $vehicles[0]->getValue('year'));
     }
 
     function testGetProductIDs()

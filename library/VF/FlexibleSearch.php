@@ -110,7 +110,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
     {
         if ($this->shouldClear()) {
             $this->clearSelection();
-            return new VF_Vehicle_Selection(array());
+            return array();
         }
         $vehicleFinder = new VF_Vehicle_Finder($this->schema);
         // Multi-tree (admin panel) integration
@@ -122,7 +122,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             return $vehicleFinder->findByLevel($this->getLevel(), $id);
         }
         if (!$this->hasGETRequest() && !$this->hasSESSIONRequest()) {
-            return new VF_Vehicle_Selection(array());
+            return array();
         }
         // front-end lookup
         try {
@@ -132,8 +132,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             } else {
                 $vehicles = $vehicleFinder->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
             }
-            $selection = new VF_Vehicle_Selection($vehicles);
-            return $selection;
+            return $vehicles;
         } catch (VF_Exception_DefinitionNotFound $e) {
             return false;
         }
@@ -259,14 +258,15 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
 
     function doGetProductIds()
     {
-        if ($this->vehicleSelection()->isEmpty()) {
+        $selectedVehicles = $this->vehicleSelection();
+        if (!count($selectedVehicles)) {
             return array();
         }
         $level = $this->getLevel();
         $where = ' `universal` = 1 ';
         $where .= 'OR (';
         foreach ($this->schema()->getLevels() as $level_type) {
-            $id = (int)$this->vehicleSelection()->getLevel($level_type)->getId();
+            $id = (int)$selectedVehicles[0]->getLevel($level_type)->getId();
             if (!$id) {
                 continue;
             }
@@ -346,11 +346,12 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         $this->storeFitInSession();
         try {
             $level = $this->getLevel();
-            $vehicle = $this->vehicleSelection();
-            if (!$vehicle) {
+            $selectedVehicles = $this->vehicleSelection();
+            if (!count($selectedVehicles)) {
                 return false;
             }
-            $levelObj = $vehicle->getLevel($level);
+            $selectedVehicle = $selectedVehicles[0];
+            $levelObj = $selectedVehicle->getLevel($level);
             if (!$level || !$levelObj || !$levelObj->getId()) {
                 return false;
             }

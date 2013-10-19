@@ -109,7 +109,8 @@ class VF_Tire_FlexibleSearch extends VF_FlexibleSearch_Wrapper implements VF_Fle
         if (!is_null($this->getConfig()->tire->populateWhenSelectVehicle) && $this->getConfig()->tire->populateWhenSelectVehicle === '') {
             return;
         }
-        $vehicle = $this->vehicleSelection();
+        $vehicles = $this->vehicleSelection();
+        $vehicle = $vehicles[0];
         $select = $this->getReadAdapter()->select()
             ->from('elite_vehicle_tire', array('section_width', 'diameter', 'aspect_ratio'))
             ->where('leaf_id = ?', $vehicle->getLeafValue())

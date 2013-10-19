@@ -234,7 +234,7 @@ class VF_Product
 
     function setCurrentlySelectedFit($fit)
     {
-        $this->fit = new VF_Vehicle_Selection(array($fit));
+        $this->fit = array($fit);
     }
 
     function currentlySelectedFit()
@@ -243,17 +243,17 @@ class VF_Product
         if ($this->fit) {
             return $this->fit;
         } else {
-            return new VF_Vehicle_Selection();
+            return array();
         }
     }
 
     function fitsSelection()
     {
         $currentVehicleSelection = $this->currentlySelectedFit();
-        if ($currentVehicleSelection->isEmpty()) {
+        if (!count($currentVehicleSelection)) {
             return false;
         }
-        $vehicle = $currentVehicleSelection->getFirstVehicle();
+        $vehicle = $currentVehicleSelection[0];
         return $this->fitsVehicle($vehicle);
     }
 

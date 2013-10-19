@@ -11,16 +11,16 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $this->switchSchema('make,model,year');
     }
 
-    function testGetFitId()
-    {
-        $vehicle = $this->createMMY();
-        $helper = $this->getHelper(array(), array(
-            'make' => $vehicle->getLevel('make')->getId(),
-            'model' => $vehicle->getLevel('model')->getId(),
-            'year' => $vehicle->getLevel('year')->getId()
-        ));
-        $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->vehicleSelection()->getLeafValue());
-    }
+//    function testGetFitId()
+//    {
+//        $vehicle = $this->createMMY();
+//        $helper = $this->getHelper(array(), array(
+//            'make' => $vehicle->getLevel('make')->getId(),
+//            'model' => $vehicle->getLevel('model')->getId(),
+//            'year' => $vehicle->getLevel('year')->getId()
+//        ));
+//        $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->vehicleSelection()->getLeafValue());
+//    }
 
     function testShouldGetFlexibleDefinition()
     {
@@ -39,7 +39,8 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
             'model' => $vehicle->getLevel('model')->getId(),
             'year' => $vehicle->getLevel('year')->getId()
         ));
-        $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->vehicleSelection()->getLeafValue());
+        $selectedVehicles = $helper->vehicleSelection();
+        $this->assertEquals($vehicle->getLevel('year')->getId(), $selectedVehicles[0]->getLeafValue());
     }
 
     function testGetFitIdMultiTree()
@@ -53,7 +54,8 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
     {
         $_SESSION = array('make' => 1, 'model' => 1, 'year' => 1);
         $helper = $this->getHelper(array(), array('make' => 0, 'model' => 0, 'year' => 0));
-        $this->assertTrue($helper->vehicleSelection()->isEmpty(), 'request values should take precedence over session value');
+
+        $this->assertEquals(0, count($helper->vehicleSelection()), 'request values should take precedence over session value');
         $this->assertFalse(isset($_SESSION['make']), 'passing 0 in request should reset session value');
     }
 
@@ -145,7 +147,8 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $vehicle = $this->createMMY();
         $_SESSION = $vehicle->toValueArray();
         $helper = $this->getHelper(array(), array());
-        $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->vehicleSelection()->getLeafValue(), 'gets fit id from session if there is no request');
+        $selectedVehicles = $helper->vehicleSelection();
+        $this->assertEquals($vehicle->getLevel('year')->getId(), $selectedVehicles[0]->getLeafValue(), 'gets fit id from session if there is no request');
         $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->storeFitInSession(), 'storeFitInSession() should return leafID');
     }
 

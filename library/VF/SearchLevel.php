@@ -90,14 +90,36 @@ class VF_SearchLevel
             return false;
         }
         if ('year_start' == $this->yearRangeAlias) {
-            return (bool)($levelObject->getTitle() == $currentSelection->earliestYear());
+            return (bool)($levelObject->getTitle() == $this->earliestYearInVehicles($currentSelection));
         } else if ('year_end' == $this->yearRangeAlias) {
-            return (bool)($levelObject->getTitle() == $currentSelection->latestYear());
+            return (bool)($levelObject->getTitle() == $this->latestYearInVehicles($currentSelection));
         }
-        $level = $currentSelection->getLevel($this->leafLevel());
+        $level = $currentSelection[0]->getLevel($this->leafLevel());
         if ($level) {
             return (bool)($levelObject->getTitle() == $level->getTitle());
         }
+    }
+
+    function latestYearInVehicles($vehicles)
+    {
+        $latestYear = null;
+        foreach ($vehicles as $vehicle) {
+            if (is_null($latestYear) || $vehicle->getLevel('year')->getTitle() > $latestYear) {
+                $latestYear = $vehicle->getLevel('year')->getTitle();
+            }
+        }
+        return $latestYear;
+    }
+
+    function earliestYearInVehicles($vehicles)
+    {
+        $earliestYear = null;
+        foreach ($vehicles as $vehicle) {
+            if (is_null($earliestYear) || $vehicle->getLevel('year')->getTitle() < $earliestYear) {
+                $earliestYear = $vehicle->getLevel('year')->getTitle();
+            }
+        }
+        return $earliestYear;
     }
 
     protected function getEntities()

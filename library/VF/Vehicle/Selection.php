@@ -6,75 +6,31 @@
  */
 class VF_Vehicle_Selection
 {
-    public $vehicles;
+    public $vehicleParamsSelected;
 
-    function __construct($vehicles = array())
+    function __construct($vehicleParams = array())
     {
-        if (is_array($vehicles)) {
-            $this->vehicles = $vehicles;
-        } else {
-            $this->vehicles = array($vehicles);
-        }
+        $this->vehicleParamsSelected = $vehicleParams;
     }
 
     function earliestYear()
     {
-        $earliestYear = null;
-        foreach ($this->vehicles as $vehicle) {
-            if (is_null($earliestYear) || $vehicle->getLevel('year')->getTitle() < $earliestYear) {
-                $earliestYear = $vehicle->getLevel('year')->getTitle();
-            }
-        }
-        return $earliestYear;
+        return $this->vehicleParamsSelected['year_start'];
     }
 
     function latestYear()
     {
-        $latestYear = null;
-        foreach ($this->vehicles as $vehicle) {
-            if (is_null($latestYear) || $vehicle->getLevel('year')->getTitle() > $latestYear) {
-                $latestYear = $vehicle->getLevel('year')->getTitle();
+        return $this->vehicleParamsSelected['year_end'];
+    }
+
+    function contains($vehicleParamsToCheck)
+    {
+        foreach($this->vehicleParamsSelected as $levelName => $selectedParam) {
+            if(isset($vehicleParamsToCheck[$levelName]) && $vehicleParamsToCheck[$levelName] !== $selectedParam) {
+                return false;
             }
         }
-        return $latestYear;
+        return true;
     }
 
-    function getFirstVehicle()
-    {
-        if (isset($this->vehicles[0])) {
-            return $this->vehicles[0];
-        }
-    }
-
-    function contains($vehicle)
-    {
-        foreach ($this->vehicles as $thisVehicle) {
-            if ($vehicle->toTitleArray() == $thisVehicle->toTitleArray()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function __call($methodName, $arguments)
-    {
-        if ($this->isEmpty()) {
-            return;
-        }
-        $method = array($this->getFirstVehicle(), $methodName);
-        return call_user_func_array($method, $arguments);
-    }
-
-    function __toString()
-    {
-        if ($this->isEmpty()) {
-            return '';
-        }
-        return $this->getFirstVehicle()->__toString();
-    }
-
-    function isEmpty()
-    {
-        return 0 == count($this->vehicles);
-    }
 }

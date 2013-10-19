@@ -58,9 +58,12 @@ class VF_Wheel_FlexibleSearchTests_WheelSearchTest extends VF_TestCase
     {
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
         $this->setRequestParams($vehicle->toValueArray());
-        $this->assertEquals($vehicle->toValueArray(), VF_Singleton::getInstance()->vehicleSelection()->toValueArray(), 'should first select a vehicle');
+        $vehicles = VF_Singleton::getInstance()->vehicleSelection();
+        $vehicle = $vehicles[0];
+        $this->assertEquals($vehicle->toValueArray(), $vehicle->toValueArray(), 'should first select a vehicle');
         $this->setRequestParams(array('lug_count' => '5', 'stud_spread' => '114.3'));
         VF_Singleton::getInstance()->flexibleSearch()->doGetProductIds();
-        $this->assertNull(VF_Singleton::getInstance()->vehicleSelection()->getFirstVehicle(), 'should clear vehicle when searching on a wheel size');
+        $vehicles = VF_Singleton::getInstance()->vehicleSelection();
+        $this->assertEquals(0, count($vehicles), 'should clear vehicle when searching on a wheel size');
     }
 }

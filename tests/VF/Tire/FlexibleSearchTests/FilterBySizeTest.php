@@ -58,9 +58,11 @@ class VF_Tire_FlexibleSearchTests_FilterBySizeTest extends VF_TestCase
     {
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
         $this->setRequestParams($vehicle->toValueArray());
-        $this->assertEquals($vehicle->toValueArray(), VF_Singleton::getInstance()->vehicleSelection()->toValueArray(), 'should first select a vehicle');
+        $selectedVehicles = VF_Singleton::getInstance()->vehicleSelection();
+        $this->assertEquals($vehicle->toValueArray(), $selectedVehicles[0]->toValueArray(), 'should first select a vehicle');
         $this->setRequestParams(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16'));
         VF_Singleton::getInstance()->flexibleSearch()->doGetProductIds();
-        $this->assertNull(VF_Singleton::getInstance()->vehicleSelection()->getFirstVehicle(), 'should clear vehicle when searching on a tire size');
+        $vehicleSelection = VF_Singleton::getInstance()->vehicleSelection();
+        $this->assertEquals(0, count($vehicleSelection), 'should clear vehicle when searching on a tire size');
     }
 }

@@ -56,9 +56,10 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
             'year' => 'loading'
         );
         $helper = $this->getHelper(array(), $requestParams);
-        $this->assertEquals($vehicle->getLevel('make')->getId(), $helper->vehicleSelection()->getValue('make'));
-        $this->assertEquals(0, $helper->vehicleSelection()->getValue('model'));
-        $this->assertEquals(0, $helper->vehicleSelection()->getValue('year'));
+        $selectedVehicles = $helper->vehicleSelection();
+        $this->assertEquals($vehicle->getLevel('make')->getId(), $selectedVehicles[0]->getValue('make'));
+        $this->assertEquals(0, $selectedVehicles[0]->getValue('model'));
+        $this->assertEquals(0, $selectedVehicles[0]->getValue('year'));
     }
 
     function testShouldStoreInSession()

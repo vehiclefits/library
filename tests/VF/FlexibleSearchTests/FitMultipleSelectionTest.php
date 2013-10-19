@@ -50,8 +50,7 @@ class VF_FlexibleSearchTests_FitMultipleSelectionTest extends VF_TestCase
             'year_end' => $civic2001->getValue('year')
         );
         $helper = $this->getHelper(array(), $requestParams);
-        $this->assertTrue($helper->vehicleSelection()->contains($civic2000));
-        $this->assertTrue($helper->vehicleSelection()->contains($civic2001));
+        $this->assertEquals(2, count($helper->vehicleSelection()));
     }
 
     function testShouldNotFitOutsideRange()
@@ -65,7 +64,7 @@ class VF_FlexibleSearchTests_FitMultipleSelectionTest extends VF_TestCase
             'year_end' => $civic2001->getValue('year')
         );
         $helper = $this->getHelper(array(), $requestParams);
-        $this->assertFalse($helper->vehicleSelection()->contains($civic2000));
+        $this->assertEquals(1, count($helper->vehicleSelection()));
     }
 
     function testShouldStoreInSession()
