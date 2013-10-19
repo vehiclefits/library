@@ -36,7 +36,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'make');
         $entity = $this->levelFinder()->find('make', $vehicle->getValue('make'));
-        $this->assertTrue($searchlevel->getSelected($entity));
+        $this->assertTrue($searchlevel->isLevelSelected($entity));
     }
 
     // 0000468: When making an incomplete selection "change" button on my garage produces error
@@ -52,7 +52,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getId());
         $request->setParam('model', $vehicle->getLevel('model')->getId());
         $entity = $this->levelFinder()->find('year', $vehicle->getValue('year'));
-        $this->assertFalse($searchlevel->getSelected($entity));
+        $this->assertFalse($searchlevel->isLevelSelected($entity));
     }
 
     function testYearSelected()
@@ -67,7 +67,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'year');
         $entity = $this->levelFinder()->find('year', $vehicle->getValue('year'));
-        $this->assertTrue($searchlevel->getSelected($entity));
+        $this->assertTrue($searchlevel->isLevelSelected($entity));
     }
 
     function testYearAlnumSelected()
@@ -82,7 +82,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'year');
         $entity = $vehicle->getLevel('year');
-        $this->assertTrue($searchlevel->getSelected($entity));
+        $this->assertTrue($searchlevel->isLevelSelected($entity));
     }
 }
 

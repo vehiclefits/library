@@ -49,7 +49,7 @@ class VF_SearchLevel
             foreach ($this->getEntities() as $entity) {
                 ?>
                 <option
-                    value="<?= $entity->getId() ?>" <?= ($this->getSelected($entity) ? ' selected="selected"' : '') ?>><?= $entity->getTitle() ?></option>
+                    value="<?= $entity->getId() ?>" <?= ($this->isLevelSelected($entity) ? ' selected="selected"' : '') ?>><?= $entity->getTitle() ?></option>
             <?php
             }
             ?>
@@ -74,8 +74,12 @@ class VF_SearchLevel
         return new VF_Schema();
     }
 
-    /** @return bool */
-    function getSelected($entity)
+    /**
+     * Check if an entity is the selected one for this 'level'
+     * @param VF_Level $entity - level to check if is selected
+     * @return bool if this is the one that is supposed to be currently selected
+     */
+    function isLevelSelected($entity)
     {
         $selected = false;
         if ($this->level != $this->leafLevel()) {
