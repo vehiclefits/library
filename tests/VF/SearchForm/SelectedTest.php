@@ -9,7 +9,7 @@ class VF_SearchForm_SelectedTest extends VF_TestCase
     function doSetUp()
     {
     }
-    
+
     function testSelected()
     {
         $this->switchSchema('make,model,year');

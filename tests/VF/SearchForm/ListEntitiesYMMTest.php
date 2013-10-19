@@ -45,7 +45,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
-        $request = $this->getRequest($vehicle->toValueArray());
+        $request = $this->getRequest($vehicle->toTitleArray());
         $search->setRequest($request);
         $this->setRequest($request);
         $actual = $search->listEntities('make');
@@ -59,7 +59,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
-        $request = $this->getRequest($vehicle->toValueArray());
+        $request = $this->getRequest($vehicle->toTitleArray());
         $search->setRequest($request);
         $this->setRequest($request);
         $actual = $search->listEntities('make');
@@ -74,7 +74,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
         $search = new VF_SearchForm();
         $search->setConfig($config);
         $search->setRequest($this->getRequest());
-        $request = $this->getRequest($vehicle->toValueArray());
+        $request = $this->getRequest($vehicle->toTitleArray());
         $search->setRequest($request);
         $this->setRequest($request);
         $actual = $search->listEntities('year');
@@ -89,7 +89,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
         $search = new VF_SearchForm();
         $search->setConfig($config);
         $search->setRequest($this->getRequest());
-        $request = $this->getRequest($vehicle->toValueArray());
+        $request = $this->getRequest($vehicle->toTitleArray());
         $search->setRequest($request);
         $this->setRequest($request);
         $actual = $search->listEntities('make');
@@ -101,7 +101,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
         $this->switchSchema('year,make,model');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
-        $search->setRequest($this->getRequest($vehicle->toValueArray()));
+        $search->setRequest($this->getRequest($vehicle->toTitleArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));
         $this->assertEquals('Civic', $actual[0]->getTitle(), 'should list models when make is selected');

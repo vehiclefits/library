@@ -72,7 +72,11 @@ class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
     {
         $this->switchSchema('make,model,year');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $_GET = $vehicle->toValueArray();
+        $_GET = array(
+            'make' => 'Honda',
+            'model' => 'Civic',
+            'year' => '2000',
+        );
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
@@ -83,9 +87,8 @@ class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
     function testShouldListModels_WhenPartialVehicleIsSelected()
     {
         $this->switchSchema('make,model,year');
-        $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $_GET['make'] = $vehicle->getLevel('make')->getId();
-        $_GET['model'] = $vehicle->getLevel('model')->getId();
+        $this->createMMYWithFitment('Honda', 'Civic', '2000');
+        $_GET['make'] = 'Honda';
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
