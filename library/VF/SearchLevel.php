@@ -81,7 +81,6 @@ class VF_SearchLevel
      */
     function isLevelSelected($levelObject)
     {
-        $selected = false;
         if ($this->level != $this->leafLevel()) {
             return (bool)($levelObject->getId() == $this->block->getSelected($this->level));
         }
