@@ -20,7 +20,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         ));
         $search = new VF_SearchForm;
         $search->setRequest($request);
-        $searchlevel = new VF_SearchLevel_TestSub2();
+        $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2000->getLevel('year')));
         $this->assertFalse($searchlevel->isLevelSelected($civic2001->getLevel('year')));
@@ -39,7 +39,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         ));
         $search = new VF_SearchForm;
         $search->setRequest($request);
-        $searchlevel = new VF_SearchLevel_TestSub2();
+        $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2001->getLevel('year')));
         $this->assertFalse($searchlevel->isLevelSelected($civic2000->getLevel('year')));
@@ -58,7 +58,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         ));
         $search = new VF_SearchForm;
         $search->setRequest($request);
-        $searchlevel = new VF_SearchLevel_TestSub2();
+        $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2000->getLevel('year')));
         $this->assertFalse($searchlevel->isLevelSelected($civic2001->getLevel('year')));
@@ -77,17 +77,9 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         ));
         $search = new VF_SearchForm;
         $search->setRequest($request);
-        $searchlevel = new VF_SearchLevel_TestSub2();
+        $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year', null, null, 'year_end');
         $this->assertFalse($searchlevel->isLevelSelected($civic2000->getLevel('year')));
         $this->assertTrue($searchlevel->isLevelSelected($civic2001->getLevel('year')));
-    }
-}
-
-class VF_SearchLevel_TestSub2 extends VF_SearchLevel
-{
-    function __($arg)
-    {
-        return $arg;
     }
 }

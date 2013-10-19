@@ -36,7 +36,7 @@ class VF_SearchLevel
         ob_start();
         if ($this->helper()->showLabels()) {
             echo '<label>';
-            echo $this->__(ucfirst($this->level));
+            echo ucfirst($this->level);
             echo ':</label>';
         }
         $prevLevelsIncluding = $this->schema()->getPrevLevelsIncluding($this->level);

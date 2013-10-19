@@ -17,7 +17,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getId());
         $search = new VF_SearchForm;
         $search->setRequest($request);
-        $searchlevel = new VF_SearchLevel_TestSub();
+        $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'make');
         $entity = $this->levelFinder()->find('make', $vehicle->getValue('make'));
         $this->assertTrue($searchlevel->isLevelSelected($entity));
@@ -31,7 +31,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getId());
         $search = new VF_SearchForm;
         $search->setRequest($request);
-        $searchlevel = new VF_SearchLevel_TestSub();
+        $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
         $request->setParam('make', $vehicle->getLevel('make')->getId());
         $request->setParam('model', $vehicle->getLevel('model')->getId());
@@ -48,7 +48,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('year', $vehicle->getLevel('year')->getId());
         $search = new VF_SearchForm;
         $search->setRequest($request);
-        $searchlevel = new VF_SearchLevel_TestSub();
+        $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
         $entity = $this->levelFinder()->find('year', $vehicle->getValue('year'));
         $this->assertTrue($searchlevel->isLevelSelected($entity));
@@ -63,17 +63,9 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
         $search = new VF_SearchForm;
         $search->setRequest($request);
-        $searchlevel = new VF_SearchLevel_TestSub();
+        $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
         $entity = $vehicle->getLevel('year');
         $this->assertTrue($searchlevel->isLevelSelected($entity));
-    }
-}
-
-class VF_SearchLevel_TestSub extends VF_SearchLevel
-{
-    function __($arg)
-    {
-        return $arg;
     }
 }
