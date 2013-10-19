@@ -11,6 +11,16 @@ class VF_SearchLevel
     protected $prevLevel;
     protected $displayBrTag;
 
+    /**
+     * Display a select box, pre-populated with values if its the first, or if there's a prev. selection.
+     *
+     * @param $block VF_Search
+     * @param $level string name of the level being displayed (ex. "Model")
+     * @param bool $prevLevel name of the level preceeding this one (ex. "Make", or false if none)
+     * @param null $displayBrTag boolean wether to print a <br /> between the select boxes.
+     * @param null $yearRangeAlias
+     * @return string The rendered HTML for this select box.
+     */
     function display($block, $level, $prevLevel = false, $displayBrTag = null, $yearRangeAlias = null)
     {
         $this->displayBrTag = $displayBrTag;
