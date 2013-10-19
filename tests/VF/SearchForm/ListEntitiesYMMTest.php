@@ -31,17 +31,17 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
 
     function testShouldListYearsInUse()
     {
-        $vehicle = $this->createMMYWithFitment();
+        $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('year', '');
         $this->assertEquals(1, count($actual));
-        $this->assertEquals($vehicle->getLevel('year')->getId(), $actual[0]->getId(), 'should list years when year not yet selected');
+        $this->assertEquals('2000', $actual[0]->getTitle(), 'should list years when year not yet selected');
     }
 
     function testShouldListMakesInUse()
     {
-        $vehicle = $this->createMMYWithFitment();
+        $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toValueArray());
@@ -49,7 +49,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
         $this->setRequest($request);
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual));
-        $this->assertEquals($vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list makes in use when model is selected');
+        $this->assertEquals('Honda', $actual[0]->getTitle(), 'should list makes in use when model is selected');
     }
 
     function testShouldNotListMakesNotInUse()
@@ -94,11 +94,11 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
 
     function testListModel()
     {
-        $vehicle = $this->createMMYWithFitment();
+        $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest($vehicle->toValueArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));
-        $this->assertEquals($vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when make is selected');
+        $this->assertEquals('Civic', $actual[0]->getTitle(), 'should list models when make is selected');
     }
 }

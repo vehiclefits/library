@@ -44,16 +44,16 @@ class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
 
     function testShouldListMakes_WhenNoVehicleIsSelected()
     {
-        $vehicle = $this->createMMYWithFitment();
+        $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual), 'should list make when no vehicle selected');
-        $this->assertEquals($vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list make when no vehicle selected');
+        $this->assertEquals('Honda', $actual[0]->getTitle(), 'should list make when no vehicle selected');
     }
 
     function testShouldBeNoModelsPreselected_WhenNoVehicleIsSelected()
     {
-        $this->createMMYWithFitment();
+        $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
@@ -62,24 +62,24 @@ class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
 
     function testShouldListModels_WhenVehicleIsSelected()
     {
-        $vehicle = $this->createMMYWithFitment();
+        $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $_GET = $vehicle->toValueArray();
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual), 'should list models when make is selected');
-        $this->assertEquals($vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when make is selected');
+        $this->assertEquals('Civic', $actual[0]->getTitle(), 'should list models when make is selected');
     }
 
     function testShouldListModels_WhenPartialVehicleIsSelected()
     {
-        $vehicle = $this->createMMYWithFitment();
+        $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $_GET['make'] = $vehicle->getLevel('make')->getId();
         $_GET['model'] = $vehicle->getLevel('model')->getId();
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual), 'should list models when just make is selected');
-        $this->assertEquals($vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when just make is selected');
+        $this->assertEquals('Civic', $actual[0]->getTitle(), 'should list models when just make is selected');
     }
 }

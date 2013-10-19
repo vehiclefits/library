@@ -24,7 +24,7 @@ class VF_SearchForm_Search_ListEntitiesMMYAlnumTest extends VF_TestCase
 {
     function testShouldListMakes_WhenNoVehicleIsSelected()
     {
-        $vehicle = $this->createMMYWithFitment();
+        $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm;
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual), 'should list makes when no vehicle is selected');
@@ -33,7 +33,7 @@ class VF_SearchForm_Search_ListEntitiesMMYAlnumTest extends VF_TestCase
 
     function testShouldNotListModelsBeforeMakeIsSelected()
     {
-        $this->createMMYWithFitment();
+        $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
@@ -42,11 +42,11 @@ class VF_SearchForm_Search_ListEntitiesMMYAlnumTest extends VF_TestCase
 
     function testShouldListModels_WhenVehicleIsSelected()
     {
-        $vehicle = $this->createMMYWithFitment();
+        $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm;
         $search->setRequest($this->getRequest($vehicle->toTitleArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));
-        $this->assertEquals($vehicle->getLevel('model')->getId(), $actual[0]->getId(), 'should list models when make is selected');
+        $this->assertEquals('Civic', $actual[0]->getTitle(), 'should list models when make is selected');
     }
 }
