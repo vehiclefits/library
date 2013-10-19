@@ -6,9 +6,13 @@
  */
 class VF_SearchForm_SelectedTest extends VF_TestCase
 {
-
+    function doSetUp()
+    {
+    }
+    
     function testSelected()
     {
+        $this->switchSchema('make,model,year');
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $request = new Zend_Controller_Request_Http;
         $request->setParams($vehicle->toTitleArray());

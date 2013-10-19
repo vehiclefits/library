@@ -26,11 +26,11 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
 
     function doSetUp()
     {
-        $this->switchSchema('year,make,model');
     }
 
     function testShouldListYearsInUse()
     {
+        $this->switchSchema('year,make,model');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
@@ -41,6 +41,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
 
     function testShouldListMakesInUse()
     {
+        $this->switchSchema('year,make,model');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
@@ -54,6 +55,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
 
     function testShouldNotListMakesNotInUse()
     {
+        $this->switchSchema('year,make,model');
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
@@ -66,6 +68,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
 
     function testShouldListYearsNotInUseIfConfigSaysTo()
     {
+        $this->switchSchema('year,make,model');
         $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
         $search = new VF_SearchForm();
@@ -80,6 +83,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
 
     function testShouldListMakesNotInUseIfConfigSaysTo()
     {
+        $this->switchSchema('year,make,model');
         $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
         $search = new VF_SearchForm();
@@ -94,6 +98,7 @@ class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_TestCase
 
     function testListModel()
     {
+        $this->switchSchema('year,make,model');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest($vehicle->toValueArray()));

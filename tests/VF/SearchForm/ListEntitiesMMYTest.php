@@ -22,12 +22,17 @@
  */
 class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
 {
+    function doSetUp()
+    {
+    }
+
     /**
      * Should throw exception when asked to list blank level
      * @expectedException VF_Level_Exception_InvalidLevel
      */
     function testShouldThrowExceptionWhenAskedToListBlankLevel()
     {
+        $this->switchSchema('make,model,year');
         $search = new VF_SearchForm();
         $search->listEntities('');
     }
@@ -38,12 +43,14 @@ class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
      */
     function testShouldThrowExceptionWhenAskedToListInvalidLevel()
     {
+        $this->switchSchema('make,model,year');
         $search = new VF_SearchForm();
         $search->listEntities('foo');
     }
 
     function testShouldListMakes_WhenNoVehicleIsSelected()
     {
+        $this->switchSchema('make,model,year');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $actual = $search->listEntities('make');
@@ -53,6 +60,7 @@ class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
 
     function testShouldBeNoModelsPreselected_WhenNoVehicleIsSelected()
     {
+        $this->switchSchema('make,model,year');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
@@ -62,6 +70,7 @@ class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
 
     function testShouldListModels_WhenVehicleIsSelected()
     {
+        $this->switchSchema('make,model,year');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $_GET = $vehicle->toValueArray();
         $search = new VF_SearchForm();
@@ -73,6 +82,7 @@ class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_TestCase
 
     function testShouldListModels_WhenPartialVehicleIsSelected()
     {
+        $this->switchSchema('make,model,year');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $_GET['make'] = $vehicle->getLevel('make')->getId();
         $_GET['model'] = $vehicle->getLevel('model')->getId();
