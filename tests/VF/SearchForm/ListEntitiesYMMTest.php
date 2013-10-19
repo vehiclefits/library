@@ -20,7 +20,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTests_TestCase
+class VF_SearchForm_Search_ListEntitiesYMMTest extends VF_SearchForm_TestCase
 {
     const MODEL2 = 'model2';
 
@@ -32,7 +32,7 @@ class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTests_TestCase
     function testShouldListYearsInUse()
     {
         $vehicle = $this->createMMYWithFitment();
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('year', '');
         $this->assertEquals(1, count($actual));
@@ -42,7 +42,7 @@ class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTests_TestCase
     function testShouldListMakesInUse()
     {
         $vehicle = $this->createMMYWithFitment();
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toValueArray());
         $search->setRequest($request);
@@ -55,7 +55,7 @@ class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTests_TestCase
     function testShouldNotListMakesNotInUse()
     {
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toValueArray());
         $search->setRequest($request);
@@ -68,7 +68,7 @@ class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTests_TestCase
     {
         $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setConfig($config);
         $search->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toValueArray());
@@ -82,7 +82,7 @@ class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTests_TestCase
     {
         $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setConfig($config);
         $search->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toValueArray());
@@ -95,7 +95,7 @@ class VF_SearchTests_Search_ListEntitiesYMMTest extends VF_SearchTests_TestCase
     function testListModel()
     {
         $vehicle = $this->createMMYWithFitment();
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setRequest($this->getRequest($vehicle->toValueArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));

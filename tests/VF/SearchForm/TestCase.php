@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-abstract class VF_SearchTests_TestCase extends VF_TestCase
+abstract class VF_SearchForm_TestCase extends VF_TestCase
 {
     protected function getBlockWithChooserConfig($configArray)
     {

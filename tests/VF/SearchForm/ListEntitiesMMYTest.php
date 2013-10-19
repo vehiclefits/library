@@ -20,7 +20,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTests_TestCase
+class VF_SearchForm_Search_ListEntitiesMMYTest extends VF_SearchForm_TestCase
 {
     /**
      * Should throw exception when asked to list blank level
@@ -28,7 +28,7 @@ class VF_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTests_TestCase
      */
     function testShouldThrowExceptionWhenAskedToListBlankLevel()
     {
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->listEntities('');
     }
 
@@ -38,14 +38,14 @@ class VF_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTests_TestCase
      */
     function testShouldThrowExceptionWhenAskedToListInvalidLevel()
     {
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->listEntities('foo');
     }
 
     function testShouldListMakes_WhenNoVehicleIsSelected()
     {
         $vehicle = $this->createMMYWithFitment();
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual), 'should list make when no vehicle selected');
         $this->assertEquals($vehicle->getLevel('make')->getId(), $actual[0]->getId(), 'should list make when no vehicle selected');
@@ -54,7 +54,7 @@ class VF_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTests_TestCase
     function testShouldBeNoModelsPreselected_WhenNoVehicleIsSelected()
     {
         $this->createMMYWithFitment();
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(array(), $actual, 'should not list models before make is selected');
@@ -64,7 +64,7 @@ class VF_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTests_TestCase
     {
         $vehicle = $this->createMMYWithFitment();
         $_GET = $vehicle->toValueArray();
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual), 'should list models when make is selected');
@@ -76,7 +76,7 @@ class VF_SearchTests_Search_ListEntitiesMMYTest extends VF_SearchTests_TestCase
         $vehicle = $this->createMMYWithFitment();
         $_GET['make'] = $vehicle->getLevel('make')->getId();
         $_GET['model'] = $vehicle->getLevel('model')->getId();
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual), 'should list models when just make is selected');

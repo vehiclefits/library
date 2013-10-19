@@ -34,7 +34,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_start' => $civic2000->getLevel('year')->getId(),
             'year_end' => $civic2000->getLevel('year')->getId()
         ));
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display($search, 'year', null, null, 'year_start');
@@ -53,7 +53,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_start' => $civic2001->getLevel('year')->getId(),
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display($search, 'year', null, null, 'year_start');
@@ -72,7 +72,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_start' => $civic2000->getLevel('year')->getId(),
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display($search, 'year', null, null, 'year_start');
@@ -91,7 +91,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_start' => $civic2000->getLevel('year')->getId(),
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel_TestSub2();
         $searchlevel->display($search, 'year', null, null, 'year_end');

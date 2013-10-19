@@ -31,7 +31,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getId());
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'make');
@@ -45,7 +45,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getId());
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'year');
@@ -62,7 +62,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getId());
         $request->setParam('model', $vehicle->getLevel('model')->getId());
         $request->setParam('year', $vehicle->getLevel('year')->getId());
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'year');
@@ -77,7 +77,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $request->setParam('model', $vehicle->getLevel('model')->getTitle());
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($request);
         $searchlevel = new VF_SearchLevel_TestSub();
         $searchlevel->display($search, 'year');

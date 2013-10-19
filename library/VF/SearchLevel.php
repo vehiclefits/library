@@ -14,7 +14,7 @@ class VF_SearchLevel
     /**
      * Display a select box, pre-populated with values if its the first, or if there's a prev. selection.
      *
-     * @param $block VF_Search
+     * @param $block VF_SearchForm
      * @param $level string name of the level being displayed (ex. "Model")
      * @param bool $prevLevel name of the level preceeding this one (ex. "Make", or false if none)
      * @param null $displayBrTag boolean wether to print a <br /> between the select boxes.

@@ -20,12 +20,12 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchTests_Search_ListEntitiesMMYAlnumTest extends VF_SearchTests_TestCase
+class VF_SearchForm_Search_ListEntitiesMMYAlnumTest extends VF_SearchForm_TestCase
 {
     function testShouldListMakes_WhenNoVehicleIsSelected()
     {
         $vehicle = $this->createMMYWithFitment();
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual), 'should list makes when no vehicle is selected');
         $this->assertEquals($vehicle->getLevel('make')->getTitle(), $actual[0]->getTitle(), 'should list makes when no vehicle is selected');
@@ -34,7 +34,7 @@ class VF_SearchTests_Search_ListEntitiesMMYAlnumTest extends VF_SearchTests_Test
     function testShouldNotListModelsBeforeMakeIsSelected()
     {
         $this->createMMYWithFitment();
-        $search = new VF_Search();
+        $search = new VF_SearchForm();
         $search->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(array(), $actual, 'should not list models before make is selected');
@@ -43,7 +43,7 @@ class VF_SearchTests_Search_ListEntitiesMMYAlnumTest extends VF_SearchTests_Test
     function testShouldListModels_WhenVehicleIsSelected()
     {
         $vehicle = $this->createMMYWithFitment();
-        $search = new VF_Search;
+        $search = new VF_SearchForm;
         $search->setRequest($this->getRequest($vehicle->toTitleArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));
