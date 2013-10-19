@@ -76,28 +76,28 @@ class VF_SearchLevel
 
     /**
      * Check if an entity is the selected one for this 'level'
-     * @param VF_Level $entity - level to check if is selected
+     * @param VF_Level $levelObject - level to check if is selected
      * @return bool if this is the one that is supposed to be currently selected
      */
-    function isLevelSelected($entity)
+    function isLevelSelected($levelObject)
     {
         $selected = false;
         if ($this->level != $this->leafLevel()) {
-            return (bool)($entity->getId() == $this->block->getSelected($this->level));
+            return (bool)($levelObject->getId() == $this->block->getSelected($this->level));
         }
         VF_Singleton::getInstance()->setRequest($this->block->getRequest());
-        $fit = VF_Singleton::getInstance()->vehicleSelection();
-        if (false === $fit) {
+        $currentSelection = VF_Singleton::getInstance()->vehicleSelection();
+        if (false === $currentSelection) {
             return false;
         }
         if ('year_start' == $this->yearRangeAlias) {
-            return (bool)($entity->getTitle() == $fit->earliestYear());
+            return (bool)($levelObject->getTitle() == $currentSelection->earliestYear());
         } else if ('year_end' == $this->yearRangeAlias) {
-            return (bool)($entity->getTitle() == $fit->latestYear());
+            return (bool)($levelObject->getTitle() == $currentSelection->latestYear());
         }
-        $level = $fit->getLevel($this->leafLevel());
+        $level = $currentSelection->getLevel($this->leafLevel());
         if ($level) {
-            return (bool)($entity->getTitle() == $level->getTitle());
+            return (bool)($levelObject->getTitle() == $level->getTitle());
         }
     }
 
