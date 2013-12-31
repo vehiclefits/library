@@ -217,7 +217,7 @@ class VF_Product
     function setFitFromGlobalIfNoLocalFitment()
     {
         $selection = VF_Singleton::getInstance()->vehicleSelection();
-        if (!$this->fit && !$selection->isEmpty()) {
+        if (!$this->fit && !$selection) {
             $this->fit = $selection;
         }
     }
