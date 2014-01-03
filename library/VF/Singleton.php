@@ -145,7 +145,7 @@ class VF_Singleton implements VF_Configurable
         }
     }
 
-    function setRequest($request)
+    function setRequest(Zend_Controller_Request_Abstract $request)
     {
         $this->_request = $request;
     }

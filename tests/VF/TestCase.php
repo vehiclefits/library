@@ -156,13 +156,13 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return $vehicle;
     }
 
-    function assertMMYTitlesEquals($make, $model, $year, $vehicle)
+    function assertMMYTitlesEquals($make, $model, $year, VF_Vehicle $vehicle)
     {
         $expected = array('make' => $make, 'model' => $model, 'year' => $year);
         $this->assertEquals($expected, $vehicle->toTitleArray());
     }
 
-    function assertVehiclesSame($vehicle1, $vehicle2)
+    function assertVehiclesSame(VF_Vehicle $vehicle1, VF_Vehicle $vehicle2)
     {
         $this->assertEquals($vehicle1->toValueArray(), $vehicle2->toValueArray());
     }

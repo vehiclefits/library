@@ -210,15 +210,16 @@ class VF_Product
             $template = '_product_ for _vehicle_';
         }
         $find = array('_product_', '_vehicle_');
-        $replace = array($name, (string)$this->currentlySelectedFit()->getFirstVehicle());
+        $vehicle = $this->getFirstCurrentlySelectedFitment();
+
+        $replace = array($name, (string)$vehicle);
         return str_replace($find, $replace, $template);
     }
 
     function setFitFromGlobalIfNoLocalFitment()
     {
-        $selection = VF_Singleton::getInstance()->vehicleSelection();
-        if (!$this->fit && !$selection) {
-            $this->fit = $selection;
+        if (!$this->fit) {
+            $this->fit = VF_Singleton::getInstance()->vehicleSelection();
         }
     }
 
@@ -234,7 +235,11 @@ class VF_Product
 
     function setCurrentlySelectedFit($fit)
     {
-        $this->fit = array($fit);
+        if(!is_array($fit)) {
+            $this->fit = array($fit);
+            return;
+        }
+        $this->fit = $fit;
     }
 
     function currentlySelectedFit()
@@ -247,17 +252,41 @@ class VF_Product
         }
     }
 
+    /**
+     * Will return VF_Vehicle if there is a fitment to be selected
+     * or false if there are no fitments selected.
+     *
+     * @author Kyle Cannon <kyle.d.cannon@gmail.com>
+     * @return bool|VF_Vehicle
+     */
+    public function getFirstCurrentlySelectedFitment() {
+        if($this->hasFitmentBeenSelected()) {
+            $fitments = $this->currentlySelectedFit();
+            return $fitments[0];
+        }
+        return false;
+    }
+    /**
+     * Will return true if there is one or more fitment(s) currently selected
+     * or false if there are no fitment(s) selected.
+     *
+     * @author Kyle Cannon <kyle.d.cannon@gmail.com>
+     * @return bool
+     */
+    public function hasFitmentBeenSelected() {
+        return count($this->currentlySelectedFit()) > 0;
+    }
+
     function fitsSelection()
     {
-        $currentVehicleSelection = $this->currentlySelectedFit();
-        if (!count($currentVehicleSelection)) {
+        if (!$this->hasFitmentBeenSelected()) {
             return false;
         }
-        $vehicle = $currentVehicleSelection[0];
+        $vehicle = $this->getFirstCurrentlySelectedFitment();
         return $this->fitsVehicle($vehicle);
     }
 
-    function fitsVehicle($vehicle)
+    function fitsVehicle(VF_Vehicle $vehicle)
     {
         $select = $this->getReadAdapter()->select()
             ->from($this->getSchema()->mappingsTable(), array('count(*)'))
