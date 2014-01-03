@@ -129,6 +129,15 @@ class VF_Vehicle implements VF_Configurable
         return trim(implode(' ', $string));
     }
 
+    function levelIdsTruncateAfter($level)
+    {
+        $ids = $this->toValueArray();
+        foreach ($this->schema->getNextLevels($level) as $levelToDrop) {
+            unset($ids[$levelToDrop]);
+        }
+        return $ids;
+    }
+
     function toValueArray()
     {
         $array = array();
