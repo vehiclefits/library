@@ -62,7 +62,7 @@ class VF_Product
         return array();
     }
 
-    function customPrice($vehicle)
+    function customPrice(VF_Vehicle $vehicle)
     {
         $select = $this->getReadAdapter()->select();
         $select->from(array('m' => $this->getSchema()->mappingsTable()), array('price'));
