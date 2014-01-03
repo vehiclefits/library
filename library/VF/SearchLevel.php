@@ -4,8 +4,10 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchLevel
+class VF_SearchLevel implements VF_Configurable
 {
+    /** @var  Zend_Config */
+    protected $config;
     /** @var  VF_SearchForm */
     protected $searchForm;
     protected $level;
@@ -49,9 +51,16 @@ class VF_SearchLevel
             <option value="0"><?= $this->__($this->helper()->getDefaultSearchOptionText($this->level)) ?></option>
             <?php
             foreach ($this->getEntities() as $entity) {
+                /** @var VF_Level $entity */
+                if($this->getConfig()->search->legacyNumericSearch):
                 ?>
                 <option
                     value="<?= $entity->getId() ?>" <?= ($this->isLevelSelected($entity) ? ' selected="selected"' : '') ?>><?= $entity->getTitle() ?></option>
+                <?php else: ?>
+                    <option
+                        value="<?= $entity->getTitle() ?>" <?= ($this->isLevelSelected($entity) ? ' selected="selected"' : '') ?>><?= $entity->getTitle() ?></option>
+                <?php endif; ?>
+
             <?php
             }
             ?>
@@ -154,5 +163,18 @@ class VF_SearchLevel
     protected function helper()
     {
         return VF_Singleton::getInstance();
+    }
+
+    function getConfig()
+    {
+        if (!$this->config instanceof Zend_Config) {
+            $this->config = $this->helper()->getConfig();
+        }
+        return $this->config;
+    }
+
+    function setConfig(Zend_Config $config)
+    {
+        $this->config = $config;
     }
 }

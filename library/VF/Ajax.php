@@ -6,22 +6,23 @@
  */
 class VF_Ajax implements VF_Configurable
 {
-    protected $alphaNumeric;
+    protected $legacyNumericSearch;
     protected $schema;
 
     /** @var Zend_Config */
     protected $config;
 
-    function execute(VF_Schema $schema, $alphaNumeric = true)
+    function execute(VF_Schema $schema)
     {
-        $this->alphaNumeric = $alphaNumeric;
+        $this->legacyNumericSearch = (bool)$this->getConfig()->search->legacyNumericSearch;
         $this->schema = $schema;
         $levels = $schema->getLevels();
         $c = count($levels);
         $levelFinder = new VF_Level_Finder($schema);
+        /** @var VF_Level_Finder|VF_Level_Finder_Selector $levelFinder */
         if (isset($_GET['front'])) {
             $product = isset($_GET['product']) ? $_GET['product'] : null;
-            if ($alphaNumeric) {
+            if (!$this->legacyNumericSearch) {
                 if ($this->shouldListAll()) {
                     $levelsToSelect = array($this->requestLevel());
                     $where = $this->requestLevels();
@@ -29,6 +30,7 @@ class VF_Ajax implements VF_Configurable
                     $vehicles = $vehicleFinder->findDistinct($levelsToSelect, $where);
                     $children = array();
                     foreach($vehicles as $vehicle) {
+                        /** @var VF_Vehicle $vehicle */
                         array_push($children, $vehicle->getLevel($this->requestLevel()));
                     }
                 } else {
@@ -79,7 +81,7 @@ class VF_Ajax implements VF_Configurable
             echo '<option value="0">' . $label . '</option>';
         }
         foreach ($children as $child) {
-            if ($this->alphaNumeric && isset($_GET['front'])) {
+            if (!$this->legacyNumericSearch && isset($_GET['front'])) {
                 echo '<option value="' . $child->getTitle() . '">' . htmlentities($child->getTitle(), ENT_QUOTES, 'UTF-8') . '</option>';
             } else {
                 echo '<option value="' . $child->getId() . '">' . htmlentities($child->getTitle(), ENT_QUOTES, 'UTF-8') . '</option>';

@@ -35,8 +35,8 @@ class VF_AjaxTests_FilterByProductTest extends VF_TestCase
         $this->insertMappingMMY($vehicle2, 2);
         $_GET['requestLevel'] = 'model';
         $_GET['product'] = 1;
-        $_GET['make'] = $vehicle1->getValue('make');
-        $this->assertEquals('<option value="' . $vehicle1->getValue('model') . '">Civic</option>', $this->execute(), 'should list model for correct product only');
+        $_GET['make'] = $vehicle1->getLevel('make')->getTitle();
+        $this->assertEquals('<option value="' . $vehicle1->getLevel('model')->getTitle() . '">Civic</option>', $this->execute(), 'should list model for correct product only');
     }
 
     function execute()
