@@ -6,7 +6,8 @@
  */
 class VF_SearchLevel
 {
-    protected $block;
+    /** @var  VF_SearchForm */
+    protected $searchForm;
     protected $level;
     protected $prevLevel;
     protected $displayBrTag;
@@ -14,17 +15,18 @@ class VF_SearchLevel
     /**
      * Display a select box, pre-populated with values if its the first, or if there's a prev. selection.
      *
-     * @param $block VF_SearchForm
+     * @param $searchForm VF_SearchForm
      * @param $level string name of the level being displayed (ex. "Model")
      * @param bool $prevLevel name of the level preceeding this one (ex. "Make", or false if none)
      * @param null $displayBrTag boolean wether to print a <br /> between the select boxes.
      * @param null $yearRangeAlias
+     *
      * @return string The rendered HTML for this select box.
      */
-    function display($block, $level, $prevLevel = false, $displayBrTag = null, $yearRangeAlias = null)
+    function display(VF_SearchForm $searchForm, $level, $prevLevel = false, $displayBrTag = null, $yearRangeAlias = null)
     {
         $this->displayBrTag = $displayBrTag;
-        $this->block = $block;
+        $this->searchForm = $searchForm;
         $this->level = $level;
         $this->prevLevel = $prevLevel;
         $this->yearRangeAlias = $yearRangeAlias;
@@ -82,9 +84,9 @@ class VF_SearchLevel
     function isLevelSelected($levelObject)
     {
         if ($this->level != $this->leafLevel()) {
-            return (bool)($levelObject->getId() == $this->block->getSelected($this->level));
+            return (bool)($levelObject->getId() == $this->searchForm->getSelected($this->level));
         }
-        VF_Singleton::getInstance()->setRequest($this->block->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->searchForm->getRequest());
         $currentSelection = VF_Singleton::getInstance()->vehicleSelection();
         if (false === $currentSelection) {
             return false;
@@ -124,7 +126,7 @@ class VF_SearchLevel
 
     protected function getEntities()
     {
-        $search = $this->block;
+        $search = $this->searchForm;
         if ($this->prevLevel) {
             return $search->listEntities($this->level);
         }
@@ -146,7 +148,7 @@ class VF_SearchLevel
 
     protected function __($text)
     {
-        return $this->block->translate($text);
+        return $this->searchForm->translate($text);
     }
 
     protected function helper()
