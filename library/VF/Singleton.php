@@ -157,6 +157,33 @@ class VF_Singleton implements VF_Configurable
         return $search->vehicleSelection();
     }
 
+
+    /**
+     * Will return VF_Vehicle if there is a fitment to be selected
+     * or false if there are no fitments selected.
+     *
+     * @author Kyle Cannon <kyle.d.cannon@gmail.com>
+     * @return bool|VF_Vehicle
+     */
+    public function getFirstCurrentlySelectedFitment() {
+        if($this->hasFitmentBeenSelected()) {
+            $fitments = $this->vehicleSelection();
+            return $fitments[0];
+        }
+        return false;
+    }
+
+    /**
+     * Will return true if there is one or more fitment(s) currently selected
+     * or false if there are no fitment(s) selected.
+     *
+     * @author Kyle Cannon <kyle.d.cannon@gmail.com>
+     * @return bool
+     */
+    public function hasFitmentBeenSelected() {
+        return count($this->vehicleSelection()) > 0;
+    }
+
     function getProductIds()
     {
         if (isset($this->productIds) && is_array($this->productIds) && count($this->productIds)) {
