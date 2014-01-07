@@ -96,8 +96,8 @@ class VF_SearchLevel implements VF_Configurable
             return (bool)($levelObject->getId() == $this->searchForm->getSelected($this->level));
         }
         VF_Singleton::getInstance()->setRequest($this->searchForm->getRequest());
-        $currentSelection = VF_Singleton::getInstance()->vehicleSelection();
-        if (false === $currentSelection) {
+        $currentSelection = VF_Singleton::getInstance()->getFirstCurrentlySelectedFitment();
+        if (false === $currentSelection || count($currentSelection) == 0) {
             return false;
         }
         if ('year_start' == $this->yearRangeAlias) {
@@ -105,7 +105,7 @@ class VF_SearchLevel implements VF_Configurable
         } else if ('year_end' == $this->yearRangeAlias) {
             return (bool)($levelObject->getTitle() == $this->latestYearInVehicles($currentSelection));
         }
-        $level = $currentSelection[0]->getLevel($this->leafLevel());
+        $level = $currentSelection->getLevel($this->leafLevel());
         if ($level) {
             return (bool)($levelObject->getTitle() == $level->getTitle());
         }
