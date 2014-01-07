@@ -1,6 +1,7 @@
 <?php
 /**
  * Vehicle Fits (http://www.vehiclefits.com for more information.)
+ *
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -17,16 +18,21 @@ class VF_SearchLevel implements VF_Configurable
     /**
      * Display a select box, pre-populated with values if its the first, or if there's a prev. selection.
      *
-     * @param $searchForm VF_SearchForm
-     * @param $level string name of the level being displayed (ex. "Model")
-     * @param bool $prevLevel name of the level preceeding this one (ex. "Make", or false if none)
+     * @param      $searchForm   VF_SearchForm
+     * @param      $level        string name of the level being displayed (ex. "Model")
+     * @param bool $prevLevel    name of the level preceeding this one (ex. "Make", or false if none)
      * @param null $displayBrTag boolean wether to print a <br /> between the select boxes.
      * @param null $yearRangeAlias
      *
      * @return string The rendered HTML for this select box.
      */
-    function display(VF_SearchForm $searchForm, $level, $prevLevel = false, $displayBrTag = null, $yearRangeAlias = null)
-    {
+    function display(
+        VF_SearchForm $searchForm,
+        $level,
+        $prevLevel = false,
+        $displayBrTag = null,
+        $yearRangeAlias = null
+    ) {
         $this->displayBrTag = $displayBrTag;
         $this->searchForm = $searchForm;
         $this->level = $level;
@@ -52,13 +58,17 @@ class VF_SearchLevel implements VF_Configurable
             <?php
             foreach ($this->getEntities() as $entity) {
                 /** @var VF_Level $entity */
-                if($this->getConfig()->search->legacyNumericSearch):
-                ?>
-                <option
-                    value="<?= $entity->getId() ?>" <?= ($this->isLevelSelected($entity) ? ' selected="selected"' : '') ?>><?= $entity->getTitle() ?></option>
+                if ($this->getConfig()->search->legacyNumericSearch):
+                    ?>
+                    <option
+                        value="<?= $entity->getId() ?>" <?=
+                    ($this->isLevelSelected($entity) ? ' selected="selected"' : '') ?>><?= $entity->getTitle(
+                        ) ?></option>
                 <?php else: ?>
                     <option
-                        value="<?= $entity->getTitle() ?>" <?= ($this->isLevelSelected($entity) ? ' selected="selected"' : '') ?>><?= $entity->getTitle() ?></option>
+                        value="<?= $entity->getTitle() ?>" <?=
+                    ($this->isLevelSelected($entity) ? ' selected="selected"' : '') ?>><?= $entity->getTitle(
+                        ) ?></option>
                 <?php endif; ?>
 
             <?php
@@ -87,7 +97,9 @@ class VF_SearchLevel implements VF_Configurable
 
     /**
      * Check if an entity is the selected one for this 'level'
+     *
      * @param VF_Level $levelObject - level to check if is selected
+     *
      * @return bool if this is the one that is supposed to be currently selected
      */
     function isLevelSelected($levelObject)
@@ -96,16 +108,25 @@ class VF_SearchLevel implements VF_Configurable
             return (bool)($levelObject->getId() == $this->searchForm->getSelected($this->level));
         }
         VF_Singleton::getInstance()->setRequest($this->searchForm->getRequest());
-        $currentSelection = VF_Singleton::getInstance()->getFirstCurrentlySelectedFitment();
-        if (false === $currentSelection || count($currentSelection) == 0) {
+        $currentSelection = VF_Singleton::getInstance()->vehicleSelection();
+        if (false === $currentSelection) {
             return false;
         }
         if ('year_start' == $this->yearRangeAlias) {
             return (bool)($levelObject->getTitle() == $this->earliestYearInVehicles($currentSelection));
-        } else if ('year_end' == $this->yearRangeAlias) {
-            return (bool)($levelObject->getTitle() == $this->latestYearInVehicles($currentSelection));
+        } else {
+            if ('year_end' == $this->yearRangeAlias) {
+                return (bool)($levelObject->getTitle() == $this->latestYearInVehicles($currentSelection));
+            }
         }
-        $level = $currentSelection->getLevel($this->leafLevel());
+        $level = false;
+        if (is_array($currentSelection) && count($currentSelection) == 1) {
+            $firstVehicle = $currentSelection[0];
+            /** @var VF_Vehicle $firstVehicle */
+            $level = $firstVehicle->getLevel($this->leafLevel());
+        } elseif ($currentSelection instanceof VF_Vehicle) {
+            $level = $currentSelection->getLevel($this->leafLevel());
+        }
         if ($level) {
             return (bool)($levelObject->getTitle() == $level->getTitle());
         }
