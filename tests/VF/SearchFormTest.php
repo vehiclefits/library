@@ -1,6 +1,7 @@
 <?php
 /**
  * Vehicle Fits (http://www.vehiclefits.com for more information.)
+ *
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -9,7 +10,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     function doSetUp()
     {
     }
-    
+
     function test_MMYShouldListMakes_WhenNoVehicleIsSelected()
     {
         $this->switchSchema('make,model,year');
@@ -17,7 +18,11 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $search = new VF_SearchForm;
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual), 'should list makes when no vehicle is selected');
-        $this->assertEquals($vehicle->getLevel('make')->getTitle(), $actual[0]->getTitle(), 'should list makes when no vehicle is selected');
+        $this->assertEquals(
+            $vehicle->getLevel('make')->getTitle(),
+            $actual[0]->getTitle(),
+            'should list makes when no vehicle is selected'
+        );
     }
 
     function test_MMYShouldNotListModelsBeforeMakeIsSelected()
@@ -43,6 +48,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
 
     /**
      * Should throw exception when asked to list blank level
+     *
      * @expectedException VF_Level_Exception_InvalidLevel
      */
     function test_MMYShouldThrowExceptionWhenAskedToListBlankLevel()
@@ -54,6 +60,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
 
     /**
      * Should throw exception when asked to list invalid level
+     *
      * @expectedException VF_Level_Exception_InvalidLevel
      */
     function test_MMYShouldThrowExceptionWhenAskedToListInvalidLevel()
@@ -174,4 +181,107 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $search->setRequest($request);
         $this->assertEquals($vehicle->getValue('model'), $search->getSelected('model'));
     }
+
+    public function testWhereListEntitiesFiltersRequestParamsUsingOnlyYear()
+    {
+        $this->switchSchema('make,model,year,engine');
+
+        $chevroletTahoe = $this->createVehicle(
+            array('make' => 'Chevrolet', 'model' => 'Tahoe', 'year' => '2002', 'engine' => '5.3L V8')
+        );
+        $toyotaCamry = $this->createVehicle(
+            array('make' => 'Toyota', 'model' => 'Camry', 'year' => '2002', 'engine' => '2.4L 2AZ-FE')
+        );
+        $chevyAstro = $this->createVehicle(
+            array('make' => 'Chevrolet', 'model' => 'Astro Van', 'year' => '2001', 'engine' => '4.3L V6')
+        );
+
+        $this->insertMapping($chevroletTahoe, 1);
+        $this->insertMapping($toyotaCamry, 2);
+        $this->insertMapping($chevyAstro, 5);
+
+        $request = new Zend_Controller_Request_Http();
+        $request->setParam('year', $chevroletTahoe->getLevel('year')->getId());
+
+        $searchForm = new VF_SearchForm;
+        $searchForm->setRequest($request);
+        $entities = $searchForm->listEntities('engine');
+
+        $this->assertArrayDoesNotHaveLevelIDPresent($entities, $chevyAstro->getLevel('engine'));
+        $this->assertArrayShouldContainLevelId($entities, $chevroletTahoe->getLevel('engine'));
+        $this->assertArrayShouldContainLevelId($entities, $toyotaCamry->getLevel('engine'));
+
+    }
+
+    public function testWhereListEntitiesFiltersRequestParamsToOnlyDisplaySingleEntity()
+    {
+        $this->switchSchema('make,model,year,engine');
+
+        $chevroletTahoe = $this->createVehicle(
+            array('make' => 'Chevrolet', 'model' => 'Tahoe', 'year' => '2002', 'engine' => '5.3L V8')
+        );
+        $toyotaCamry = $this->createVehicle(
+            array('make' => 'Toyota', 'model' => 'Camry', 'year' => '2002', 'engine' => '2.4L 2AZ-FE')
+        );
+        $chevyAstro = $this->createVehicle(
+            array('make' => 'Chevrolet', 'model' => 'Astro Van', 'year' => '2001', 'engine' => '4.3L V6')
+        );
+
+        $this->insertMapping($chevroletTahoe, 1);
+        $this->insertMapping($toyotaCamry, 2);
+        $this->insertMapping($chevyAstro, 5);
+
+        $request = new Zend_Controller_Request_Http();
+        $request->setParam('make', $chevroletTahoe->getLevel('make')->getId());
+        $request->setParam('model', $chevroletTahoe->getLevel('model')->getId());
+        $request->setParam('year', $chevroletTahoe->getLevel('year')->getId());
+
+        $searchForm = new VF_SearchForm;
+        $searchForm->setRequest($request);
+        $entities = $searchForm->listEntities('engine');
+
+        $this->assertEquals(1, count($entities));
+        $this->assertArrayOnlyHasLevelIDPresent($entities, $chevroletTahoe->getLevel('engine'));
+    }
+
+    public function assertArrayOnlyHasLevelIDPresent(array $levels, VF_Level $actualLevel)
+    {
+        foreach ($levels AS $level) {
+            /** @var $level VF_Level */
+            if ($level->getId() != $actualLevel->getId()) {
+                $this->fail(
+                    sprintf("Level ID %s was not supposed to be in result but was found.", $actualLevel->getId())
+                );
+            }
+        }
+        return;
+    }
+
+    public function assertArrayShouldContainLevelId(array $levels, VF_Level $actualLevel)
+    {
+        foreach ($levels AS $level) {
+            /** @var $level VF_Level */
+            if ($level->getId() == $actualLevel->getId()) {
+                return;
+            }
+        }
+        $this->fail(
+            sprintf("Level ID %s was supposed to be in result at least once but was found.", $actualLevel->getId())
+        );
+    }
+
+
+    public function assertArrayDoesNotHaveLevelIDPresent(array $levels, VF_Level $actualLevel)
+    {
+        foreach ($levels AS $level) {
+            /** @var $level VF_Level */
+            if ($level->getId() == $actualLevel->getId()) {
+                $this->fail(
+                    sprintf("Level ID %s was not supposed to be in result but was found.", $actualLevel->getId())
+                );
+            }
+        }
+        return;
+    }
+
 }

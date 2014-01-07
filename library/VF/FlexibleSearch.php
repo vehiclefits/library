@@ -256,6 +256,15 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         return false;
     }
 
+    function getLevelAndValueForSelectedPreviousLevels($currentLevel)
+    {
+        $return = array();
+        foreach ($this->schema->getPrevLevels($currentLevel) AS $level) {
+            $return[$level] = $this->getValueForSelectedLevel($level);
+        }
+        return $return;
+    }
+
     function doGetProductIds()
     {
         $selectedVehicles = $this->vehicleSelection();

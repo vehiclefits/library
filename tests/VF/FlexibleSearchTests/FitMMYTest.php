@@ -1,6 +1,7 @@
 <?php
 /**
  * Vehicle Fits (http://www.vehiclefits.com for more information.)
+ *
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -34,11 +35,14 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
     function testGetFitId2()
     {
         $vehicle = $this->createMMY();
-        $helper = $this->getHelper(array(), array(
-            'make' => $vehicle->getLevel('make')->getId(),
-            'model' => $vehicle->getLevel('model')->getId(),
-            'year' => $vehicle->getLevel('year')->getId()
-        ));
+        $helper = $this->getHelper(
+            array(),
+            array(
+                 'make'  => $vehicle->getLevel('make')->getId(),
+                 'model' => $vehicle->getLevel('model')->getId(),
+                 'year'  => $vehicle->getLevel('year')->getId()
+            )
+        );
         $selectedVehicles = $helper->vehicleSelection();
         $this->assertEquals($vehicle->getLevel('year')->getId(), $selectedVehicles[0]->getLeafValue());
     }
@@ -55,7 +59,11 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $_SESSION = array('make' => 1, 'model' => 1, 'year' => 1);
         $helper = $this->getHelper(array(), array('make' => 0, 'model' => 0, 'year' => 0));
 
-        $this->assertEquals(0, count($helper->vehicleSelection()), 'request values should take precedence over session value');
+        $this->assertEquals(
+            0,
+            count($helper->vehicleSelection()),
+            'request values should take precedence over session value'
+        );
         $this->assertFalse(isset($_SESSION['make']), 'passing 0 in request should reset session value');
     }
 
@@ -83,7 +91,10 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
     {
         $_SESSION = array('make' => null, 'model' => null, 'year' => null);
         $vehicle = $this->createMMY();
-        $helper = $this->getHelper(array('search' => array('storeVehicleInSession' => 'false')), $vehicle->toValueArray());
+        $helper = $this->getHelper(
+            array('search' => array('storeVehicleInSession' => 'false')),
+            $vehicle->toValueArray()
+        );
         $helper->storeFitInSession();
         unset($_SESSION['garage']);
         $this->assertNotEquals($vehicle->toValueArray(), $_SESSION, 'should not store in session when disabled');
@@ -131,7 +142,10 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $vehicle = $this->createMMY();
         $_SESSION = $vehicle->toValueArray();
         $helper = $this->getHelper(array(), array());
-        $this->assertEquals($vehicle->getLevel('make')->getId(), $helper->flexibleSearch()->getValueForSelectedLevel('make'));
+        $this->assertEquals(
+            $vehicle->getLevel('make')->getId(),
+            $helper->flexibleSearch()->getValueForSelectedLevel('make')
+        );
     }
 
     function testGetsYearIdFromSession()
@@ -139,7 +153,10 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $vehicle = $this->createMMY();
         $_SESSION = $vehicle->toValueArray();
         $helper = $this->getHelper(array(), array());
-        $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->flexibleSearch()->getValueForSelectedLevel('year'));
+        $this->assertEquals(
+            $vehicle->getLevel('year')->getId(),
+            $helper->flexibleSearch()->getValueForSelectedLevel('year')
+        );
     }
 
     function testGetsIdFromSession()
@@ -148,8 +165,16 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $_SESSION = $vehicle->toValueArray();
         $helper = $this->getHelper(array(), array());
         $selectedVehicles = $helper->vehicleSelection();
-        $this->assertEquals($vehicle->getLevel('year')->getId(), $selectedVehicles[0]->getLeafValue(), 'gets fit id from session if there is no request');
-        $this->assertEquals($vehicle->getLevel('year')->getId(), $helper->storeFitInSession(), 'storeFitInSession() should return leafID');
+        $this->assertEquals(
+            $vehicle->getLevel('year')->getId(),
+            $selectedVehicles[0]->getLeafValue(),
+            'gets fit id from session if there is no request'
+        );
+        $this->assertEquals(
+            $vehicle->getLevel('year')->getId(),
+            $helper->storeFitInSession(),
+            'storeFitInSession() should return leafID'
+        );
     }
 
     function testShouldAutomaticallyClearInvalidSession()
@@ -157,13 +182,36 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $_SESSION = array('make' => 99, 'model' => 99, 'year' => 99);
         $helper = $this->getHelper();
         $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest());
-        $this->assertFalse($flexibleSearch->getFlexibleDefinition(), 'when fitment is deleted should automatically clear invalid session');
+        $this->assertFalse(
+            $flexibleSearch->getFlexibleDefinition(),
+            'when fitment is deleted should automatically clear invalid session'
+        );
     }
 
-    function testgetValueForSelectedLevel()
+    function testGetValueForSelectedLevel()
     {
         $vehicle = $this->createMMY();
         $helper = $this->getHelper(array(), $vehicle->toValueArray());
         $this->assertEquals($vehicle->getLevel('make')->getId(), $helper->getValueForSelectedLevel('make'));
+    }
+
+    function testGetLevelAndValueForSelectedPreviousLevels()
+    {
+        $vehicle1 = $this->createVehicle(
+            array('make' => 'Toyota', 'model' => 'Camry', 'year' => '2002', 'engine' => '2.4L 2AZ-FE')
+        );
+        $vehicle2 = $this->createVehicle(
+            array('make' => 'Chevrolet', 'model' => 'Astro Van', 'year' => '2001', 'engine' => '4.3L V6')
+        );
+        $vehicle3 = $this->createVehicle(
+            array('make' => 'Chevrolet', 'model' => 'Tahoe', 'year' => '2002', 'engine' => '5.3L V8')
+        );
+        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest($vehicle3->toValueArray()));
+        $expectedResponse = array(
+            'make'  => $vehicle3->getLevel('make')->getId(),
+            'model' => $vehicle3->getLevel('model')->getId(),
+            'year'  => $vehicle3->getLevel('year')->getId()
+        );
+        $this->assertEquals($expectedResponse, $flexibleSearch->getLevelAndValueForSelectedPreviousLevels('engine'));
     }
 }

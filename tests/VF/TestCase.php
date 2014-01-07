@@ -256,6 +256,11 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return $mapping->save();
     }
 
+    protected function insertMapping(VF_Vehicle $vehicle, $product_id=1) {
+        $mapping = new VF_Mapping($product_id, $vehicle);
+        return $mapping->save();
+    }
+
     /** @return integer the created fit's ID */
     protected function insertMappingYMM($year_id, $make_id, $model_id = 0, $product_id = 0)
     {

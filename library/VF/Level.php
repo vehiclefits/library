@@ -45,7 +45,7 @@ class VF_Level implements VF_Configurable
         $this->config = $config;
     }
 
-    /** @return VF_Level_Finder */
+    /** @return VF_Level_Finder|VF_Level_Finder_Selector */
     function getFinder()
     {
         if (!($this->finder instanceof VF_Level_Finder)) {

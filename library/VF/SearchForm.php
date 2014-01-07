@@ -33,6 +33,11 @@ class VF_SearchForm implements VF_Configurable
 
     protected $template;
 
+    /**
+     * @var VF_FlexibleSearch
+     */
+    protected $flexibleSearch;
+
     function getProductId()
     {
         return 0;
@@ -79,7 +84,7 @@ class VF_SearchForm implements VF_Configurable
         if ($this->shouldListAll()) {
             return $levelObject->listAll($parent_id);
         } else {
-            return $levelObject->listInUse(array($parentLevel => $parent_id));
+            return $levelObject->listInUse($this->getFlexibleSearch()->getLevelAndValueForSelectedPreviousLevels($level));
         }
     }
 
@@ -99,8 +104,8 @@ class VF_SearchForm implements VF_Configurable
         $levels = array();
         $displayLevels = $this->getLevels();
         foreach ($displayLevels as $level) {
-            $search = new VF_FlexibleSearch($this->getSchema(), $this->getRequest());
-            $val = $search->getValueForSelectedLevel($level);
+
+            $val = $this->getFlexibleSearch()->getValueForSelectedLevel($level);
             if (!is_null($val)) {
                 $levels[$level] = $val;
             }
@@ -177,7 +182,7 @@ class VF_SearchForm implements VF_Configurable
 
     function getFlexibleDefinition()
     {
-        return $this->getFlexible()->getFlexibleDefinition();
+        return $this->getFlexibleSearch()->getFlexibleDefinition();
     }
 
     function shouldShowMyGarageActive()
@@ -197,11 +202,15 @@ class VF_SearchForm implements VF_Configurable
         return $text;
     }
 
-    function getFlexible()
+    /**
+     * @return VF_FlexibleSearch
+     */
+    function getFlexibleSearch()
     {
-        $schema = new VF_Schema;
-        $flexible = new VF_FlexibleSearch($schema, $this->getRequest());
-        return $flexible;
+        if(!$this->flexibleSearch) {
+            $this->flexibleSearch = new VF_FlexibleSearch($this->getSchema(), $this->getRequest());
+        }
+        return $this->flexibleSearch;
     }
 
     function renderCategoryOptions()
