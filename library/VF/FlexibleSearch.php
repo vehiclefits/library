@@ -26,8 +26,8 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
     protected $schema;
     protected $request;
     protected $config;
-
     protected $vehicleSelection;
+    protected $fitmentInSession;
 
     function __construct(VF_Schema $schema, Zend_Controller_Request_Abstract $request)
     {
@@ -305,11 +305,18 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         return $ids;
     }
 
+    function storeFitInSession() {
+        if(!$this->fitmentInSession) {
+            return $this->fitmentInSession = $this->doStoreFitInSession();
+        }
+        return $this->fitmentInSession;
+    }
+
     /**
      * store paramaters in the session
      * @return integer fit_id
      */
-    function storeFitInSession()
+    function doStoreFitInSession()
     {
         if (!$this->shouldStoreVehicleInSession()) {
             return;
