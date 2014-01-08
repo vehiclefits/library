@@ -43,12 +43,6 @@ class VF_SearchForm implements VF_Configurable
         return VF_Singleton::getInstance()->getRequest();
     }
 
-    /** for testability */
-    function setRequest($request)
-    {
-        $this->_request = $request;
-    }
-
     function getSelected($level)
     {
        return $this->getFlexibleSearch()->getValueForSelectedLevel($level);
