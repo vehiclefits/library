@@ -16,7 +16,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'make');
         $entity = $this->levelFinder()->find('make', $vehicle->getValue('make'));
@@ -30,7 +30,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
@@ -47,7 +47,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('model', $vehicle->getLevel('model')->getTitle());
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
         $entity = $this->levelFinder()->find('year', $vehicle->getValue('year'));
@@ -62,7 +62,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('model', $vehicle->getLevel('model')->getTitle());
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
         $entity = $vehicle->getLevel('year');

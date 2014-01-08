@@ -33,11 +33,6 @@ class VF_SearchForm implements VF_Configurable
 
     protected $template;
 
-    /**
-     * @var VF_FlexibleSearch
-     */
-    protected $flexibleSearch;
-
     function getProductId()
     {
         return 0;
@@ -45,7 +40,7 @@ class VF_SearchForm implements VF_Configurable
 
     function getRequest()
     {
-        return $this->_request;
+        return VF_Singleton::getInstance()->getRequest();
     }
 
     /** for testability */
@@ -56,8 +51,7 @@ class VF_SearchForm implements VF_Configurable
 
     function getSelected($level)
     {
-        $search = new VF_FlexibleSearch($this->getSchema(), $this->getRequest());
-        return $search->getValueForSelectedLevel($level);
+       return $this->getFlexibleSearch()->getValueForSelectedLevel($level);
     }
 
     function listEntities($level)
@@ -207,10 +201,7 @@ class VF_SearchForm implements VF_Configurable
      */
     function getFlexibleSearch()
     {
-        if(!$this->flexibleSearch) {
-            $this->flexibleSearch = new VF_FlexibleSearch($this->getSchema(), $this->getRequest());
-        }
-        return $this->flexibleSearch;
+        return VF_Singleton::getInstance()->flexibleSearch();
     }
 
     function renderCategoryOptions()

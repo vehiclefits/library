@@ -30,7 +30,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('make,model,year');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
-        $search->setRequest($this->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(array(), $actual, 'should not list models before make is selected');
     }
@@ -40,7 +40,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('make,model,year');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm;
-        $search->setRequest($this->getRequest($vehicle->toTitleArray()));
+        VF_Singleton::getInstance()->setRequest($this->getRequest($vehicle->toTitleArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));
         $this->assertEquals('Civic', $actual[0]->getTitle(), 'should list models when make is selected');
@@ -75,7 +75,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('make,model,year');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
-        $search->setRequest($this->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(array(), $actual, 'should not list models before make is selected');
     }
@@ -86,7 +86,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $_GET['make'] = 'Honda';
         $search = new VF_SearchForm();
-        $search->setRequest($this->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual), 'should list models when just make is selected');
         $this->assertEquals('Civic', $actual[0]->getTitle(), 'should list models when just make is selected');
@@ -97,7 +97,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('year,make,model');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
-        $search->setRequest($this->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         $actual = $search->listEntities('year', '');
         $this->assertEquals(1, count($actual));
         $this->assertEquals('2000', $actual[0]->getTitle(), 'should list years when year not yet selected');
@@ -108,9 +108,9 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('year,make,model');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
-        $search->setRequest($this->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toTitleArray());
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $this->setRequest($request);
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual));
@@ -122,9 +122,9 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('year,make,model');
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
         $search = new VF_SearchForm();
-        $search->setRequest($this->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toTitleArray());
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $this->setRequest($request);
         $actual = $search->listEntities('make');
         $this->assertEquals(0, count($actual), 'should not list makes not in use when model is selected');
@@ -137,9 +137,9 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
         $search = new VF_SearchForm();
         $search->setConfig($config);
-        $search->setRequest($this->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toTitleArray());
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $this->setRequest($request);
         $actual = $search->listEntities('year');
         $this->assertEquals(1, count($actual), 'should list years not in use when config says to');
@@ -152,9 +152,9 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
         $search = new VF_SearchForm();
         $search->setConfig($config);
-        $search->setRequest($this->getRequest());
+        VF_Singleton::getInstance()->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toTitleArray());
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $this->setRequest($request);
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual), 'should list makes not in use when config says to');
@@ -165,7 +165,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('year,make,model');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $search = new VF_SearchForm();
-        $search->setRequest($this->getRequest($vehicle->toTitleArray()));
+        VF_Singleton::getInstance()->setRequest($this->getRequest($vehicle->toTitleArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));
         $this->assertEquals('Civic', $actual[0]->getTitle(), 'should list models when make is selected');
@@ -178,9 +178,10 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $request = new Zend_Controller_Request_Http;
         $request->setParams($vehicle->toTitleArray());
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $this->assertEquals($vehicle->getValue('model'), $search->getSelected('model'));
-    }
+    }   
+    
 
     public function testWhereListEntitiesFiltersRequestParamsUsingOnlyYear()
     {
@@ -204,7 +205,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $request->setParam('year', $chevroletTahoe->getLevel('year')->getId());
 
         $searchForm = new VF_SearchForm;
-        $searchForm->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $entities = $searchForm->listEntities('engine');
 
         $this->assertArrayDoesNotHaveLevelIDPresent($entities, $chevyAstro->getLevel('engine'));
@@ -237,12 +238,13 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $request->setParam('year', $chevroletTahoe->getLevel('year')->getId());
 
         $searchForm = new VF_SearchForm;
-        $searchForm->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $entities = $searchForm->listEntities('engine');
 
-        $this->assertEquals(1, count($entities));
+        $this->assertEquals(1,count($entities));
         $this->assertArrayOnlyHasLevelIDPresent($entities, $chevroletTahoe->getLevel('engine'));
     }
+
 
     public function assertArrayOnlyHasLevelIDPresent(array $levels, VF_Level $actualLevel)
     {

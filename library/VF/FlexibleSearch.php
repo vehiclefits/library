@@ -27,6 +27,8 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
     protected $request;
     protected $config;
 
+    protected $vehicleSelection;
+
     function __construct(VF_Schema $schema, Zend_Controller_Request_Abstract $request)
     {
         $this->schema = $schema;
@@ -106,7 +108,15 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         }
     }
 
-    function vehicleSelection()
+    function vehicleSelection() {
+        if(!$this->vehicleSelection) {
+            return $this->vehicleSelection = $this->doVehicleSelection();
+        }
+        return $this->vehicleSelection;
+
+    }
+
+    function doVehicleSelection()
     {
         if ($this->shouldClear()) {
             $this->clearSelection();

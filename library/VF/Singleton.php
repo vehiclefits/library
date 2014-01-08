@@ -14,6 +14,8 @@ class VF_Singleton implements VF_Configurable
     protected $dbAdapter;
     protected $productIds;
     protected $_request;
+    /** @var  VF_FlexibleSearch */
+    protected $flexibleSearch;
 
     /** @return VF_Singleton */
     static function getInstance($new = false) // test only
@@ -109,7 +111,7 @@ class VF_Singleton implements VF_Configurable
 
     function getValueForSelectedLevel($level)
     {
-        $search = new VF_FlexibleSearch($this->schema(), $this->getRequest());
+        $search = $this->flexibleSearch();
         $search->storeFitInSession();
         return $search->getValueForSelectedLevel($level);
     }
@@ -307,18 +309,20 @@ class VF_Singleton implements VF_Configurable
     /** @return VF_FlexibleSearch */
     function flexibleSearch()
     {
-        $search = new VF_FlexibleSearch($this->schema(), $this->getRequest());
-        $search->setConfig($this->getConfig());
+        if(!$this->flexibleSearch instanceof VF_FlexibleSearch) {
+            $this->flexibleSearch = new VF_FlexibleSearch($this->schema(), $this->getRequest());
+            $this->flexibleSearch->setConfig($this->getConfig());
+        }
         if ($this->shouldEnableVafWheelModule()) {
-            $search = new VF_Wheel_FlexibleSearch($search);
+            $this->flexibleSearch  = new VF_Wheel_FlexibleSearch($this->flexibleSearch);
         }
         if ($this->shouldEnableVaftireModule()) {
-            $search = new VF_Tire_FlexibleSearch($search);
+            $this->flexibleSearch  = new VF_Tire_FlexibleSearch($this->flexibleSearch);
         }
         if ($this->shouldEnableVafwheeladapterModule()) {
-            $search = new VF_Wheeladapter_FlexibleSearch($search);
+            $this->flexibleSearch  = new VF_Wheeladapter_FlexibleSearch($this->flexibleSearch);
         }
-        return $search;
+        return $this->flexibleSearch;
     }
 
     function getBaseUrl($https = null)
