@@ -23,20 +23,12 @@
 class VF_SearchForm implements VF_Configurable
 {
 
-    /** @var Zend_Controller_Request_Http */
-    protected $_request;
-
     /** @var Zend_Config */
     protected $config;
 
     protected $current_category_id;
 
     protected $template;
-
-    /**
-     * @var VF_FlexibleSearch
-     */
-    protected $flexibleSearch;
 
     function getProductId()
     {
@@ -45,19 +37,12 @@ class VF_SearchForm implements VF_Configurable
 
     function getRequest()
     {
-        return $this->_request;
-    }
-
-    /** for testability */
-    function setRequest($request)
-    {
-        $this->_request = $request;
+        return VF_Singleton::getInstance()->getRequest();
     }
 
     function getSelected($level)
     {
-        $search = new VF_FlexibleSearch($this->getSchema(), $this->getRequest());
-        return $search->getValueForSelectedLevel($level);
+       return $this->getFlexibleSearch()->getValueForSelectedLevel($level);
     }
 
     function listEntities($level)
@@ -207,10 +192,7 @@ class VF_SearchForm implements VF_Configurable
      */
     function getFlexibleSearch()
     {
-        if(!$this->flexibleSearch) {
-            $this->flexibleSearch = new VF_FlexibleSearch($this->getSchema(), $this->getRequest());
-        }
-        return $this->flexibleSearch;
+        return VF_Singleton::getInstance()->flexibleSearch();
     }
 
     function renderCategoryOptions()

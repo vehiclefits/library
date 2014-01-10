@@ -19,7 +19,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_end' => $civic2000->getLevel('year')->getId()
         ));
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2000->getLevel('year')));
@@ -38,7 +38,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2001->getLevel('year')));
@@ -57,7 +57,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2000->getLevel('year')));
@@ -76,7 +76,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
             'year_end' => $civic2001->getLevel('year')->getId()
         ));
         $search = new VF_SearchForm;
-        $search->setRequest($request);
+        VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year', null, null, 'year_end');
         $this->assertFalse($searchlevel->isLevelSelected($civic2000->getLevel('year')));
