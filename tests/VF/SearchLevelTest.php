@@ -15,7 +15,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
-        $search = new VF_SearchForm;
+        $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'make');
@@ -29,7 +29,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $vehicle = $this->createMMY(self::MAKE, self::MODEL, self::YEAR);
         $request = new Zend_Controller_Request_Http();
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
-        $search = new VF_SearchForm;
+        $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
@@ -46,7 +46,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $request->setParam('model', $vehicle->getLevel('model')->getTitle());
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
-        $search = new VF_SearchForm;
+        $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');
@@ -61,7 +61,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $request->setParam('model', $vehicle->getLevel('model')->getTitle());
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
-        $search = new VF_SearchForm;
+        $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
         $searchlevel = new VF_SearchLevel();
         $searchlevel->display($search, 'year');

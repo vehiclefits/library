@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
+class VF_Search_FormTest extends VF_TestCase
 {
     function doSetUp()
     {
@@ -15,7 +15,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     {
         $this->switchSchema('make,model,year');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $search = new VF_SearchForm;
+        $search = new VF_Search_Form;
         $actual = $search->listEntities('make');
         $this->assertEquals(1, count($actual), 'should list makes when no vehicle is selected');
         $this->assertEquals(
@@ -29,7 +29,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     {
         $this->switchSchema('make,model,year');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         VF_Singleton::getInstance()->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(array(), $actual, 'should not list models before make is selected');
@@ -39,7 +39,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     {
         $this->switchSchema('make,model,year');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $search = new VF_SearchForm;
+        $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($this->getRequest($vehicle->toTitleArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));
@@ -54,7 +54,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     function test_MMYShouldThrowExceptionWhenAskedToListBlankLevel()
     {
         $this->switchSchema('make,model,year');
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         $search->listEntities('');
     }
 
@@ -66,7 +66,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     function test_MMYShouldThrowExceptionWhenAskedToListInvalidLevel()
     {
         $this->switchSchema('make,model,year');
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         $search->listEntities('foo');
     }
 
@@ -74,7 +74,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     {
         $this->switchSchema('make,model,year');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         VF_Singleton::getInstance()->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(array(), $actual, 'should not list models before make is selected');
@@ -85,7 +85,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('make,model,year');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
         $_GET['make'] = 'Honda';
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         VF_Singleton::getInstance()->setRequest($this->getRequest());
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual), 'should list models when just make is selected');
@@ -96,7 +96,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     {
         $this->switchSchema('year,make,model');
         $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         VF_Singleton::getInstance()->setRequest($this->getRequest());
         $actual = $search->listEntities('year', '');
         $this->assertEquals(1, count($actual));
@@ -107,7 +107,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     {
         $this->switchSchema('year,make,model');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         VF_Singleton::getInstance()->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toTitleArray());
         VF_Singleton::getInstance()->setRequest($request);
@@ -121,7 +121,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     {
         $this->switchSchema('year,make,model');
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         VF_Singleton::getInstance()->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toTitleArray());
         VF_Singleton::getInstance()->setRequest($request);
@@ -135,7 +135,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('year,make,model');
         $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         $search->setConfig($config);
         VF_Singleton::getInstance()->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toTitleArray());
@@ -150,7 +150,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $this->switchSchema('year,make,model');
         $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         $search->setConfig($config);
         VF_Singleton::getInstance()->setRequest($this->getRequest());
         $request = $this->getRequest($vehicle->toTitleArray());
@@ -164,7 +164,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
     {
         $this->switchSchema('year,make,model');
         $vehicle = $this->createMMYWithFitment('Honda', 'Civic', '2000');
-        $search = new VF_SearchForm();
+        $search = new VF_Search_Form();
         VF_Singleton::getInstance()->setRequest($this->getRequest($vehicle->toTitleArray()));
         $actual = $search->listEntities('model');
         $this->assertEquals(1, count($actual));
@@ -177,7 +177,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
         $request = new Zend_Controller_Request_Http;
         $request->setParams($vehicle->toTitleArray());
-        $search = new VF_SearchForm;
+        $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
         $this->assertEquals($vehicle->getValue('model'), $search->getSelected('model'));
     }   
@@ -204,7 +204,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $request = new Zend_Controller_Request_Http();
         $request->setParam('year', $chevroletTahoe->getLevel('year')->getId());
 
-        $searchForm = new VF_SearchForm;
+        $searchForm = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
         $entities = $searchForm->listEntities('engine');
 
@@ -237,7 +237,7 @@ class VF_SearchForm_Search_SearchFormTest extends VF_TestCase
         $request->setParam('model', $chevroletTahoe->getLevel('model')->getId());
         $request->setParam('year', $chevroletTahoe->getLevel('year')->getId());
 
-        $searchForm = new VF_SearchForm;
+        $searchForm = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
         $entities = $searchForm->listEntities('engine');
 

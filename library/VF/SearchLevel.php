@@ -9,7 +9,7 @@ class VF_SearchLevel implements VF_Configurable
 {
     /** @var  Zend_Config */
     protected $config;
-    /** @var  VF_SearchForm */
+    /** @var  VF_Search_Form */
     protected $searchForm;
     protected $level;
     protected $prevLevel;
@@ -18,7 +18,7 @@ class VF_SearchLevel implements VF_Configurable
     /**
      * Display a select box, pre-populated with values if its the first, or if there's a prev. selection.
      *
-     * @param      $searchForm   VF_SearchForm
+     * @param      $searchForm   VF_Search_Form
      * @param      $level        string name of the level being displayed (ex. "Model")
      * @param bool $prevLevel    name of the level preceeding this one (ex. "Make", or false if none)
      * @param null $displayBrTag boolean wether to print a <br /> between the select boxes.
@@ -27,7 +27,7 @@ class VF_SearchLevel implements VF_Configurable
      * @return string The rendered HTML for this select box.
      */
     function display(
-        VF_SearchForm $searchForm,
+        VF_Search_Form $searchForm,
         $level,
         $prevLevel = false,
         $displayBrTag = null,

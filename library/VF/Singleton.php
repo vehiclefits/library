@@ -225,7 +225,7 @@ class VF_Singleton implements VF_Configurable
 
     function showSearchButton()
     {
-        $block = new VF_SearchForm();
+        $block = new VF_Search_Form();
         $block->setConfig($this->getConfig());
         return $block->showSearchButton();
     }
