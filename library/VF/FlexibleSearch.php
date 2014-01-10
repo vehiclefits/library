@@ -206,11 +206,6 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         return isset($_SESSION[$level]) && (int)$_SESSION[$level];
     }
 
-    function setRequest($request)
-    {
-        $this->request = $request;
-    }
-
     function getRequest()
     {
         return $this->request;
