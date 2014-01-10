@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchLevelYearRangeTest extends VF_TestCase
+class VF_LevelYearRangeTest extends VF_TestCase
 {
 
     function testYearSelected()
@@ -20,7 +20,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         ));
         $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
-        $searchlevel = new VF_SearchLevel();
+        $searchlevel = new VF_Search_Level();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2000->getLevel('year')));
         $this->assertFalse($searchlevel->isLevelSelected($civic2001->getLevel('year')));
@@ -39,7 +39,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         ));
         $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
-        $searchlevel = new VF_SearchLevel();
+        $searchlevel = new VF_Search_Level();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2001->getLevel('year')));
         $this->assertFalse($searchlevel->isLevelSelected($civic2000->getLevel('year')));
@@ -58,7 +58,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         ));
         $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
-        $searchlevel = new VF_SearchLevel();
+        $searchlevel = new VF_Search_Level();
         $searchlevel->display($search, 'year', null, null, 'year_start');
         $this->assertTrue($searchlevel->isLevelSelected($civic2000->getLevel('year')));
         $this->assertFalse($searchlevel->isLevelSelected($civic2001->getLevel('year')));
@@ -77,7 +77,7 @@ class VF_SearchLevelYearRangeTest extends VF_TestCase
         ));
         $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
-        $searchlevel = new VF_SearchLevel();
+        $searchlevel = new VF_Search_Level();
         $searchlevel->display($search, 'year', null, null, 'year_end');
         $this->assertFalse($searchlevel->isLevelSelected($civic2000->getLevel('year')));
         $this->assertTrue($searchlevel->isLevelSelected($civic2001->getLevel('year')));

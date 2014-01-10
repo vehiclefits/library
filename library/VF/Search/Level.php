@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchLevel implements VF_Configurable
+class VF_Search_Level implements VF_Configurable
 {
     /** @var  Zend_Config */
     protected $config;

@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SearchLevelTest extends VF_TestCase
+class VF_Search_LevelTest extends VF_TestCase
 {
     const MAKE = 'Honda';
     const MODEL = 'Civic';
@@ -17,7 +17,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
-        $searchlevel = new VF_SearchLevel();
+        $searchlevel = new VF_Search_Level();
         $searchlevel->display($search, 'make');
         $entity = $this->levelFinder()->find('make', $vehicle->getValue('make'));
         $this->assertTrue($searchlevel->isLevelSelected($entity));
@@ -31,7 +31,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
-        $searchlevel = new VF_SearchLevel();
+        $searchlevel = new VF_Search_Level();
         $searchlevel->display($search, 'year');
         $request->setParam('make', $vehicle->getLevel('make')->getTitle());
         $request->setParam('model', $vehicle->getLevel('model')->getTitle());
@@ -48,7 +48,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
         $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
-        $searchlevel = new VF_SearchLevel();
+        $searchlevel = new VF_Search_Level();
         $searchlevel->display($search, 'year');
         $entity = $this->levelFinder()->find('year', $vehicle->getValue('year'));
         $this->assertTrue($searchlevel->isLevelSelected($entity));
@@ -63,7 +63,7 @@ class VF_SearchLevelTest extends VF_TestCase
         $request->setParam('year', $vehicle->getLevel('year')->getTitle());
         $search = new VF_Search_Form;
         VF_Singleton::getInstance()->setRequest($request);
-        $searchlevel = new VF_SearchLevel();
+        $searchlevel = new VF_Search_Level();
         $searchlevel->display($search, 'year');
         $entity = $vehicle->getLevel('year');
         $this->assertTrue($searchlevel->isLevelSelected($entity));
