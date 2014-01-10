@@ -23,9 +23,6 @@
 class VF_SearchForm implements VF_Configurable
 {
 
-    /** @var Zend_Controller_Request_Http */
-    protected $_request;
-
     /** @var Zend_Config */
     protected $config;
 
