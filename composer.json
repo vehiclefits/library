@@ -23,7 +23,8 @@
     "require": {
         "joshribakoff/php-csv-utils": "1.*",
         "zendframework/zendframework1": "*",
-        "robmorgan/phinx": "v0.2.8"
+        "robmorgan/phinx": "v0.2.8",
+        "pimple/pimple": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.19",
