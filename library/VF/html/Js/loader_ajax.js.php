@@ -23,8 +23,8 @@ var getUrl = function( form, requestLevel ) {
         }
         url = url + '&' + level + '=' + form.find('.' + level + 'Select').val();
     });
-    
-    return url;
+
+    return encodeURI(url);
 }
 
 <?php
