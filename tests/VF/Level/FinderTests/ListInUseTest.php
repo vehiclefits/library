@@ -164,7 +164,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
     {
         $schemaGenerator = new VF_Schema_Generator();
         $schemaGenerator->setSorting('make', 'desc');
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals('desc', $schema->getSorting('make'));
         $vehicle1 = $this->createMMY('A', 'Civic', '2000');
         $vehicle2 = $this->createMMY('B', 'Civic', '2000');
@@ -183,7 +183,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
     {
         $schemaGenerator = new VF_Schema_Generator();
         $schemaGenerator->setSorting('make', 'asc');
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals('asc', $schema->getSorting('make'));
         $vehicle1 = $this->createMMY('A', 'Civic', '2000');
         $vehicle2 = $this->createMMY('B', 'Civic', '2000');
@@ -202,7 +202,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
     {
         $schemaGenerator = new VF_Schema_Generator();
         $schemaGenerator->setSorting('year', 'desc');
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals('desc', $schema->getSorting('year'));
         $vehicle1 = $this->createMMY('Honda', 'Civic', '1999');
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2000');
@@ -221,7 +221,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
     {
         $schemaGenerator = new VF_Schema_Generator();
         $schemaGenerator->setSorting('year', 'asc');
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals('asc', $schema->getSorting('year'));
         $vehicle1 = $this->createMMY('Honda', 'Civic', '1999');
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2000');

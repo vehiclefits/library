@@ -55,7 +55,7 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
     function getFitForSku($sku, $schema = null)
     {
         if (is_null($schema)) {
-            $schema = new VF_Schema;
+            $schema = VF_Singleton::getInstance()->schema();
         }
         $sql = sprintf(
             "SELECT `entity_id` from `test_catalog_product_entity` WHERE `sku` = %s",

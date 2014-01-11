@@ -14,7 +14,7 @@ class VF_SchemaTests_LevelsStringTest extends VF_TestCase
 
     function testLevelsFB()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals('`foo`,`bar`', $schema->getLevelsString(), 'should escape levels for mysql');
     }
 }

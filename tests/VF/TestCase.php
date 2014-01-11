@@ -86,7 +86,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     {
         if (!$force) {
             try {
-                $schema = new VF_Schema();
+                $schema = VF_Singleton::getInstance()->schema();
                 if ($levels == implode(',', $schema->getLevels())) {
                     $this->startTransaction();
                     return;

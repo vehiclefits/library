@@ -36,7 +36,7 @@ class VF_SchemaTests_MultipleTest extends VF_TestCase
     function testShouldAssumeDefaultSchemaWhenNotSpecified()
     {
         VF_Schema::create('foo,bar');
-        $schema = new VF_Schema;
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array('make', 'model', 'option', 'year'), $schema->getLevels(), 'should assume default schema when not specified');
     }
 

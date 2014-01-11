@@ -311,7 +311,7 @@ class VF_Product
 
     function getMappingId(VF_Vehicle $vehicle)
     {
-        $schema = new VF_Schema;
+        $schema = VF_Singleton::getInstance()->schema();
         $select = $this->getReadAdapter()->select()
             ->from($this->getSchema()->mappingsTable(), 'id')
             ->where($schema->getLeafLevel() . '_id = ?', $vehicle->getLeafValue())

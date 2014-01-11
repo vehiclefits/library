@@ -13,19 +13,19 @@ class VF_SchemaTests_MMY_PrevLevelsTest extends VF_TestCase
 
     function testPrevLevelsMake()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array(), $schema->getPrevLevels('make'));
     }
 
     function testPrevLevelsModel()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array('make'), $schema->getPrevLevels('model'));
     }
 
     function testPrevLevelsYear()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array('make', 'model'), $schema->getPrevLevels('year'));
     }
 }

@@ -13,7 +13,7 @@ class VF_SchemaTests_SchemaMMOYTest extends VF_TestCase
 
     function testLevelsMMOY()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array('make', 'model', 'option', 'year'), $schema->getLevels(), 'should get levels MMOY');
     }
 }

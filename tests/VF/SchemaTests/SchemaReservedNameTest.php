@@ -13,7 +13,7 @@ class VF_SchemaTests_SchemaReservedNameTest extends VF_TestCase
 
     function testLevels()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array('make', 'model', 'version'), $schema->getLevels(), 'should get levels');
     }
 }

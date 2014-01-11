@@ -16,7 +16,7 @@ class VF_SchemaTests_PerformanceTest extends VF_TestCase
     {
         $this->getReadAdapter()->getProfiler()->clear();
         $this->getReadAdapter()->getProfiler()->setEnabled(true);
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array('make', 'model', 'year'), $schema->getLevels(), 'should get levels MMY');
         $queries = $this->getReadAdapter()->getProfiler()->getQueryProfiles();
         $this->assertEquals(1, count($queries));
@@ -26,7 +26,7 @@ class VF_SchemaTests_PerformanceTest extends VF_TestCase
     {
         $this->getReadAdapter()->getProfiler()->clear();
         $this->getReadAdapter()->getProfiler()->setEnabled(true);
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $schema->getLevels();
         $schema->getLevels();
         $queries = $this->getReadAdapter()->getProfiler()->getQueryProfiles();
@@ -37,9 +37,9 @@ class VF_SchemaTests_PerformanceTest extends VF_TestCase
     {
         $this->getReadAdapter()->getProfiler()->clear();
         $this->getReadAdapter()->getProfiler()->setEnabled(true);
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $schema->getLevels();
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $schema->getLevels();
         $queries = $this->getReadAdapter()->getProfiler()->getQueryProfiles();
         $this->assertEquals(1, count($queries));

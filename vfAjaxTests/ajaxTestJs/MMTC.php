@@ -32,7 +32,7 @@ $schemaGenerator = new VF_Schema_Generator();
 $schemaGenerator->dropExistingTables();
 $schemaGenerator->execute( array('make','model','chassis','trim'));
 
-$schema = new VF_Schema();
+$schema = VF_Singleton::getInstance()->schema();
 
 $vehicle = VF_Vehicle::create( $schema, array('make'=>'Honda_Unique'.uniqid(), 'model'=>'Civic', 'chassis'=>'chassis', 'trim'=>'trim') );
 $vehicle->save();

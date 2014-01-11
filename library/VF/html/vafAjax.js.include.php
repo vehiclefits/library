@@ -23,7 +23,7 @@
  */
 $front = (bool)( isset( $_GET['front'] ) && $_GET['front'] );
 $command = $front ? 'getLevels' : 'getLevels';
-$schema = new VF_Schema;
+$schema = VF_Singleton::getInstance()->schema();
 
 
 $CONFIG['unavailableSelections'] = isset( $_GET['unavailableSelections'] ) ? $_GET['unavailableSelections'] : VF_Singleton::getInstance()->getConfig()->search->unavailableSelections;
@@ -231,7 +231,7 @@ class VafJs_Default implements VafJs_Decorator
     
     protected function leafLevel()
     {
-        $schema = new Vf_Schema;
+        $schema = VF_Singleton::getInstance()->schema();
         return $schema->getLeafLevel();
     }
 }

@@ -43,7 +43,7 @@ class VF_Schema_CLITest extends VF_TestCase
      */
     function testShouldStartWithEmptyDatabase()
     {
-        $schema = new VF_Schema;
+        $schema = VF_Singleton::getInstance()->schema();
         $schema->getLevels();
     }
 
@@ -51,7 +51,7 @@ class VF_Schema_CLITest extends VF_TestCase
     {
         $command = __DIR__ . '/vf schema --force --levels="year,make,model"';
         exec($command);
-        $schema = new VF_Schema;
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array('year', 'make', 'model'), $schema->getLevels(), 'should create default schema of MMY');
     }
 

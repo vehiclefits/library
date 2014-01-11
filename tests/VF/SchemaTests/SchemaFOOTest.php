@@ -13,7 +13,7 @@ class VF_SchemaTests_SchemaFOOTest extends VF_TestCase
 
     function testLevelsFB()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(array('foo', 'bar'), $schema->getLevels(), 'should get levels FB');
     }
 }

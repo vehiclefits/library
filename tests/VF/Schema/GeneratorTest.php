@@ -28,7 +28,7 @@ class VF_Schema_GeneratorTest extends VF_TestCase
     function testShouldDefaultToMasterSchema()
     {
         $this->schemaGenerator()->execute(array('make', 'model', 'year'));
-        $schema = new VF_Schema;
+        $schema = VF_Singleton::getInstance()->schema();
         $this->assertEquals(1, $schema->id(), 'schema should default to master schema represented by ID=1');
     }
 

@@ -22,7 +22,7 @@ class VF_Schema implements VF_Configurable
 
     static function create($levels)
     {
-        $schema = new VF_Schema;
+        $schema = VF_Singleton::getInstance()->schema();
         $schema->getReadAdapter()->insert('elite_schema', array(
             'key' => 'levels',
             'value' => $levels
