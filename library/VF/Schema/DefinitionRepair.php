@@ -24,7 +24,7 @@ class VF_Schema_DefinitionRepair extends VF_Schema_Generator
 {
     function repair()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $this->levels = $schema->getLevels();
         $this->saveLeafLevels();
         return '';
@@ -32,7 +32,7 @@ class VF_Schema_DefinitionRepair extends VF_Schema_Generator
 
     protected function saveLeafLevels()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $select = $this->getReadAdapter()->select()
             ->from('elite_' . $schema->getLeafLevel());
         $result = $select->query();

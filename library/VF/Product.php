@@ -82,7 +82,7 @@ class VF_Product
 
     function getOrderBy()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $levels = $schema->getLevels();
         $c = count($levels);
         $sql = '';
@@ -95,7 +95,7 @@ class VF_Product
     public static function getJoins()
     {
         $joins = '';
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $levels = $schema->getLevels();
         $c = count($levels);
         for ($i = 0; $i <= $c - 1; $i++) {
@@ -326,7 +326,7 @@ class VF_Product
      */
     function duplicate()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $vehicleFinder = new VF_Vehicle_Finder($schema);
         $leaf = $schema->getLeafLevel() . '_id';
         $newProduct = parent::duplicate();
@@ -355,7 +355,7 @@ class VF_Product
 
     function createFitFromRow($row)
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         return new VF_Vehicle($schema, $row->id, $row);
     }
 
@@ -378,7 +378,7 @@ class VF_Product
 
     function getSchema()
     {
-        return new VF_Schema();
+        return VF_Singleton::getInstance()->schema();
     }
 
     /** @return Zend_Db_Statement_Interface */

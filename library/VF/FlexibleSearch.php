@@ -399,9 +399,12 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         return VF_Singleton::getInstance()->getReadAdapter();
     }
 
+    /**
+     * @return VF_Schema
+     */
     function schema()
     {
-        return new VF_Schema();
+        return VF_Singleton::getInstance()->schema();
     }
 
     function setConfig($config)
@@ -409,6 +412,9 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         $this->config = $config;
     }
 
+    /**
+     * @return Zend_Config
+     */
     function getConfig()
     {
         if (!$this->config) {

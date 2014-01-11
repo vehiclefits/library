@@ -79,7 +79,7 @@ abstract class VF_Import_Abstract
         if (isset($this->schema)) {
             return $this->schema;
         }
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $schema->setConfig($this->getConfig());
         return $this->schema = $schema;
     }

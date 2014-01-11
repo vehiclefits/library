@@ -105,9 +105,7 @@ class VF_Search_Form implements VF_Configurable
 
     function getLevels()
     {
-        $schema = new VF_Schema();
-        $schema->setConfig($this->getConfig());
-        return $schema->getLevels();
+        return VF_Singleton::getInstance()->schema()->getLevels();
     }
 
     function showClearButton()
@@ -213,7 +211,7 @@ class VF_Search_Form implements VF_Configurable
 
     function getSchema()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         $schema->setConfig($this->getConfig());
         return $schema;
     }

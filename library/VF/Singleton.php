@@ -105,7 +105,7 @@ class VF_Singleton implements VF_Configurable
 
     function getLeafLevel()
     {
-        $schema = new VF_Schema();
+        $schema = VF_Singleton::getInstance()->schema();
         return $schema->getLeafLevel();
     }
 
@@ -302,8 +302,7 @@ class VF_Singleton implements VF_Configurable
 
     function schema()
     {
-        $schema = new VF_Schema();
-        return $schema;
+        return new VF_Schema();
     }
 
     /** @return VF_FlexibleSearch */

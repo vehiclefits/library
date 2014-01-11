@@ -29,7 +29,7 @@ foreach( $levels as $level )
 }
 function vafDoLevel( $level, $parent_id = 0 )
 {    
-    $schema = new VF_Schema();
+    $schema = VF_Singleton::getInstance()->schema();
     $finder = new VF_Level( $level );
     $parentLevel = $schema->getPrevLevel( $level );
     if( $parentLevel )
