@@ -276,7 +276,6 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if (!count($selectedVehicles)) {
             return array();
         }
-        $level = $this->getLevel();
         $where = ' `universal` = 1 ';
         $where .= 'OR (';
         foreach ($this->schema()->getLevels() as $level_type) {
