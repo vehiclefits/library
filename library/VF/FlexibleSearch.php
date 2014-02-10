@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Vehicle Fits
  *
@@ -17,6 +18,7 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
+ *
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -108,8 +110,9 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         }
     }
 
-    function vehicleSelection() {
-        if(!$this->vehicleSelection) {
+    function vehicleSelection()
+    {
+        if (!$this->vehicleSelection) {
             return $this->vehicleSelection = $this->doVehicleSelection();
         }
         return $this->vehicleSelection;
@@ -170,15 +173,21 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             if (isset($_SESSION[$level . '_start']) && isset($_SESSION[$level . '_end'])) {
                 $return[$level . '_start'] = $_SESSION[$level . '_start'];
                 $return[$level . '_end'] = $_SESSION[$level . '_end'];
-            } else if (isset($_SESSION[$level]) && (int)$_SESSION[$level]) {
-                $return[$level] = $_SESSION[$level];
-            } else if (isset($requestParams[$level . '_start']) && isset($requestParams[$level . '_end'])) {
-                $return[$level . '_start'] = $requestParams[$level . '_start'];
-                $return[$level . '_end'] = $requestParams[$level . '_end'];
-            } else if (isset($requestParams[$level]) && (int)$requestParams[$level]) {
-                $return[$level] = $requestParams[$level];
             } else {
-                $return[$level] = 0;
+                if (isset($_SESSION[$level]) && (int)$_SESSION[$level]) {
+                    $return[$level] = $_SESSION[$level];
+                } else {
+                    if (isset($requestParams[$level . '_start']) && isset($requestParams[$level . '_end'])) {
+                        $return[$level . '_start'] = $requestParams[$level . '_start'];
+                        $return[$level . '_end'] = $requestParams[$level . '_end'];
+                    } else {
+                        if (isset($requestParams[$level]) && (int)$requestParams[$level]) {
+                            $return[$level] = $requestParams[$level];
+                        } else {
+                            $return[$level] = 0;
+                        }
+                    }
+                }
             }
         }
         return $return;
@@ -256,7 +265,11 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             } else {
                 $parentValue = null;
             }
-            return $levelFinder->findEntityIdByTitle($level, $levelStringValue, isset($parentValue) ? $parentValue : null);
+            return $levelFinder->findEntityIdByTitle(
+                $level,
+                $levelStringValue,
+                isset($parentValue) ? $parentValue : null
+            );
         }
         return false;
     }
@@ -270,37 +283,74 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         return $return;
     }
 
+    protected function buildDbSelectForDistinctEntityIdMapping()
+    {
+        return $this->getReadAdapter()->select()->distinct()->from($this->schema()->mappingsTable(), 'entity_id');
+    }
+
+    function buildDistinctQueryForVehicleEntityIdMappings(Zend_Db_Select $select, VF_Vehicle $vehicle)
+    {
+        $subSelect = $this->getReadAdapter()->select();
+        foreach ($this->schema()->getLevels() AS $current_level) {
+            $level = $vehicle->getLevel($current_level);
+            if (!$level->getId()) {
+                continue;
+            }
+            $subSelect->where(sprintf("%s = ?", $current_level), $level->getTitle());
+        }
+
+        $select = $this->combineSubSelectIfWhereIsNotEmpty($select, $subSelect);
+
+        return $select;
+    }
+
+    function combineSubSelectIfWhereIsNotEmpty(Zend_Db_Select $select, Zend_Db_Select $subSelect)
+    {
+        $whereArray = $subSelect->getPart(Zend_Db_Select::WHERE);
+        if (count($whereArray)) {
+            return $select->orWhere(implode(' ', $whereArray));
+        }
+        return $select;
+    }
+
+    function getMappedEntityIdsForVehicle(VF_Vehicle $vehicle)
+    {
+        $select = $this->buildDbSelectForDistinctEntityIdMapping();
+        $select = $select->where('universal = ?', 1);
+        $select = $this->buildDistinctQueryForVehicleEntityIdMappings($select, $vehicle);
+        return $select->query()->fetchAll(Zend_Db::FETCH_COLUMN, 0);
+    }
+
     function doGetProductIds()
     {
         $selectedVehicles = $this->vehicleSelection();
-        if (!count($selectedVehicles)) {
+        if (!$vehicleCount = count($selectedVehicles)) {
             return array();
         }
-        $where = ' `universal` = 1 ';
-        $where .= 'OR (';
-        foreach ($this->schema()->getLevels() as $level_type) {
-            $id = (int)$selectedVehicles[0]->getLevel($level_type)->getId();
-            if (!$id) {
-                continue;
-            }
-            if ($level_type != $this->schema()->getRootLevel()) {
-                $where .= ' && ';
-            }
-            $where .= sprintf(' `%s_id` = %d  ', $level_type, $id);
+        if ($selectedVehicles instanceof VF_Vehicle) {
+            return $this->getMappedEntityIdsForVehicle($selectedVehicles);
         }
-        $where .= ')';
-        $rows = $this->getReadAdapter()->fetchAll("SELECT distinct( entity_id ) FROM " . $this->schema()->mappingsTable() . " WHERE  $where");
+
+        $select = $this->buildDbSelectForDistinctEntityIdMapping();
+        $select = $select->where('universal = ?', 1);
+        $subSelect = $this->getReadAdapter()->select();
+        foreach ($selectedVehicles AS $vehicle) {
+            $subSelect = $this->buildDistinctQueryForVehicleEntityIdMappings($subSelect, $vehicle);
+        }
+
+        $select = $this->combineSubSelectIfWhereIsNotEmpty($select, $subSelect);
+
+        $rows = $select->query()->fetchAll(Zend_Db::FETCH_COLUMN, 0);
+
         if (count($rows) == 0) {
             return array(0);
         }
-        foreach ($rows as $r) {
-            $ids [] = $r['entity_id'];
-        }
-        return $ids;
+        return $rows;
     }
 
-    function storeFitInSession() {
-        if(!$this->fitmentInSession) {
+    function storeFitInSession()
+    {
+        if (!$this->fitmentInSession) {
             return $this->fitmentInSession = $this->doStoreFitInSession();
         }
         return $this->fitmentInSession;
@@ -308,6 +358,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
 
     /**
      * store paramaters in the session
+     *
      * @return integer fit_id
      */
     function doStoreFitInSession()
