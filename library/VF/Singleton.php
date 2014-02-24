@@ -74,28 +74,16 @@ class VF_Singleton implements VF_Configurable
         return $mapping_id;
     }
 
-    function shouldEnableVafWheelModule()
-    {
-        if (!$this->getConfig()->modulestatus->enableVafwheel) {
-            return false;
-        }
-        return true;
+    function shouldEnableVafWheelModule() {
+        return (bool) $this->getConfig()->modulestatus->enableVafwheel;
     }
 
-    function shouldEnableVaftireModule()
-    {
-        if (!$this->getConfig()->modulestatus->enableVaftire) {
-            return false;
-        }
-        return true;
+    function shouldEnableVaftireModule() {
+        return (bool) $this->getConfig()->modulestatus->enableVaftire;
     }
 
-    function shouldEnableVafwheeladapterModule()
-    {
-        if (!$this->getConfig()->modulestatus->enableVafwheeladapter) {
-            return false;
-        }
-        return true;
+    function shouldEnableVafwheeladapterModule() {
+        return (bool) $this->getConfig()->modulestatus->enableVafwheeladapter;
     }
 
     function clearSelection()
