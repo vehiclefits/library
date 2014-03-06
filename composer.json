@@ -21,7 +21,7 @@
         "library/"
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "joshribakoff/php-csv-utils": "1.*",
         "zendframework/zendframework1": "*",
         "robmorgan/phinx": "v0.2.8",
