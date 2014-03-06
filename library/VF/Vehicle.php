@@ -74,15 +74,15 @@ class VF_Vehicle extends VF_AbstractFinder implements VF_Configurable
             return $this->levels[$level];
         }
         if ($this->levelIsOutsideFlexibleSelection($level)) {
-            return new VF_Level($level, 0, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
-            ), $this->getLevelFinder());
+            return new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(
+            ), $level, 0);
         }
         $id = $this->getValue($level);
         $levelFinder = $this->getLevelFinder();
         $object = $levelFinder->find($level, $id);
         if (false == $object) {
-            $object = new VF_Level($level, $id, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
-            ), $this->getLevelFinder());
+            $object = new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+            ), $this->getLevelFinder(), $level, $id);
             if (false == $id) {
                 $title = isset($this->titles[$level]) ? $this->titles[$level] : '';
                 $object->setTitle($title);

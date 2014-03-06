@@ -91,8 +91,8 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
     {
         $container = $this->createSchemaWithServiceContainer('foo,bar');
         $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $container);
-        $bar = new VF_Level('bar', null, $container->getSchemaClass(), $container->getReadAdapterClass(
-        ), $container->getConfigClass(), $container->getLevelFinderClass());
+        $bar = new VF_Level($container->getSchemaClass(), $container->getReadAdapterClass(), $container->getConfigClass(
+        ), $container->getLevelFinderClass(), 'bar', null);
         $actual = $bar->listAll($vehicle->getValue('foo'));
         $this->assertEquals('456', $actual[0]->getTitle(), 'should list children levels in 2nd schema');
     }

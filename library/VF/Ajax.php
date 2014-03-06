@@ -28,8 +28,8 @@ class VF_Ajax extends VF_AbstractFinderRequest implements VF_Configurable
                 } else {
 
                     $children = $this->getLevelFinder()->listInUseByTitle(
-                        new VF_Level($this->requestLevel(), 0, $this->getSchema(), $this->getReadAdapter(
-                        ), $this->getConfig(), $this->getLevelFinder()),
+                        new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+                        ), $this->getLevelFinder(), $this->requestLevel(), 0),
                         $this->requestLevels(),
                         $product
                     );
@@ -37,15 +37,15 @@ class VF_Ajax extends VF_AbstractFinderRequest implements VF_Configurable
             } else {
                 if ($this->shouldListAll()) {
                     $children = $this->getLevelFinder()->listAll(
-                        new VF_Level($this->requestLevel(), 0, $this->getSchema(), $this->getReadAdapter(
-                        ), $this->getConfig(), $this->getLevelFinder()),
+                        new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+                        ), $this->getLevelFinder(), $this->requestLevel(), 0),
                         $this->requestLevels(),
                         $product
                     );
                 } else {
                     $children = $this->getLevelFinder()->listInUse(
-                        new VF_Level($this->requestLevel(), 0, $this->getSchema(), $this->getReadAdapter(
-                        ), $this->getConfig(), $this->getLevelFinder()),
+                        new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+                        ), $this->getLevelFinder(), $this->requestLevel(), 0),
                         $this->requestLevels(),
                         $product
                     );

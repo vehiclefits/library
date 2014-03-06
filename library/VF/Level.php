@@ -19,8 +19,14 @@ class VF_Level extends VF_Base implements VF_Configurable
     /** @var Zend_Config */
     protected $config;
 
-    function __construct($type, $id = 0, VF_Schema $schema, Zend_Db_Adapter_Abstract $adapter, VF_Config $config, VF_Level_Finder $levelFinder)
-    {
+    function __construct(
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $adapter,
+        VF_Config $config,
+        VF_Level_Finder $levelFinder,
+        $type,
+        $id = 0
+    ) {
         parent::__construct($schema, $adapter, $config);
         $this->type = $type;
         $this->id = $id;
@@ -88,8 +94,8 @@ class VF_Level extends VF_Base implements VF_Configurable
 
     function createEntity($level, $id = 0)
     {
-        return new VF_Level($level, $id, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
-        ), $this->getLevelFinder());
+        return new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(
+        ), $level, $id);
     }
 
     function getType()

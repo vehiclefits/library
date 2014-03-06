@@ -66,8 +66,8 @@ class VF_Search_Form extends VF_AbstractFinderRequest implements VF_Configurable
         if ($parentLevel) {
             $parent_id = $this->getSelected($parentLevel);
         }
-        $levelObject = new VF_Level($level, 0, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
-        ), $this->getLevelFinder());
+        $levelObject = new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+        ), $this->getLevelFinder(), $level, 0);
         if ($this->isNotRootAndHasNoParent($level, $parent_id)) {
             return array();
         }

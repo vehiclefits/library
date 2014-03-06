@@ -45,8 +45,8 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         if (!is_object($row)) {
             throw new VF_Level_Exception_NotFound('error initializing model with level [' . $level . '] and id [' . $id . ']');
         }
-        $level = new VF_Level($level, $id, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
-        ), $this->getLevelFinder());
+        $level = new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(
+        ), $level, $id);
         $level->setTitle($row->title);
         $this->identityMap()->add($level);
         return $level;
@@ -179,8 +179,10 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         if (!$levelId) {
             return false;
         }
-        $level = $level = new VF_Level($type, $levelId, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
-        ), $this->getLevelFinder());
+        $level
+            =
+        $level = new VF_Level($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(
+        ), $type, $levelId);
         $level->setTitle($title);
         return $level;
     }

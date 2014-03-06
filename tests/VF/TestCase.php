@@ -426,7 +426,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
      */
     protected function insertYear($model_id, $title = '')
     {
-        $year = new VF_Level('year', 0, $this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass());
+        $year = new VF_Level($this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(), 'year', 0);
         $year->setTitle($title);
         return $year->save($model_id);
     }
@@ -514,8 +514,8 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         if (is_null($serviceContainer)) {
             $serviceContainer = $this->getServiceContainer();
         }
-        return new VF_Level($type, $id, $serviceContainer->getSchemaClass(), $serviceContainer->getReadAdapterClass(
-        ), $serviceContainer->getConfigClass(), $serviceContainer->getLevelFinderClass());
+        return new VF_Level($serviceContainer->getSchemaClass(), $serviceContainer->getReadAdapterClass(
+        ), $serviceContainer->getConfigClass(), $serviceContainer->getLevelFinderClass(), $type, $id);
     }
 
     function getRequest($params = array())
