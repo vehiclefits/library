@@ -6,7 +6,7 @@
  */
 class VF_Product extends VF_AbstractFinder
 {
-    /** @var Collection of VF_Vehicle */
+    /** @var array Collection of VF_Vehicle */
     protected $fits = NULL;
     /** @var VF_Vehicle the customer has associated */
     protected $fit;
@@ -272,6 +272,7 @@ class VF_Product extends VF_AbstractFinder
         return 0 != $count;
     }
 
+    /** @todo move to vfmagento */
     function isInEnabledCategory(Elite_Vaf_Model_Catalog_Category_Filter $filter, $categoryIds)
     {
         foreach ($categoryIds as $categoryId) {

@@ -63,7 +63,7 @@ class VF_Note_Finder extends VF_Db
     /**
      * @param mixed $code alpha numeric note code, pass null to auto-generate
      * @param mixed $message note message
-     * @return note id (last insert id)
+     * @return string note id (last insert id)
      */
     function insert($code = null, $message)
     {

@@ -216,6 +216,7 @@ class VF_Search_Form extends VF_AbstractFinderRequest implements VF_Configurable
         return ob_get_clean();
     }
 
+    /** @todo Refactor */
     function renderBefore()
     {
         if (file_exists(ELITE_PATH . '/Vaflogo')) {

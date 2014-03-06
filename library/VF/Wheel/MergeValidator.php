@@ -22,6 +22,7 @@
  */
 class VF_Wheel_MergeValidator extends VF_Db
 {
+    /** @todo Refactor */
     function ensureCompatible($slaveVehicles, $masterVehicle)
     {
         $masterVehicle = new VF_Wheel_Vehicle($this->getReadAdapter(), $masterVehicle);

@@ -6,7 +6,7 @@
  */
 class VF_Note_Catalog_Product extends VF_Base
 {
-    /** @var Elite_Vaf_Model_Catalog_Product */
+    /** @var VF_Product */
     protected $wrappedProduct;
 
     function __construct(VF_Schema $schema, Zend_Db_Adapter_Abstract $adapter, Zend_Config $config, VF_Product $productToWrap)
