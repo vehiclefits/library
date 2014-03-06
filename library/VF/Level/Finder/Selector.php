@@ -16,6 +16,18 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
     protected $children_in_use;
 
     protected $ancestors_in_use;
+    /** @var \VF_Level_Finder */
+    protected $levelFinder;
+
+    public function __construct(
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $readAdapter,
+        Zend_Config $config,
+        VF_Level_Finder $levelFinder
+    ) {
+        parent::__construct($schema, $readAdapter, $config);
+        $this->levelFinder = $levelFinder;
+    }
 
     function find($level, $id)
     {
@@ -33,7 +45,8 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         if (!is_object($row)) {
             throw new VF_Level_Exception_NotFound('error initializing model with level [' . $level . '] and id [' . $id . ']');
         }
-        $level = new VF_Level($level, $id, $this->schema);
+        $level = new VF_Level($level, $id, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+        ), $this->getLevelFinder());
         $level->setTitle($row->title);
         $this->identityMap()->add($level);
         return $level;
@@ -166,7 +179,8 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
         if (!$levelId) {
             return false;
         }
-        $level = new VF_Level($type, $levelId, $this->getSchema());
+        $level = $level = new VF_Level($type, $levelId, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+        ), $this->getLevelFinder());
         $level->setTitle($title);
         return $level;
     }
@@ -195,4 +209,11 @@ class VF_Level_Finder_Selector extends VF_Level_Finder_Abstract implements VF_Le
     {
         return str_replace(' ', '_', $identifier);
     }
+
+    function getLevelFinder()
+    {
+        return $this->levelFinder;
+    }
+
+
 }

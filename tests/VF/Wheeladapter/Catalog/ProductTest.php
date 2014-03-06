@@ -24,15 +24,15 @@ class VF_Wheeladapter_Catalog_ProductTest extends VF_TestCase
 {
     function testCreateNewProduct()
     {
-        $product = new VF_Product;
-        $wheelAdapterProduct = new VF_Wheeladapter_Catalog_Product($product);
+        $product = $this->vfProduct();
+        $wheelAdapterProduct = new VF_Wheeladapter_Catalog_Product($this->getReadAdapter(), $product);
         $this->assertFalse($wheelAdapterProduct->getWheelSideBoltPattern(), 'should create new product w/ no bolt patterns');
     }
 
     function testCreateNewProduct2()
     {
-        $product = new VF_Product;
-        $wheelAdapterProduct = new VF_Wheeladapter_Catalog_Product($product);
+        $product = $this->vfProduct();
+        $wheelAdapterProduct = new VF_Wheeladapter_Catalog_Product($this->getReadAdapter(), $product);
         $this->assertEquals(array(), $wheelAdapterProduct->getVehicleSideBoltPatterns(), 'should create new product w/ no bolt patterns');
     }
 

@@ -14,7 +14,8 @@ class VF_Import_ValueExploderMMTEYTest extends VF_Import_ProductFitments_CSV_Imp
 
     function testExplodeValues()
     {
-        $valueExploder = new VF_Import_ValueExploder;
+        $valueExploder = new VF_Import_ValueExploder($this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getVehicleFinderClass());
         $this->importDefinitions();
         $result = $valueExploder->explode(array('make' => 'honda', 'model' => 'civic', 'trim' => '{{all}}', 'engine' => '{{all}}', 'year' => 2000));
         $this->assertEquals(4, count($result), 'value exploder should explode multiple tokens');
@@ -35,7 +36,9 @@ honda, civic, lx, b, 2001
 not honda, civic, lx, b, 2000';
         $csvFile = TEMP_PATH . '/definitions.csv';
         file_put_contents($csvFile, $csvData);
-        $importer = new VF_Import_VehiclesList_CSV_Import($csvFile);
+        $importer = new VF_Import_VehiclesList_CSV_Import($csvFile, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+        ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
         $importer->import();
     }
 }

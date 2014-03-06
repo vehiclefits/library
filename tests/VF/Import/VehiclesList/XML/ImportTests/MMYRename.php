@@ -11,7 +11,7 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYRenameTest extends VF_Import_Veh
 
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = '<?xml version="1.0" encoding="UTF-8"?>
 <vehicles>
     <definition id="1">

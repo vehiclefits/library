@@ -10,7 +10,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_MultipleTest extends VF_Impo
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'sku, make, model, year_start, year_end
 sku, honda, civic, 2000, 2001';
         $this->product_id = $this->insertProduct('sku');

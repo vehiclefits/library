@@ -33,7 +33,7 @@ honda, civic, 2000, 2002, 1x114.3
 acura, integra, 2000, 2003, 2x114.3';
         $this->csvFile = TEMP_PATH . '/bolt-definitions-range.csv';
         file_put_contents($this->csvFile, $this->csvData);
-        $importer = new VF_Wheel_Importer_Definitions_Bolts($this->csvFile);
+        $importer = $this->getVehicleBoltImporter($this->csvFile,$this->getServiceContainer());
         $importer->import();
     }
 

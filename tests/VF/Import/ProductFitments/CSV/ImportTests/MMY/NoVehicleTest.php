@@ -8,7 +8,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NoVehicletest extends VF_Imp
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->insertProduct('sku');
     }
 

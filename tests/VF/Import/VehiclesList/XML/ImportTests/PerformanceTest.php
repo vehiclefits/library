@@ -10,7 +10,7 @@ class VF_Import_VehiclesList_XML_ImportTests_MMY_PerformanceTest extends VF_Impo
 
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->xmlFile = $this->xmlFile();
     }
 

@@ -8,7 +8,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_SimpleTest extends VF_Import
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'sku, make, model, year
 sku, honda, civic, 2000';
         $this->query(sprintf("INSERT INTO test_catalog_product_entity ( `sku` ) values ( '%s' )", self::SKU));
@@ -64,7 +64,7 @@ foobar123, honda, civic, 2000')
             ->setProductSkuField('reference')
             ->setProductIdField('id_product')
             ->import();
-        $product = new VF_Product;
+        $product = $this->vfProduct();
         $product->setId($productID);
         $fitments = $product->getFitModels();
         $this->assertEquals('honda civic 2000', $fitments[0]->__toString(), 'should add fitment to product');
@@ -81,7 +81,7 @@ foobar123, honda, civic, 2000')
             ->setProductSkuField('reference')
             ->setProductIdField('id_product')
             ->import();
-        $product = new VF_Product;
+        $product = $this->vfProduct();
         $product->setId($productID);
         $fitments = $product->getFitModels();
         $this->assertEquals('honda civic 2000', $fitments[0]->__toString(), 'should add fitment to product');
@@ -89,6 +89,8 @@ foobar123, honda, civic, 2000')
 
     function mappingsImporterFromFile($csvFile)
     {
-        return new VF_Import_ProductFitments_CSV_Import($csvFile);
+        return new VF_Import_ProductFitments_CSV_Import($csvFile, $this->getServiceContainer()->getSchemaClass(
+            ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+        ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
     }
 }

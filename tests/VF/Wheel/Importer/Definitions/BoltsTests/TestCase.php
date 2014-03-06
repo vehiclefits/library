@@ -26,25 +26,32 @@ abstract class VF_Wheel_Importer_Definitions_BoltsTests_TestCase extends VF_Test
     {
         $csvFile = TEMP_PATH . '/bolt-definitions.csv';
         file_put_contents($csvFile, $stringData);
-        $importer = new VF_Wheel_Importer_Definitions_Bolts($csvFile);
+        $importer = $this->getVehicleBoltImporter($csvFile, $this->getServiceContainer());
         $importer->import();
+    }
+
+    function getVehicleBoltImporter($csvFile, VF_ServiceContainer $container)
+    {
+        return new VF_Wheel_Importer_Definitions_Bolts($csvFile, $container->getSchemaClass(
+            ), $container->getReadAdapterClass(), $container->getConfigClass(), $container->getLevelFinderClass(
+        ), $container->getVehicleFinderClass());
     }
 
     function findVehicleByLevelsMMY($make, $model, $year)
     {
         $vehicle = parent::findVehicleByLevelsMMY($make, $model, $year);
-        return new VF_Wheel_Vehicle($vehicle);
+        return new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
     }
 
     function findVehicleByLevelsYMM($year, $make, $model)
     {
         $vehicle = parent::findVehicleByLevelsYMM($year, $make, $model);
-        return new VF_Wheel_Vehicle($vehicle);
+        return new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
     }
 
     function findVehicleByLevelsMMOY($make, $model, $option, $year)
     {
         $vehicle = parent::findVehicleByLevelsMMOY($make, $model, $option, $year);
-        return new VF_Wheel_Vehicle($vehicle);
+        return new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
     }
 }

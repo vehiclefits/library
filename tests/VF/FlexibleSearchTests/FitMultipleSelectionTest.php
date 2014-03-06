@@ -6,10 +6,6 @@
  */
 class VF_FlexibleSearchTests_FitMultipleSelectionTest extends VF_TestCase
 {
-    protected function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
     function testShouldDetectNumericRequest()
     {

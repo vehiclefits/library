@@ -20,33 +20,28 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Wheeladapter_FlexibleSearch extends VF_FlexibleSearch_Wrapper implements VF_FlexibleSearch_Interface
+class VF_Wheeladapter_FlexibleSearch extends VF_Wheel_FlexibleSearch implements VF_FlexibleSearch_Interface
 {
     function doGetProductIds()
     {
         if (!$this->filteringOnWheelSide() && !$this->filteringOnVehicleSide()) {
-            return $this->productIdsMatchingVehicleSelection();
+            return parent::doGetProductIds();
         }
-        $finder = new VF_Wheeladapter_Finder();
+        $finder = new VF_Wheeladapter_Finder($this->getReadAdapter());
         if ($this->filteringOnWheelSide() && $this->filteringOnVehicleSide()) {
             $productIds = $finder->getProductIds($this->wheelBolt(), $this->vehicleBolt());
         } else if (!$this->filteringOnWheelSide()) {
             $productIds = $finder->getProductIds(null, $this->vehicleBolt());
         } else if (!$this->filteringOnVehicleSide()) {
             $productIds = $finder->getProductIds($this->wheelBolt(), null);
-            if ($this->wrappedFlexibleSearch->hasRequest()) {
-                $productIds = array_intersect($productIds, $this->productIdsMatchingVehicleSelection());
+            if ($this->hasRequest()) {
+                $productIds = array_intersect($productIds, parent::doGetProductIds());
             }
         }
         if (array() == $productIds) {
             return array(0);
         }
         return $productIds;
-    }
-
-    function productIdsMatchingVehicleSelection()
-    {
-        return $this->wrappedFlexibleSearch->doGetProductIds();
     }
 
     function filteringOnWheelSide()
@@ -71,24 +66,32 @@ class VF_Wheeladapter_FlexibleSearch extends VF_FlexibleSearch_Wrapper implement
         return VF_Wheel_BoltPattern::create($vehicleBoltString);
     }
 
-    function storeAdapterSizeInSession()
+    function storeInSession()
     {
-        if ($this->shouldClear()) {
-            return $this->clear();
-        }
-        $_SESSION['wheel_lug_count'] = $this->getParam('wheel_lug_count');
-        $_SESSION['wheel_stud_spread'] = $this->getParam('wheel_stud_spread');
-        $_SESSION['vehicle_lug_count'] = $this->getParam('vehicle_lug_count');
-        $_SESSION['vehicle_stud_spread'] = $this->getParam('vehicle_stud_spread');
+        $this->storeAdapterSizeInSession();
+        return parent::storeInSession();
     }
 
-    function shouldClear()
+    function storeAdapterSizeInSession()
+    {
+        if ($this->shouldClearWheelAdapterFromSession()) {
+            $this->clearWheelAdapterSelectionFromSession();
+            return;
+        }
+
+        $_SESSION['wheel_lug_count'] = $this->wheelSideLugCount();
+        $_SESSION['wheel_stud_spread'] = $this->wheelSideStudSpread();
+        $_SESSION['vehicle_lug_count'] = $this->vehicleSideLugCount();
+        $_SESSION['vehicle_stud_spread'] = $this->vehicleSideStudSpread();
+    }
+
+    function shouldClearWheelAdapterFromSession()
     {
         return 0 == (int)$this->wheelSideLugCount() && 0 == (int)$this->wheelSideStudSpread() &&
         0 == (int)$this->vehicleSideLugCount() && 0 == (int)$this->vehicleSideStudSpread();
     }
 
-    function clear()
+    function clearWheelAdapterSelectionFromSession()
     {
         unset($_SESSION['wheel_lug_count']);
         unset($_SESSION['wheel_stud_spread']);

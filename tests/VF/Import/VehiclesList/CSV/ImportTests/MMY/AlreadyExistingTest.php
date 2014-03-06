@@ -11,7 +11,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_AlreadyExistingTest extends VF_
 
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'make, model, year
 honda, civic, 2000
 honda, civic, 2001

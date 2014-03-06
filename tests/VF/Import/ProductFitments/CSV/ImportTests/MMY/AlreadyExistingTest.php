@@ -9,7 +9,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_AlreadyExistingTest extends 
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'sku, make, model, year' . "\n" .
             'sku, honda, civic, 2000';
         $this->insertProduct('sku');

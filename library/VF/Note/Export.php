@@ -4,11 +4,11 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Note_Export
+class VF_Note_Export extends VF_Db
 {
     function export()
     {
-        $finder = new VF_Note_Finder();
+        $finder = new VF_Note_Finder($this->getReadAdapter());
         $result = '"id","code","message"';
         $result .= "\n";
         foreach ($finder->getAllNotes() as $note) {

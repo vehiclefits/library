@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Vehicle Fits
  *
@@ -17,6 +18,7 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
+ *
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -28,19 +30,19 @@ class VF_Wheel_FlexibleSearchTests_LugCountTest extends VF_TestCase
         $this->assertEquals(5, $flexibleSearch->lugCount(), 'should get lug count from request');
     }
 
-    function testShouldStoreInSession()
+    function testShouldNotStoreInSessionBecauseMissingStudSpread()
     {
         $flexibleSearch = $this->flexibleWheelSearch(array('lug_count' => '5'));
-        VF_Singleton::getInstance()->storeFitInSession();
-        $this->assertEquals(5, $this->flexibleWheelSearch()->lugCount(), 'should store lug count in session');
+        $this->getServiceContainer()->storeFitInSession();
+        $this->assertNull($this->flexibleWheelSearch()->lugCount(), 'should store lug count in session');
     }
 
     function testShouldClearFromSession()
     {
         $flexibleSearch = $this->flexibleWheelSearch(array('lug_count' => '5'));
-        VF_Singleton::getInstance()->storeFitInSession();
+        $this->getServiceContainer()->storeFitInSession();
         $flexibleSearch = $this->flexibleWheelSearch(array('lug_count' => '0'));
-        VF_Singleton::getInstance()->storeFitInSession();
+        $this->getServiceContainer()->storeFitInSession();
         $this->assertEquals(0, $this->flexibleWheelSearch()->lugCount(), 'should clear lug count from session');
     }
 }

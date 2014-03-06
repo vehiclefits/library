@@ -26,13 +26,15 @@ class VF_Tire_Importer_Definitions_TireSizeTests_MMY_TestCase extends VF_TestCas
     {
         $file = TEMP_PATH . '/bolt-definitions-range.csv';
         file_put_contents($file, $stringData);
-        $importer = new VF_Tire_Importer_Definitions_TireSize($file);
+        $importer = new VF_Tire_Importer_Definitions_TireSize($file, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+        ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
         $importer->import();
     }
 
     function findVehicleByLevelsMMY($make, $model, $year)
     {
         $vehicle = parent::findVehicleByLevelsMMY($make, $model, $year);
-        return new VF_Tire_Vehicle($vehicle);
+        return new VF_Tire_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
     }
 }

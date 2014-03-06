@@ -6,13 +6,7 @@
  */
 class VF_Import_VehiclesList_Xml_Import extends VF_Import
 {
-    protected $file;
     protected $row_number;
-
-    function __construct($file)
-    {
-        $this->file = $file;
-    }
 
     function import()
     {
@@ -76,6 +70,6 @@ class VF_Import_VehiclesList_Xml_Import extends VF_Import
 
     function getSchema()
     {
-        return new VF_Schema();
+        return $this->schema;
     }
 }

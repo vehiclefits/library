@@ -92,13 +92,13 @@ class VF_Import_ProductFitments_CSV_Export extends VF_Import_VehiclesList_CSV_Ex
 
     private function doCols()
     {
-        $exporter = new VF_Note_Observer_Exporter_Mappings_CSV();
+        $exporter = new VF_Note_Observer_Exporter_Mappings_CSV($this->getReadAdapter());
         return $exporter->doCols();
     }
 
     private function doRow($row)
     {
-        $exporter = new VF_Note_Observer_Exporter_Mappings_CSV;
+        $exporter = new VF_Note_Observer_Exporter_Mappings_CSV($this->getReadAdapter());
         return $exporter->doRow($row);
     }
 }

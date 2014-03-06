@@ -7,10 +7,6 @@
  */
 class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
 {
-    protected function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
 //    function testGetFitId()
 //    {
@@ -28,7 +24,7 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $vehicle1 = $this->createVehicle(array('make' => 'Honda1', 'model' => 'Civic', 'year' => '2000'));
         $vehicle2 = $this->createVehicle(array('make' => 'Honda2', 'model' => 'Civic', 'year' => '2000'));
         $_SESSION = $vehicle2->toValueArray();
-        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest());
+        $flexibleSearch = $this->getServiceContainer()->getFlexibleSearchClass();
         $this->assertEquals($vehicle2->toValueArray(), $flexibleSearch->getFlexibleDefinition()->toValueArray());
     }
 
@@ -103,10 +99,13 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
     function testShouldNotStoreInSession2()
     {
         $_SESSION = array('make' => null, 'model' => null, 'year' => null);
+        $config = new Zend_Config(array('search' => array('storeVehicleInSession' => '')),true);
+
         $vehicle = $this->createMMY();
-        $helper = $this->getHelper(array('search' => array('storeVehicleInSession' => '')), $vehicle->toValueArray());
-        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest($vehicle->toValueArray()));
-        $flexibleSearch->storeFitInSession();
+        $this->getServiceContainer()->getConfigClass()->merge($config);
+        $this->getServiceContainer()->getRequestClass()->setParams($vehicle->toValueArray());
+        $this->getServiceContainer()->getFlexibleSearchClass()->storeFitmentInSession();
+
         unset($_SESSION['garage']);
         $this->assertNotEquals($vehicle->toValueArray(), $_SESSION, 'should get global configuration');
     }
@@ -173,7 +172,7 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $this->assertEquals(
             $vehicle->getLevel('year')->getId(),
             $helper->storeFitInSession(),
-            'storeFitInSession() should return leafID'
+            'storeFitmentInSession() should return leafID'
         );
     }
 
@@ -181,7 +180,7 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
     {
         $_SESSION = array('make' => 99, 'model' => 99, 'year' => 99);
         $helper = $this->getHelper();
-        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest());
+        $flexibleSearch = $this->getServiceContainer()->getFlexibleSearchClass();
         $this->assertFalse(
             $flexibleSearch->getFlexibleDefinition(),
             'when fitment is deleted should automatically clear invalid session'
@@ -206,7 +205,9 @@ class VF_FlexibleSearchTests_FitMMYTest extends VF_TestCase
         $vehicle3 = $this->createVehicle(
             array('make' => 'Chevrolet', 'model' => 'Tahoe', 'year' => '2002', 'engine' => '5.3L V8')
         );
-        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema, $this->getRequest($vehicle3->toValueArray()));
+
+        $this->setServiceContainerWithRequest($this->getRequest($vehicle3->toValueArray()));
+        $flexibleSearch = $this->getServiceContainer()->getFlexibleSearchClass();
         $expectedResponse = array(
             'make'  => $vehicle3->getLevel('make')->getId(),
             'model' => $vehicle3->getLevel('model')->getId(),

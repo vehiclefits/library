@@ -9,7 +9,7 @@ class VF_Import_VehiclesList_CSV_ExportTest extends VF_Import_TestCase
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->importVehiclesList('make, model, year
 honda, civic, 2000
 honda, civic, 2001

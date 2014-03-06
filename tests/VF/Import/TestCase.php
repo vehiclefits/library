@@ -8,7 +8,8 @@ class VF_Import_TestCase extends VF_TestCase
 {
     function getVehiclesListExport()
     {
-        return new VF_Import_VehiclesList_CSV_Export;
+        return new VF_Import_VehiclesList_CSV_Export($this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass());
     }
 
     function importVehiclesList($csvData)
@@ -28,7 +29,9 @@ class VF_Import_TestCase extends VF_TestCase
     {
         $file = TEMP_PATH . '/vehicles-list.csv';
         file_put_contents($file, $csvData);
-        $importer = new VF_Import_VehiclesList_CSV_Import($file);
+        $importer = new VF_Import_VehiclesList_CSV_Import($file, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+        ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
         return $importer;
     }
 }

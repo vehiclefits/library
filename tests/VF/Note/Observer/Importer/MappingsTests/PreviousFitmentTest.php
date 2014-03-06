@@ -10,7 +10,7 @@ class VF_Note_Observer_Importer_MappingsTests_PreviousFitmentTest extends VF_Not
 
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->product_id = $this->insertProduct('sku');
     }
 

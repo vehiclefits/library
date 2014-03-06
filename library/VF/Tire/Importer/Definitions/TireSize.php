@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Vehicle Fits
  *
@@ -17,6 +18,7 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
+ *
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -29,7 +31,7 @@ class VF_Tire_Importer_Definitions_TireSize extends VF_Import_VehiclesList_CSV_I
     }
 
     /**
-     * @param array $row
+     * @param array              $row
      * @param VF_Vehicle|boolean the vehicle, false if none (for example, when setting a product as universal)
      */
     function doImportRow($row, $vehicle)
@@ -37,7 +39,7 @@ class VF_Tire_Importer_Definitions_TireSize extends VF_Import_VehiclesList_CSV_I
         if (!$vehicle) {
             return;
         }
-        $tireVehicle = new VF_Tire_Vehicle($vehicle);
+        $tireVehicle = new VF_Tire_Vehicle($this->getReadAdapter(), $vehicle);
         $tireSize = $this->tireSize($row);
         if (!$tireSize) {
             return false;

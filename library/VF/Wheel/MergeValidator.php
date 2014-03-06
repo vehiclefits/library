@@ -20,13 +20,13 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Wheel_MergeValidator
+class VF_Wheel_MergeValidator extends VF_Db
 {
     function ensureCompatible($slaveVehicles, $masterVehicle)
     {
-        $masterVehicle = new VF_Wheel_Vehicle($masterVehicle);
+        $masterVehicle = new VF_Wheel_Vehicle($this->getReadAdapter(), $masterVehicle);
         foreach ($slaveVehicles as $slaveVehicle) {
-            $slaveVehicle = new VF_Wheel_Vehicle($slaveVehicle);
+            $slaveVehicle = new VF_Wheel_Vehicle($this->getReadAdapter(), $slaveVehicle);
             if ($masterVehicle->boltPattern() != $slaveVehicle->boltPattern()) {
                 throw new Elite_Vaf_Model_Merge_Exception_IncompatibleVehicleAttribute('bolt patterns dont match');
             }

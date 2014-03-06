@@ -8,7 +8,7 @@ class VF_Import_ProductFitments_CSV_ExportTest extends VF_Import_ProductFitments
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'sku, make, model, year, universal
 sku123, honda, civic, 2001
 sku456, honda, civic, 2000
@@ -20,7 +20,10 @@ sku123,acura,test,2002
         file_put_contents($this->csvFile, $this->csvData);
         $this->insertProduct('sku123');
         $this->insertProduct('sku456');
-        $importer = new VF_Import_ProductFitments_CSV_Import($this->csvFile);
+        $importer = new VF_Import_ProductFitments_CSV_Import($this->csvFile, $this->getServiceContainer()
+            ->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()
+            ->getConfigClass(), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()
+            ->getVehicleFinderClass());
         $importer->setProductTable('test_catalog_product_entity');
         $importer->import();
     }
@@ -28,7 +31,8 @@ sku123,acura,test,2002
     function testExport()
     {
         $stream = fopen("php://temp", 'w');
-        $exporter = new VF_Import_ProductFitments_CSV_Export();
+        $exporter = new VF_Import_ProductFitments_CSV_Export($this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass());
         $exporter->setProductTable('test_catalog_product_entity');
         $exporter->export($stream);
         rewind($stream);

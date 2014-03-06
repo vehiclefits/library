@@ -9,7 +9,7 @@ class VF_Vehicle_FinderTests_PerformanceTest extends VF_TestCase
     function testFindById()
     {
         $vehicle = $this->createMMY();
-        $finder = new VF_Vehicle_Finder(new VF_Schema());
+        $finder = $this->vehicleFinder();
         $this->getReadAdapter()->getProfiler()->clear();
         $this->getReadAdapter()->getProfiler()->setEnabled(true);
         $finder->findById($vehicle->getId());
@@ -24,7 +24,7 @@ class VF_Vehicle_FinderTests_PerformanceTest extends VF_TestCase
     {
         $vehicle = $this->createMMY();
         $yearId = $vehicle->getValue('year');
-        $finder = new VF_Vehicle_Finder(new VF_Schema());
+        $finder = $this->vehicleFinder();
         $this->getReadAdapter()->getProfiler()->clear();
         $this->getReadAdapter()->getProfiler()->setEnabled(true);
         $finder->findByLevel('year', $yearId);
@@ -39,7 +39,7 @@ class VF_Vehicle_FinderTests_PerformanceTest extends VF_TestCase
     {
         $vehicle = $this->createMMY();
         $yearId = $vehicle->getValue('year');
-        $finder = new VF_Vehicle_Finder(new VF_Schema());
+        $finder = $this->vehicleFinder();
         $this->getReadAdapter()->getProfiler()->clear();
         $this->getReadAdapter()->getProfiler()->setEnabled(true);
         $finder->findByLeaf($yearId);

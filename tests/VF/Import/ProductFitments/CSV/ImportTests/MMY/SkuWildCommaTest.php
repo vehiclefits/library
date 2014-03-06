@@ -8,7 +8,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_SkuWildCommaTest extends VF_
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'sku, make, model, year
 "aaa*,bbb*", honda, civic, 2000';
         $this->insertProduct('aaa1');

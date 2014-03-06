@@ -4,55 +4,63 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_AjaxTests_MultipleSchemaTest extends VF_TestCase
+class VF_AjaxTests_MultipleSchemaTest extends VF_AjaxTests_AjaxTestCase
 {
-    function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
     function testShouldListRootLevel_WhenCalledFromFrontend()
     {
-        $schema = VF_Schema::create('foo,bar');
-        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
-        $mapping = new VF_Mapping(1, $vehicle);
+        $container = $this->createSchemaWithServiceContainer('foo,bar');
+        $schema = $container->getSchemaClass();
+        $schema_id = $schema->id();
+        $this->setServiceContainer(new VF_ServiceContainer($schema_id, $this->getRequest(), $this->getReadAdapter(),new Zend_Config(array())));
+
+        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $container);
+        $mapping = new VF_Mapping(1, $vehicle, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass());
         $mapping->save();
         ob_start();
         $_GET['front'] = 1;
         $_GET['requestLevel'] = 'foo';
-        $ajax = new VF_Ajax();
-        $ajax->execute($schema);
+        $this->getAjax()->execute();
         $actual = ob_get_clean();
         $this->assertEquals('<option value="123">123</option>', $actual, 'should list root levels from 2nd schema');
     }
 
     function testShouldListChildLevel_WhenCalledFromFrontend()
     {
-        $schema = VF_Schema::create('foo,bar');
-        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
-        $mapping = new VF_Mapping(1, $vehicle);
+        $container = $this->createSchemaWithServiceContainer('foo,bar');
+        $schema = $container->getSchemaClass();
+        $schema_id = $schema->id();
+        $this->setServiceContainer(new VF_ServiceContainer($schema_id, $this->getRequest(), $this->getReadAdapter(),new Zend_Config(array())));
+
+        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $container);
+        $mapping = new VF_Mapping(1, $vehicle, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass());
         $mapping->save();
         ob_start();
         $_GET['front'] = 1;
         $_GET['requestLevel'] = 'bar';
         $_GET['foo'] = '123';
-        $ajax = new VF_Ajax();
-        $ajax->execute($schema);
+        $this->getAjax()->execute();
         $actual = ob_get_clean();
         $this->assertEquals('<option value="456">456</option>', $actual, 'should list child levels from 2nd schema');
     }
 
     function testShouldListChildLevel_WhenCalledFromBackend()
     {
-        $schema = VF_Schema::create('foo,bar');
-        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
-        $mapping = new VF_Mapping(1, $vehicle);
+        $container = $this->createSchemaWithServiceContainer('foo,bar');
+        $schema = $container->getSchemaClass();
+        $schema_id = $schema->id();
+        $this->setServiceContainer(new VF_ServiceContainer($schema_id, $this->getRequest(), $this->getReadAdapter(),new Zend_Config(array())));
+
+        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $container);
+        $mapping = new VF_Mapping(1, $vehicle, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass());
         $mapping->save();
         ob_start();
         $_GET['requestLevel'] = 'bar';
         $_GET['foo'] = $vehicle->getValue('bar');
-        $ajax = new VF_Ajax();
-        $ajax->execute($schema);
+        $this->getAjax()->execute();
         $actual = ob_get_clean();
         $this->assertEquals('<option value="' . $vehicle->getValue('bar') . '">456</option>', $actual, 'should list child levels from 2nd schema');
     }

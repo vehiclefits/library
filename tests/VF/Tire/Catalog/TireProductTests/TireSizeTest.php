@@ -26,15 +26,15 @@ class VF_Tire_Catalog_TireProductTests_TireSizeTest extends VF_TestCase
 
     function testCreateNewProduct()
     {
-        $product = new VF_Product;
-        $tireProduct = new VF_Tire_Catalog_TireProduct($product);
+        $product = $this->vfProduct();
+        $tireProduct = new VF_Tire_Catalog_TireProduct($this->getServiceContainer()->getReadAdapterClass(), $product);
         $this->assertFalse($tireProduct->getTireSize(), 'should create new product w/ no tire size');
     }
 
     function testCreateNewProduct_TireType()
     {
-        $product = new VF_Product;
-        $tireProduct = new VF_Tire_Catalog_TireProduct($product);
+        $product = $this->vfProduct();
+        $tireProduct = new VF_Tire_Catalog_TireProduct($this->getServiceContainer()->getReadAdapterClass(), $product);
         $this->assertFalse($tireProduct->tireType(), 'should create new product w/ no tire type');
     }
 

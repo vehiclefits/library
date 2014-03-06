@@ -13,7 +13,7 @@ class VF_SchemaTests_SchemaSpaceInLevelNameTest extends VF_Import_TestCase
 
     function testLevels()
     {
-        $schema = VF_Singleton::getInstance()->schema();
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals(array('make', 'model type', 'year'), $schema->getLevels(), 'should allow spaces in level name');
     }
 

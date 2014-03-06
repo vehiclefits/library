@@ -20,15 +20,15 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Wheel_FlexibleSearch extends VF_FlexibleSearch_Wrapper implements VF_FlexibleSearch_Interface
+class VF_Wheel_FlexibleSearch extends VF_Tire_FlexibleSearch implements VF_FlexibleSearch_Interface
 {
 
     function doGetProductIds()
     {
         if (!$this->lugCount() || !$this->studSpread()) {
-            return $this->wrappedFlexibleSearch->doGetProductIds();
+            return parent::doGetProductIds();
         }
-        $finder = new VF_Wheel_Finder();
+        $finder = new VF_Wheel_Finder($this->getReadAdapter());
         $productIds = $finder->getProductIds($this->boltPattern());
         if (array() == $productIds) {
             return array(0);
@@ -46,27 +46,32 @@ class VF_Wheel_FlexibleSearch extends VF_FlexibleSearch_Wrapper implements VF_Fl
         return $this->lugCount() . 'x' . $this->studSpread();
     }
 
-    function storeSizeInSession()
+    function storeInSession()
     {
-        if ($this->shouldClear()) {
-            $this->clear();
+        $this->storeWheelSizeInSession();
+        return parent::storeInSession();
+    }
+
+    function storeWheelSizeInSession()
+    {
+        if ($this->shouldClearWheelFromSession()) {
+            $this->clearWheelSelectionFromSession();
         }
         if (!$this->lugCount() || !$this->studSpread()) {
             return;
         }
-        $this->clearSelection();
-        $tireSearch = new VF_Tire_FlexibleSearch($this);
-        $tireSearch->clear();
         $_SESSION['lug_count'] = $this->lugCount();
         $_SESSION['stud_spread'] = $this->studSpread();
+        $this->clearTireSelectionFromSession();
+        $this->clearVehicleSelection();
     }
 
-    function shouldClear()
+    function shouldClearWheelFromSession()
     {
         return 0 == (int)$this->lugCount() && 0 == (int)$this->studSpread();
     }
 
-    function clear()
+    function clearWheelSelectionFromSession()
     {
         unset($_SESSION['lug_count']);
         unset($_SESSION['stud_spread']);

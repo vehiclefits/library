@@ -8,7 +8,7 @@ class VF_LevelTests_EditTest extends VF_TestCase
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldEditLevel()

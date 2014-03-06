@@ -25,7 +25,7 @@ class VF_LevelTests_LevelTest extends VF_TestCase
 
     function testConstructorSetsType()
     {
-        $entity = new VF_Level('make');
+        $entity = $this->vfLevel('make');
         $this->assertSame('make', $entity->getType());
     }
 
@@ -57,13 +57,13 @@ class VF_LevelTests_LevelTest extends VF_TestCase
     function testInitThrowsExceptionIfTypeInvalid()
     {
         $id = $this->insertMake();
-        $entity = new VF_Level(self::INVALID_TYPE, $id);
+        $entity = $this->vfLevel(self::INVALID_TYPE, $id);
     }
 
     function testInitDoesNothingIfNoId()
     {
         try {
-            $entity = new VF_Level(self::INVALID_TYPE, 0);
+            $entity = $this->vfLevel(self::INVALID_TYPE, 0);
         } catch (Exception $e) {
             return $this->assertTrue(false, 'instantiating with invalid type will not throw exception as long as no id was passed');
         }
@@ -102,10 +102,5 @@ class VF_LevelTests_LevelTest extends VF_TestCase
         $id = $make->save();
         $make = $this->levelFinder()->findEntityByTitle('make', '039');
         $this->assertEquals($id, $make->getId(), 'should trim whitespace');
-    }
-
-    function levelFinder()
-    {
-        return new VF_Level_Finder();
     }
 }

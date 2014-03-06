@@ -30,7 +30,9 @@ class VF_Tire_Catalog_TireProduct_ExportTest extends VF_TestCase
         $product->setId($id);
         $product->setTireSize($tireSize);
         $stream = fopen("php://temp", 'w');
-        $export = new VF_Tire_Catalog_TireProduct_ExportTestSub;
+        $export = new VF_Tire_Catalog_TireProduct_ExportTestSub($this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+        ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
         $export->export($stream);
         rewind($stream);
         $data = stream_get_contents($stream);
@@ -38,13 +40,5 @@ class VF_Tire_Catalog_TireProduct_ExportTest extends VF_TestCase
 "sku123","205","55","16"
 ';
         $this->assertEquals($expected, $data);
-    }
-}
-
-class VF_Tire_Catalog_TireProduct_ExportTestSub extends VF_Tire_Catalog_TireProduct_Export
-{
-    function getProductTable()
-    {
-        return 'test_catalog_product_entity';
     }
 }

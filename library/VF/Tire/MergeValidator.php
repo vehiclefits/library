@@ -20,13 +20,14 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Tire_MergeValidator
+class VF_Tire_MergeValidator extends VF_Db
 {
+    /** @todo From what I see this is only used in vfmagento. Move this to vfmagento instead. */
     function ensureCompatible($slaveVehicles, $masterVehicle)
     {
-        $masterVehicle = new VF_Tire_Vehicle($masterVehicle);
+        $masterVehicle = new VF_Tire_Vehicle($this->getReadAdapter(), $masterVehicle);
         foreach ($slaveVehicles as $slaveVehicle) {
-            $slaveVehicle = new VF_Tire_Vehicle($slaveVehicle);
+            $slaveVehicle = new VF_Tire_Vehicle($this->getReadAdapter(), $slaveVehicle);
             if ($masterVehicle->tireSize() != $slaveVehicle->tireSize()) {
                 throw new Elite_Vaf_Model_Merge_Exception_IncompatibleVehicleAttribute('tire sizes dont match');
             }

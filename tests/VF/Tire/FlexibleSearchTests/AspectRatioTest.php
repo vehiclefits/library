@@ -31,16 +31,16 @@ class VF_Tire_FlexibleSearchTests_AspectRatioTest extends VF_TestCase
     function testShouldStoreInSession()
     {
         $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16'));
-        VF_Singleton::getInstance()->storeFitInSession();
+        $this->getServiceContainer()->storeFitInSession();
         $this->assertEquals(55, $this->flexibleTireSearch()->aspectRatio(), 'should store aspect ratio in session');
     }
 
     function testShouldClearFromSession()
     {
         $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '205', 'aspect_ratio' => '55', 'diameter' => '16'));
-        VF_Singleton::getInstance()->storeFitInSession();
+        $this->getServiceContainer()->storeFitInSession();
         $flexibleSearch = $this->flexibleTireSearch(array('section_width' => '0', 'aspect_ratio' => '0', 'diameter' => '0'));
-        VF_Singleton::getInstance()->storeFitInSession();
+        $this->getServiceContainer()->storeFitInSession();
         $this->assertNull($this->flexibleTireSearch()->aspectRatio(), 'should clear aspect ratio from session');
     }
 }

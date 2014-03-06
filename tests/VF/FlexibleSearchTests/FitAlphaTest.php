@@ -22,10 +22,6 @@
  */
 class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
 {
-    protected function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
     function testShouldDetectAlnumRequest()
     {
@@ -41,6 +37,7 @@ class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
     function testPassMakeByTitle()
     {
         $vehicle = $this->createMMY('Honda', 'Civic', '2000');
+
         $helper = $this->getHelper(array(), array(
             'make' => 'Honda',
             'model' => 'Civic',
@@ -79,7 +76,7 @@ class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
         $vehicle1 = $this->createMMY('Honda', 'Civic', '2000');
         $this->insertMappingMMY($vehicle1, 1);
         $this->setRequestParams($vehicle1->toTitleArray());
-        $this->assertEquals(array(1), VF_Singleton::getInstance()->getProductIds());
+        $this->assertEquals(array(1), $this->getServiceContainer()->getProductIds());
     }
 
     function testGetProductIDsWithSpace()
@@ -87,7 +84,7 @@ class VF_FlexibleSearchTests_FitAlphaTest extends VF_TestCase
         $vehicle2 = $this->createMMY('Ford', 'F 150', '2000');
         $this->insertMappingMMY($vehicle2, 2);
         $this->setRequestParams($vehicle2->toTitleArray());
-        $this->assertEquals(array(2), VF_Singleton::getInstance()->getProductIds());
+        $this->assertEquals(array(2), $this->getServiceContainer()->getProductIds());
     }
 
     function testShouldStoreInSession()

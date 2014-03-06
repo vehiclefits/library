@@ -20,12 +20,9 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_AjaxTests_FilterByProductAlnumTest extends VF_TestCase
+class VF_AjaxTests_FilterByProductAlnumTest extends VF_AjaxTests_AjaxTestCase
 {
-    function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
+
 
     function testShouldFilterModelByProduct()
     {
@@ -35,27 +32,8 @@ class VF_AjaxTests_FilterByProductAlnumTest extends VF_TestCase
         $this->insertMappingMMY($vehicle2, 2);
         $_GET['requestLevel'] = 'model';
         $_GET['product'] = 1;
-        $_GET['make'] = $vehicle1->getLevel('make');
+        $_GET['make'] = $vehicle1->getLevel('make')->getTitle();
         $this->assertEquals('<option value="' . $vehicle1->getLevel('model') . '">Civic</option>', $this->execute(), 'should list model for correct product only');
     }
 
-    function execute()
-    {
-        ob_start();
-        $_GET['front'] = 1;
-        $this->getAjax()->execute($this->getSchema(), true);
-        return ob_get_clean();
-    }
-
-    /** @return VF_Ajax */
-    function getAjax()
-    {
-        return new VF_Ajax();
-    }
-
-    /** @return VF_Schema */
-    function getSchema()
-    {
-        return new VF_Schema();
-    }
 }

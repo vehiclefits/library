@@ -25,9 +25,4 @@ class VF_Note_Observer_Exporter_Mappings_CSV extends VF_Note_Observer_Exporter_M
         return ',"' . implode(',', $noteCodes) . '"';
     }
 
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
 }

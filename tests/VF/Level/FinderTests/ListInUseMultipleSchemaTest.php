@@ -6,18 +6,15 @@
  */
 class VF_Level_FinderTests_ListInUseMultipleSchemaTest extends VF_TestCase
 {
-    function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
-    function testShuoldListFromSecondSchema()
+    function testShouldListFromSecondSchema()
     {
-        $schema = VF_Schema::create('foo,bar');
-        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
-        $mapping = new VF_Mapping(1, $vehicle);
+        $container = $this->createSchemaWithServiceContainer('foo,bar');
+        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $container);
+        $mapping = new VF_Mapping(1, $vehicle, $container->getSchemaClass(), $container->getReadAdapterClass(
+        ), $container->getConfigClass());
         $mapping->save();
-        $foo = new VF_Level('foo', null, $schema);
+        $foo = $this->vfLevel('foo', null, $container);
         $actual = $foo->listInUse();
         $this->assertEquals('123', $actual[0], 'should list for level in 2nd schema "foo"');
     }

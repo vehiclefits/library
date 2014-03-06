@@ -24,7 +24,7 @@ class VF_Tire_Importer_Definitions_TireSizeTests_MMY_MultipleSizesOnSingleVehicl
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldImportMultipleSizesOnSingleVehicle()

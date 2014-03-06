@@ -430,7 +430,7 @@ if ( typeof document === "undefined" || document.readyState === "complete" ) {
 }
 
 addEvent(window, "load", function() {
-	// Initialize the config, saving the execution queue
+	// Initialize the zendConfig, saving the execution queue
 	var oldconfig = extend({}, config);
 	QUnit.init();
 	extend(config, oldconfig);

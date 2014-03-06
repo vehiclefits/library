@@ -20,13 +20,14 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Wheel_Catalog_Product
+class VF_Wheel_Catalog_Product extends VF_Db
 {
     /** @var VF_Product */
     protected $wrappedProduct;
 
-    function __construct(VF_Product $productToWrap)
+    function __construct(Zend_Db_Adapter_Abstract $adapter, VF_Product $productToWrap)
     {
+        parent::__construct($adapter);
         $this->wrappedProduct = $productToWrap;
     }
 
@@ -106,7 +107,7 @@ class VF_Wheel_Catalog_Product
 
     function definition($vehicle_id)
     {
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
+        $vehicleFinder = $this->vehicleFinder();
         return $vehicleFinder->findById($vehicle_id);
     }
 
@@ -114,17 +115,5 @@ class VF_Wheel_Catalog_Product
     {
         $method = array($this->wrappedProduct, $methodName);
         return call_user_func_array($method, $arguments);
-    }
-
-    /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
     }
 }

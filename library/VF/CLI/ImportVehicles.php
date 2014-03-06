@@ -32,7 +32,9 @@ class VF_CLI_ImportVehicles extends VF_CLI
         $file = $this->lastArgument();
         $writer = new Zend_Log_Writer_Stream('vehicles-list-import.csv.log');
         $log = new Zend_Log($writer);
-        $importer = new VF_Import_VehiclesList_CSV_Import($file);
+        $importer = new VF_Import_VehiclesList_CSV_Import($file,$this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+        ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
         $importer->setLog($log);
         $importer->import();
     }

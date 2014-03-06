@@ -186,20 +186,15 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
                 $this->doImportRow($row, false);
                 continue;
             }
-            $vehicle = $this->vehicleFinder()->findOneByLevels($combination);
+            $vehicle = $this->getVehicleFinder()->findOneByLevels($combination);
             $this->doImportRow($row, $vehicle);
         }
-    }
-
-    function vehicleFinder()
-    {
-        return new VF_Vehicle_Finder($this->getSchema());
     }
 
     /** @return boolean true only if all field names in the combination are blank */
     function fieldsAreBlank($combination)
     {
-        foreach ($this->schema()->getLevels() as $level) {
+        foreach ($this->getSchema()->getLevels() as $level) {
             if ($combination[$level] == '') {
                 return true;
             }
@@ -345,7 +340,8 @@ class VF_Import_VehiclesList_CSV_Import extends VF_Import
 
     function getCombinations($values, $row)
     {
-        $combiner = new VF_Import_Combiner($this->getSchema(), $this->getConfig());
+        $combiner = new VF_Import_Combiner($this->getSchema(), $this->getReadAdapter(), $this->getVehicleFinder(
+        ), $this->getConfig());
         $combinations = $combiner->getCombinations($values);
         if ($combiner->getError()) {
             $this->log('Line(' . $this->row_number . ') ' . $combiner->getError(), Zend_Log::NOTICE);

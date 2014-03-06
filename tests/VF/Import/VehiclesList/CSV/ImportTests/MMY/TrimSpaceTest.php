@@ -8,7 +8,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_TrimSpaceTest extends VF_Import
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldTrimSpace()

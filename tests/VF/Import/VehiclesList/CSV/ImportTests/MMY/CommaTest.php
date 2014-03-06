@@ -10,7 +10,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_CommaTest extends VF_Import_Tes
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testComma()
@@ -18,7 +18,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_CommaTest extends VF_Import_Tes
         $importer = $this->vehiclesListImporter('"make", "model", "year"
 "honda", "accord,civic", "2000,2003"');
         $importer->import();
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema);
+        $vehicleFinder = $this->vehicleFinder();
         $vehicles = $vehicleFinder->findByLevels(array('make' => 'honda'));
         $this->assertEquals(4, count($vehicles), 'should enumerate out options');
         $this->assertEquals('honda accord 2000', $vehicles[0]->__toString());
@@ -32,7 +32,6 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_CommaTest extends VF_Import_Tes
         $importer = $this->vehiclesListImporter('"make", "model", "year"
 "honda", "accord, civic", "2000,2003"');
         $importer->import();
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema);
         $this->assertTrue($this->vehicleExists(array('make' => 'honda', 'model' => 'civic', 'year' => '2000')));
     }
 
@@ -41,7 +40,6 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_CommaTest extends VF_Import_Tes
         $importer = $this->vehiclesListImporter('"make", "model", "year"
 "honda", "accord,, test, civic", "2000,2003"');
         $importer->import();
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema);
         $this->assertTrue($this->vehicleExists(array('make' => 'honda', 'model' => 'accord, test', 'year' => '2000')));
     }
 }

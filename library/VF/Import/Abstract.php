@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-abstract class VF_Import_Abstract
+abstract class VF_Import_Abstract extends VF_AbstractFinder
 {
     protected $entityIds = array();
 
@@ -25,8 +25,15 @@ abstract class VF_Import_Abstract
     protected $product_sku_field;
     protected $product_id_field;
 
-    function __construct($file)
-    {
+    function __construct(
+        $file,
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $adapter,
+        VF_Config $config,
+        VF_Level_Finder $levelFinder,
+        VF_Vehicle_Finder $vehicleFinder
+    ) {
+        parent::__construct($schema, $adapter, $config, $levelFinder, $vehicleFinder);
         $this->file = $file;
         $this->reader = new Csv_Reader($this->file, new Csv_Dialect);
     }
@@ -69,21 +76,6 @@ abstract class VF_Import_Abstract
         return $this->getReader()->getRow();
     }
 
-    function schema()
-    {
-        return $this->getSchema();
-    }
-
-    function getSchema()
-    {
-        if (isset($this->schema)) {
-            return $this->schema;
-        }
-        $schema = VF_Singleton::getInstance()->schema();
-        $schema->setConfig($this->getConfig());
-        return $this->schema = $schema;
-    }
-
     /** @return Csv_Reader */
     function getReader()
     {
@@ -124,18 +116,11 @@ abstract class VF_Import_Abstract
         return $entity_id;
     }
 
-    /** @return Zend_Db_Adapter_Abstract */
-    function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
-
-    /** @return Zend_Db_Statement_Interface */
-    function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
+    /**
+     * @todo Possibly move this to an abstract function that gets overwritten depending on what module uses it.
+     *
+     * @return string
+     */
     function getProductTable()
     {
         if (isset($this->product_table)) {

@@ -26,7 +26,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_InvalidDelimiterTest extends VF
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     /**

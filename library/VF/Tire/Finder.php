@@ -20,7 +20,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Tire_Finder
+class VF_Tire_Finder extends VF_Db
 {
     function sectionWidths()
     {
@@ -79,9 +79,4 @@ class VF_Tire_Finder
         return $return;
     }
 
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
 }

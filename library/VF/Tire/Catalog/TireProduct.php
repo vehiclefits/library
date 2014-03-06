@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Tire_Catalog_TireProduct
+class VF_Tire_Catalog_TireProduct extends VF_Db
 {
 
     /** @var Elite_Vaf_Model_Catalog_Product */
@@ -13,8 +13,9 @@ class VF_Tire_Catalog_TireProduct
     const SUMMER_ALL = 1;
     const WINTER = 2;
 
-    function __construct(VF_Product $productToWrap)
+    function __construct(Zend_Db_Adapter_Abstract $adapter, VF_Product $productToWrap)
     {
+        parent::__construct($adapter);
         $this->wrappedProduct = $productToWrap;
     }
 
@@ -56,7 +57,7 @@ class VF_Tire_Catalog_TireProduct
 
     function vehicle($vehicleID)
     {
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
+        $vehicleFinder = $this->vehicleFinder();
         return $vehicleFinder->findById($vehicleID);
     }
 
@@ -111,15 +112,4 @@ class VF_Tire_Catalog_TireProduct
         return call_user_func_array($method, $arguments);
     }
 
-    /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
 }

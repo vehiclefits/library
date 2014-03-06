@@ -8,14 +8,17 @@ class VF_Import_ProductFitments_CSV_ExportTests_UniversalTest extends VF_Import_
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'sku, make, model, year, universal
 sku123,  ,  ,  ,1';
         $this->csvFile = TEMP_PATH . '/mappings-single.csv';
         file_put_contents($this->csvFile, $this->csvData);
         $this->insertProduct('sku123');
         $this->insertProduct('sku456');
-        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass($this->csvFile);
+        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass($this->csvFile, $this->getServiceContainer()
+            ->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()
+            ->getConfigClass(), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()
+            ->getVehicleFinderClass());
         $importer->import();
     }
 

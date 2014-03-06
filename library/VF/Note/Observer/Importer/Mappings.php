@@ -10,7 +10,7 @@
  *
  * Side effects: creates a fitment note, associates them to products
  */
-class VF_Note_Observer_Importer_Mappings
+class VF_Note_Observer_Importer_Mappings extends VF_Db
 {
     /** @var array $fields for the current row */
     protected $fields;
@@ -78,19 +78,8 @@ class VF_Note_Observer_Importer_Mappings
         return isset($this->row[$field]) ? $this->row[$field] : false;
     }
 
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
-
     function noteFinder()
     {
-        return new VF_Note_Finder();
+        return new VF_Note_Finder($this->getReadAdapter());
     }
 }

@@ -24,7 +24,7 @@ class VF_Wheel_Importer_Definitions_BoltsTests_MMY_YearRangeTest extends VF_Whee
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldImportLugCountForYear2000()

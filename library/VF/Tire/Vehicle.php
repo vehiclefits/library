@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Vehicle Fits
  *
@@ -17,51 +18,61 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
+ *
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Tire_Vehicle
+class VF_Tire_Vehicle extends VF_Db
 {
     /** @var VF_Vehicle */
     protected $wrappedVehicle;
 
-    function __construct(VF_Vehicle $vehicle)
+    function __construct(Zend_Db_Adapter_Abstract $adapter, VF_Vehicle $vehicle)
     {
+        parent::__construct($adapter);
         $this->wrappedVehicle = $vehicle;
     }
 
     /** @return VF_TireSize */
     function tireSize()
     {
-        $select = $this->getReadAdapter()->select()
-            ->from('elite_vehicle_tire', array('section_width', 'aspect_ratio', 'diameter'))
-            ->where('leaf_id = ?', (int)$this->wrappedVehicle->getLeafValue());
+        $select = $this->getReadAdapter()->select()->from(
+                'elite_vehicle_tire',
+                array('section_width', 'aspect_ratio', 'diameter')
+            )->where('leaf_id = ?', (int)$this->wrappedVehicle->getLeafValue());
         $result = $this->query($select);
         $return = array();
         foreach ($result->fetchAll(Zend_Db::FETCH_OBJ) as $tireSizeStd) {
-            array_push($return, new VF_TireSize($tireSizeStd->section_width, $tireSizeStd->aspect_ratio, $tireSizeStd->diameter));
+            array_push(
+                $return,
+                new VF_TireSize($tireSizeStd->section_width, $tireSizeStd->aspect_ratio, $tireSizeStd->diameter)
+            );
         }
         return $return;
     }
 
     function addTireSize(VF_TireSize $tireSize)
     {
-        $select = $this->getReadAdapter()->select()
-            ->from('elite_vehicle_tire')
-            ->where('leaf_id = ?', (int)$this->wrappedVehicle->getLeafValue())
-            ->where('section_width = ?', (int)$tireSize->sectionWidth())
-            ->where('aspect_ratio = ?', (int)$tireSize->aspectRatio())
-            ->where('diameter = ?', (int)$tireSize->diameter());
+        $select = $this->getReadAdapter()->select()->from('elite_vehicle_tire')->where(
+                'leaf_id = ?',
+                (int)$this->wrappedVehicle->getLeafValue()
+            )->where('section_width = ?', (int)$tireSize->sectionWidth())->where(
+                'aspect_ratio = ?',
+                (int)$tireSize->aspectRatio()
+            )->where('diameter = ?', (int)$tireSize->diameter());
         $result = $select->query();
         if ($result->fetchColumn()) {
             return;
         }
-        $this->getReadAdapter()->insert('elite_vehicle_tire', array(
-            'leaf_id' => (int)$this->wrappedVehicle->getLeafValue(),
-            'section_width' => $tireSize->sectionWidth(),
-            'aspect_ratio' => $tireSize->aspectRatio(),
-            'diameter' => $tireSize->diameter(),
-        ));
+        $this->getReadAdapter()->insert(
+            'elite_vehicle_tire',
+            array(
+                'leaf_id' => (int)$this->wrappedVehicle->getLeafValue(),
+                'section_width' => $tireSize->sectionWidth(),
+                'aspect_ratio' => $tireSize->aspectRatio(),
+                'diameter' => $tireSize->diameter(),
+            )
+        );
     }
 
     function vehicle()
@@ -73,17 +84,5 @@ class VF_Tire_Vehicle
     {
         $method = array($this->wrappedVehicle, $methodName);
         return call_user_func_array($method, $arguments);
-    }
-
-    /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
     }
 }

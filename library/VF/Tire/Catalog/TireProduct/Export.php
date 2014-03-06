@@ -20,7 +20,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Tire_Catalog_TireProduct_Export
+class VF_Tire_Catalog_TireProduct_Export extends VF_AbstractFinder
 {
 
     function export($stream)
@@ -28,9 +28,10 @@ class VF_Tire_Catalog_TireProduct_Export
         fwrite($stream, '"sku","section_width","aspect_ratio","diameter"');
         fwrite($stream, "\n");
         foreach ($this->getProductRows() as $productRow) {
-            $product = new VF_Product;
+            $product = new VF_Product($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+            ), $this->getLevelFinder(), $this->getVehicleFinder());
             $product->setId($productRow['entity_id']);
-            $product = new VF_Tire_Catalog_TireProduct($product);
+            $product = new VF_Tire_Catalog_TireProduct($this->getReadAdapter(), $product);
             if ($product->getTireSize()) {
                 $tireSize = $product->getTireSize();
                 fwrite($stream, '"' . $productRow['sku'] . '",');
@@ -44,7 +45,7 @@ class VF_Tire_Catalog_TireProduct_Export
 
     function getProductRows()
     {
-        $query = VF_Singleton::getInstance()->getReadAdapter()->select()
+        $query = $this->getReadAdapter()->select()
             ->from($this->getProductTable(), array('entity_id', 'sku'));
         $rs = $query->query();
         $ids = array();

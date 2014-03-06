@@ -46,17 +46,17 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
 
     function mappingsImporterFromFile($csvFile)
     {
-        return new VF_Import_ProductFitments_CSV_Import_TestSubClass($csvFile);
+        return new VF_Import_ProductFitments_CSV_Import_TestSubClass($csvFile, $this->getServiceContainer()
+            ->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()
+            ->getConfigClass(), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()
+            ->getVehicleFinderClass());
     }
 
     /**
      * @deprecated
      */
-    function getFitForSku($sku, $schema = null)
+    function getFitForSku($sku)
     {
-        if (is_null($schema)) {
-            $schema = VF_Singleton::getInstance()->schema();
-        }
         $sql = sprintf(
             "SELECT `entity_id` from `test_catalog_product_entity` WHERE `sku` = %s",
             $this->getReadAdapter()->quote($sku)
@@ -66,7 +66,7 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
         $r->closeCursor();
         $sql = sprintf(
             "SELECT `%s_id` from `elite_1_mapping` WHERE `entity_id` = %d AND `universal` = 0",
-            $schema->getLeafLevel(),
+            $this->getServiceContainer()->getSchemaClass()->getLeafLevel(),
             $product_id
         );
         $r = $this->query($sql);
@@ -75,8 +75,7 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
         if (!$leaf_id) {
             return false;
         }
-        $finder = new VF_Vehicle_Finder($schema);
-        return $finder->findByLeaf($leaf_id);
+        return $this->getServiceContainer()->getVehicleFinderClass()->findByLeaf($leaf_id);
     }
 
     /**
@@ -104,7 +103,8 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
     function exportProductFitments()
     {
         $stream = fopen("php://temp", 'w');
-        $exporter = new VF_Import_ProductFitments_CSV_ExportTests_TestSub();
+        $exporter = new VF_Import_ProductFitments_CSV_ExportTests_TestSub($this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass());
         $exporter->export($stream);
         rewind($stream);
         $data = stream_get_contents($stream);

@@ -8,7 +8,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_CountAddedTest extends VF_Impor
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testCountAddedDefaults0()

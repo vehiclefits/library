@@ -9,8 +9,23 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
     const E_WARNING = 1;
 
     protected $count = 0;
+
+    /** @var VF_Vehicle_Finder */
+    protected $vehicleFinder;
     /** @var Zend_Config */
     protected $config;
+
+    function __construct(
+        $file,
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $adapter,
+        Zend_Config $config,
+        VF_Level_Finder $levelFinder,
+        VF_Vehicle_Finder $vehicleFinder
+    ) {
+        parent::__construct($file, $schema, $adapter, $config, $levelFinder, $vehicleFinder);
+        $this->vehicleFinder = $vehicleFinder;
+    }
 
     abstract function import();
 
@@ -45,7 +60,7 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
     function extractLevelsFromImportTable($level)
     {
         if (!$this->getSchema()->hasParent($level)) {
-            $sql = sprintf('INSERT INTO ' . $this->schema()->levelTable($level) . ' (title)
+            $sql = sprintf('INSERT INTO ' . $this->getSchema()->levelTable($level) . ' (title)
                 SELECT DISTINCT %1$s FROM elite_import WHERE universal != 1 && `%1$s` != "" && %1$s_id = 0', str_replace(' ', '_', $level));
             $this->query($sql);
         } else {
@@ -103,7 +118,7 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
         if (false == $this->fieldPositions) {
             throw new VF_Import_VehiclesList_CSV_Exception_FieldHeaders('Field headers missing');
         }
-        foreach ($this->schema()->getLevels() as $level) {
+        foreach ($this->getSchema()->getLevels() as $level) {
             if (!$this->allowMissingFields() &&
                 !isset($this->fieldPositions[$level]) && (
                     !isset($this->fieldPositions[$level . '_start']) && !isset($this->fieldPositions[$level . '_end'])) &&
@@ -125,14 +140,17 @@ abstract class VF_Import extends VF_Import_Abstract implements VF_Configurable
 
     function getConfig()
     {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
         return $this->config;
     }
 
     function setConfig(Zend_Config $config)
     {
-        $this->config = $config;
+        $this->config = $this->getConfig()->merge($config);
     }
+
+    function getVehicleFinder()
+    {
+        return $this->vehicleFinder;
+    }
+
 }

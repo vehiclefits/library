@@ -8,7 +8,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_NonExistantSkusTest extends 
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testWhenOneRow_ShouldReportSingleMissingSKU()

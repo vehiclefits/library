@@ -34,7 +34,7 @@ class VF_Tire_Catalog_TireProduct_Import extends VF_Import_Abstract
     {
         $sku = $this->getFieldValue('sku', $row);
         $productId = $this->productId($sku);
-        $product = new VF_Tire_Catalog_TireProduct(new VF_Product());
+        $product = new VF_Tire_Catalog_TireProduct($this->getReadAdapter(), new VF_Product($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(), $this->getVehicleFinder()));
         $product->setId($productId);
         $tireSize = $this->tireSize($row);
         $product->setTireSize($tireSize);

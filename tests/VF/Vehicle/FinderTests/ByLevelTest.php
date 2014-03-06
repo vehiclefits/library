@@ -12,7 +12,7 @@ class VF_Vehicle_FinderTests_ByLevelTest extends VF_Vehicle_FinderTests_TestCase
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testFindByMake()

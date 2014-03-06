@@ -4,13 +4,14 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Note_Catalog_Product
+class VF_Note_Catalog_Product extends VF_Base
 {
     /** @var Elite_Vaf_Model_Catalog_Product */
     protected $wrappedProduct;
 
-    function __construct(VF_Product $productToWrap)
+    function __construct(VF_Schema $schema, Zend_Db_Adapter_Abstract $adapter, Zend_Config $config, VF_Product $productToWrap)
     {
+        parent::__construct($schema, $adapter, $config);
         $this->wrappedProduct = $productToWrap;
     }
 
@@ -43,7 +44,7 @@ class VF_Note_Catalog_Product
 
     function noteFinder()
     {
-        return new VF_Note_Finder;
+        return new VF_Note_Finder($this->getReadAdapter());
     }
 
     function __call($methodName, $arguments)

@@ -8,7 +8,7 @@ class VF_Level_FinderTests_FindTest extends VF_TestCase
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldLoadMakeId()
@@ -67,8 +67,8 @@ class VF_Level_FinderTests_FindTest extends VF_TestCase
     {
         $vehicle1 = $this->createMMY();
         $vehicle2 = $this->createMMY();
-        $model_reloaded = new VF_Level('model', $vehicle1->getValue('model'));
-        $model_reloaded2 = new VF_Level('model', $vehicle2->getValue('model'));
+        $model_reloaded = $this->vfLevel('model', $vehicle1->getValue('model'));
+        $model_reloaded2 = $this->vfLevel('model', $vehicle2->getValue('model'));
         $this->assertEquals($vehicle1->getValue('model'), $model_reloaded->getId());
         $this->assertEquals($vehicle2->getValue('model'), $model_reloaded2->getId(), 'should load multiple model');
     }
@@ -77,8 +77,8 @@ class VF_Level_FinderTests_FindTest extends VF_TestCase
     {
         $vehicle1 = $this->createMMY();
         $vehicle2 = $this->createMMY();
-        $year_reloaded = new VF_Level('year', $vehicle1->getValue('year'));
-        $year_reloaded2 = new VF_Level('year', $vehicle2->getValue('year'));
+        $year_reloaded = $this->vfLevel('year', $vehicle1->getValue('year'));
+        $year_reloaded2 = $this->vfLevel('year', $vehicle2->getValue('year'));
         $this->assertEquals($vehicle1->getValue('year'), $year_reloaded->getId());
         $this->assertEquals($vehicle2->getValue('year'), $year_reloaded2->getId(), 'should load multiple year');
     }

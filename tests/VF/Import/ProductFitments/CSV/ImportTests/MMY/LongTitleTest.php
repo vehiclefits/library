@@ -8,7 +8,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_LongTitleTest extends VF_Imp
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'sku, make, model, year
 sku, honda, 7.3L V8 Powerstroke Diesel W Dual Alternator Top Alternator, 2000';
         $this->insertProduct(self::SKU);

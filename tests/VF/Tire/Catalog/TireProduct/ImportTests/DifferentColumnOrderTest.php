@@ -26,7 +26,7 @@ class VF_Tire_Catalog_TireProduct_ImportTests_DifferentColumnOrderTest extends V
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = '"sku","diameter","section_width","aspect_ratio"
 "sku","16","205","55"';
         $this->csvFile = TEMP_PATH . '/product-tire-sizes.csv';
@@ -39,7 +39,7 @@ class VF_Tire_Catalog_TireProduct_ImportTests_DifferentColumnOrderTest extends V
         $importer = $this->importer($this->csvFile);
         $importer->import();
         $product = $this->getVFProductForSku(self::SKU);
-        $product = new VF_Tire_Catalog_TireProduct($product);
+        $product = $this->vfTireCatalogProduct($product);
         $tireSize = $product->getTireSize();
         $this->assertEquals(16, $tireSize->diameter(), 'should set diameter');
     }
@@ -49,7 +49,7 @@ class VF_Tire_Catalog_TireProduct_ImportTests_DifferentColumnOrderTest extends V
         $importer = $this->importer($this->csvFile);
         $importer->import();
         $product = $this->getVFProductForSku(self::SKU);
-        $product = new VF_Tire_Catalog_TireProduct($product);
+        $product = $this->vfTireCatalogProduct($product);
         $tireSize = $product->getTireSize();
         $this->assertEquals(205, $tireSize->sectionWidth(), 'should set section width');
     }
@@ -59,7 +59,7 @@ class VF_Tire_Catalog_TireProduct_ImportTests_DifferentColumnOrderTest extends V
         $importer = $this->importer($this->csvFile);
         $importer->import();
         $product = $this->getVFProductForSku(self::SKU);
-        $product = new VF_Tire_Catalog_TireProduct($product);
+        $product = $this->vfTireCatalogProduct($product);
         $tireSize = $product->getTireSize();
         $this->assertEquals(55, $tireSize->aspectRatio(), 'should set aspect ratio');
     }

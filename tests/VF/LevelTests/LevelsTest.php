@@ -9,48 +9,48 @@ class VF_LevelTests_LevelsTest extends VF_TestCase
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testGetType()
     {
-        $entity = new VF_Level('make');
+        $entity = $this->vfLevel('make');
         $this->assertSame(self::ENTITY_TYPE_MAKE, $entity->getType());
     }
 
     function testgetNextLevelMake()
     {
-        $entity = new VF_Level('make');
+        $entity = $this->vfLevel('make');
         $this->assertEquals(self::ENTITY_TYPE_MODEL, $entity->getNextLevel(), 'getNextLevel should return "model" for a entity of type "make"');
     }
 
     function testgetNextLevelModel()
     {
-        $entity = new VF_Level('model');
+        $entity = $this->vfLevel('model');
         $this->assertEquals(self::ENTITY_TYPE_YEAR, $entity->getNextLevel(), 'getNextLevel should return "year" for a entity of type "model"');
     }
 
     function testgetNextLevelYear()
     {
-        $entity = new VF_Level('year');
+        $entity = $this->vfLevel('year');
         $this->assertEquals('', $entity->getNextLevel(), 'getNextLevel should return emtpy string if called on a leaf level');
     }
 
     function testgetPrevLevelMake()
     {
-        $entity = new VF_Level('make');
+        $entity = $this->vfLevel('make');
         $this->assertEquals('', $entity->getPrevLevel(), 'getPrevLevel should return emtpy string if called on a root level');
     }
 
     function testgetPrevLevelModel()
     {
-        $entity = new VF_Level('model');
+        $entity = $this->vfLevel('model');
         $this->assertEquals(self::ENTITY_TYPE_MAKE, $entity->getPrevLevel(), 'getPrevLevel should return "make" for a entity of type "model"');
     }
 
     function testgetPrevLevelYear()
     {
-        $entity = new VF_Level('year');
+        $entity = $this->vfLevel('year');
         $this->assertEquals(self::ENTITY_TYPE_MODEL, $entity->getPrevLevel(), 'getPrevLevel should return "model" for a entity of type "year"');
     }
 }

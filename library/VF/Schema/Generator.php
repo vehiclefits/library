@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Schema_Generator
+class VF_Schema_Generator extends VF_Db
 {
     public $levels = array();
     public $level_options = array();
@@ -12,11 +12,6 @@ class VF_Schema_Generator
 
     const NEWLINE = "\n";
     const VERSION = 26;
-
-    function __construct()
-    {
-        $this->db = new VF_Db;
-    }
 
     function execute($levels, $showProgress = false, $id = 1)
     {
@@ -60,26 +55,26 @@ class VF_Schema_Generator
         }
         $return .= $this->createSchemaTable();
         $return .= $this->createVersionTable();
-        $generator = new VF_Wheel_Schema_Generator();
+        $generator = new VF_Wheel_Schema_Generator($this->getReadAdapter());
         $return .= $generator->generator($levels);
-        $generator = new VF_Wheeladapter_Schema_Generator();
+        $generator = new VF_Wheeladapter_Schema_Generator($this->getReadAdapter());
         $return .= $generator->generator($levels);
-        $generator = new VF_Tire_Schema_Generator();
+        $generator = new VF_Tire_Schema_Generator($this->getReadAdapter());
         $return .= $generator->generator($levels);
         if (file_exists(ELITE_PATH . '/Vafpaint')) {
-            $generator = new Elite_Vafpaint_Model_Schema_Generator();
+            $generator = new Elite_Vafpaint_Model_Schema_Generator($this->getReadAdapter());
             $return .= $generator->generator($levels);
         }
-        $generator = new VF_Note_SchemaGenerator();
+        $generator = new VF_Note_SchemaGenerator($this->getReadAdapter());
         $return .= $generator->generator($levels);
-        $generator = new VF_Import_Schema_Generator();
+        $generator = new VF_Import_Schema_Generator($this->getReadAdapter());
         $return .= $generator->generator($levels);
         if (file_exists(ELITE_PATH . '/Vafgarage')) {
-            $generator = new Elite_Vafgarage_Model_Schema_Generator();
+            $generator = new Elite_Vafgarage_Model_Schema_Generator($this->getReadAdapter());
             $return .= $generator->generator($levels);
         }
         if (file_exists(ELITE_PATH . '/Vafdiagram')) {
-            $generator = new Elite_Vafdiagram_Model_Schema_Generator();
+            $generator = new Elite_Vafdiagram_Model_Schema_Generator($this->getReadAdapter());
             $return .= $generator->generator($levels);
         }
         return $return;
@@ -322,17 +317,6 @@ class VF_Schema_Generator
             return '';
         }
         return (string)Mage::getConfig()->getTablePrefix();
-    }
-
-    function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
     }
 
     function id()

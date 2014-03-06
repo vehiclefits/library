@@ -15,7 +15,7 @@ honda, accord, 2001';
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->product_id = $this->insertProduct('sku');
     }
 
@@ -24,7 +24,7 @@ honda, accord, 2001';
         $this->importVehiclesList($this->vehiclesList);
         $this->mappingsImport('sku, make, model, year
 sku, honda, {{all}}, 2000');
-        $product = new VF_Product();
+        $product = $this->vfProduct();
         $product->setId($this->product_id);
         $fits = $product->getFits();
         $this->assertEquals(2, count($fits), 'should blow out options');
@@ -37,7 +37,7 @@ sku, honda, {{all}}, 2000');
         $this->importVehiclesList($this->vehiclesList);
         $this->mappingsImport('sku, make, model, year
 sku, honda, {{all}}, {{all}}');
-        $product = new VF_Product();
+        $product = $this->vfProduct();
         $product->setId($this->product_id);
         $fits = $product->getFits();
         $this->assertEquals(3, count($fits), 'should blow out options');

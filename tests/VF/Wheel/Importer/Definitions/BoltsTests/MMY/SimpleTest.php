@@ -24,7 +24,7 @@ class VF_Wheel_Importer_Definitions_BoltsTests_MMY_SimpleTest extends VF_Wheel_I
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldImportLugCount()

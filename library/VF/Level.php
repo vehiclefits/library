@@ -4,27 +4,30 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Level implements VF_Configurable
+class VF_Level extends VF_Base implements VF_Configurable
 {
 
     protected $id;
     protected $title;
     protected $type;
     /** @var VF_Level_Finder */
-    protected $finder;
+    protected $levelFinder;
     /** @var VF_Schema */
     protected $schema;
+    /** @var Zend_Db_Adapter_Abstract */
+    protected $readAdapter;
     /** @var Zend_Config */
     protected $config;
 
-    function __construct($type, $id = 0, $schema = null)
+    function __construct($type, $id = 0, VF_Schema $schema, Zend_Db_Adapter_Abstract $adapter, VF_Config $config, VF_Level_Finder $levelFinder)
     {
-        $this->schema = $schema ? $schema : new VF_Schema;
+        parent::__construct($schema, $adapter, $config);
+        $this->type = $type;
+        $this->id = $id;
+        $this->levelFinder = $levelFinder;
         if ($id && !in_array($type, $this->getSchema()->getLevels())) {
             throw new VF_Level_Exception_InvalidLevel('[' . $type . '] is an invalid level');
         }
-        $this->type = $type;
-        $this->id = $id;
     }
 
     function identityMap()
@@ -32,27 +35,15 @@ class VF_Level implements VF_Configurable
         return VF_Level_IdentityMap::getInstance();
     }
 
-    function getConfig()
-    {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
-        return $this->config;
-    }
-
     function setConfig(Zend_Config $config)
     {
-        $this->config = $config;
+        throw new Exception("Do not use this. Use merge instead in Container.");
     }
 
     /** @return VF_Level_Finder|VF_Level_Finder_Selector */
-    function getFinder()
+    function getLevelFinder()
     {
-        if (!($this->finder instanceof VF_Level_Finder)) {
-            $this->finder = new VF_Level_Finder($this->getSchema());
-        }
-        $this->finder->setConfig($this->getConfig());
-        return $this->finder;
+        return $this->levelFinder;
     }
 
     function getId()
@@ -97,22 +88,13 @@ class VF_Level implements VF_Configurable
 
     function createEntity($level, $id = 0)
     {
-        return new VF_Level($level, $id);
+        return new VF_Level($level, $id, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+        ), $this->getLevelFinder());
     }
 
     function getType()
     {
         return $this->type;
-    }
-
-    function getChildCount()
-    {
-        return $this->getFinder()->getChildCount($this);
-    }
-
-    function getChildren()
-    {
-        return $this->getFinder()->getChildren($this);
     }
 
     /**
@@ -154,11 +136,6 @@ class VF_Level implements VF_Configurable
         return $levelId;
     }
 
-    function vehicleFinder()
-    {
-        return new VF_Vehicle_Finder($this->getSchema());
-    }
-
     function requestedIdCorrespondsToExistingRecord($requestedSaveId)
     {
         $select = $this->getReadAdapter()->select()
@@ -170,7 +147,7 @@ class VF_Level implements VF_Configurable
 
     function listAll($parent_id = 0)
     {
-        return $this->getFinder()->listAll($this, $parent_id);
+        return $this->getLevelFinder()->listAll($this, $parent_id);
     }
 
     function getSortOrder()
@@ -183,12 +160,12 @@ class VF_Level implements VF_Configurable
 
     function listInUse($parents = array(), $product_id = 0)
     {
-        return $this->getFinder()->listInUse($this, $parents, $product_id);
+        return $this->getLevelFinder()->listInUse($this, $parents, $product_id);
     }
 
     function listInUseByTitle($parents = array(), $product_id = 0)
     {
-        return $this->getFinder()->listInUseByTitle($this, $parents, $product_id);
+        return $this->getLevelFinder()->listInUseByTitle($this, $parents, $product_id);
     }
 
     function getTable()
@@ -214,28 +191,11 @@ class VF_Level implements VF_Configurable
     /** @return integer ID */
     function findEntityIdByTitle($parent_id = 0)
     {
-        return $this->getFinder()->findEntityIdByTitle($this->getType(), $this->getTitle(), $parent_id);
-    }
-
-    function getSchema()
-    {
-        return $this->schema;
+        return $this->getLevelFinder()->findEntityIdByTitle($this->getType(), $this->getTitle(), $parent_id);
     }
 
     function __toString()
     {
         return $this->getTitle();
-    }
-
-    /** @return Zend_Db_Statement_Interface */
-    function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
     }
 }

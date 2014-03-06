@@ -20,13 +20,14 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Wheel_Vehicle
+class VF_Wheel_Vehicle extends VF_Db
 {
     /** @var VF_Vehicle */
     protected $wrappedVehicle;
 
-    function __construct(VF_Vehicle $vehicle)
+    function __construct(Zend_Db_Adapter_Abstract $adapter, VF_Vehicle $vehicle)
     {
+        parent::__construct($adapter);
         $this->wrappedVehicle = $vehicle;
     }
 
@@ -59,17 +60,5 @@ class VF_Wheel_Vehicle
             (int)$this->wrappedVehicle->getId()
         ));
         return $r->fetchObject();
-    }
-
-    /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
     }
 }

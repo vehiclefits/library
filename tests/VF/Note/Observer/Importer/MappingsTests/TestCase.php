@@ -10,7 +10,10 @@ abstract class VF_Note_Observer_Importer_MappingsTests_TestCase extends VF_Impor
     {
         $file = TEMP_PATH . '/mappings.csv';
         file_put_contents($file, $stringData);
-        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass($file);
+        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass($file, $this->getServiceContainer()
+            ->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()
+            ->getConfigClass(), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()
+            ->getVehicleFinderClass());
         $importer->import();
     }
 }

@@ -24,7 +24,7 @@ class VF_Tire_Importer_Definitions_TireSizeTests_MMY_YearRangeTest extends VF_Ti
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testNoVehicle()

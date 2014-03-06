@@ -4,19 +4,20 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Vehicle_Finder implements VF_Configurable
+class VF_Vehicle_Finder extends VF_Base implements VF_Configurable
 {
-
-    protected $schema;
-    /** @var Zend_Config */
-    protected $config;
 
     const INCLUDE_PARTIALS = true;
     static $IDENTITY_MAP_FINDBYLEVEL = array();
 
-    function __construct(VF_Schema $schema)
-    {
-        $this->schema = $schema;
+    public function __construct(
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $adapter,
+        Zend_Config $config,
+        VF_Level_Finder $levelFinder
+    ) {
+        parent::__construct($schema, $adapter, $config);
+        $this->levelFinder = $levelFinder;
     }
 
     /**
@@ -46,7 +47,11 @@ class VF_Vehicle_Finder implements VF_Configurable
         }
         $return = array();
         while ($row = $r->fetchObject()) {
-            array_push($return, new VF_Vehicle($this->schema, $row->id, $row));
+            array_push(
+                $return,
+                new VF_Vehicle($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(
+                ), $this, $row->id, $row)
+            );
         }
         return $return;
     }
@@ -77,7 +82,8 @@ class VF_Vehicle_Finder implements VF_Configurable
         if (!is_object($row)) {
             throw new Exception('No such definition with id [' . $id . ']');
         }
-        $vehicle = new VF_Vehicle($this->schema, $id, $row);
+        $vehicle = new VF_Vehicle($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+        ), $this->getLevelFinder(), $this, $id, $row);
         $identityMap->add($vehicle);
         return $vehicle;
     }
@@ -190,7 +196,8 @@ class VF_Vehicle_Finder implements VF_Configurable
                 unset($row->$levelToRemove);
                 unset($row->{$levelToRemove . '_id'});
             }
-            $return[] = new VF_Vehicle($this->schema, $row->id, $row);
+            $return[] = new VF_Vehicle($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+            ), $this->getLevelFinder(), $this, $row->id, $row);
         }
         return $return;
     }
@@ -229,7 +236,7 @@ class VF_Vehicle_Finder implements VF_Configurable
         $result = $this->query($select)->fetchAll(Zend_Db::FETCH_ASSOC);
         $return = array();
         foreach ($result as $row) {
-            $return[] = new VF_Vehicle($this->schema, 0, $row, false, $row);
+            $return[] = new VF_Vehicle($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(), $this, 0, $row, false, $row);
         }
         return $return;
     }
@@ -282,7 +289,8 @@ class VF_Vehicle_Finder implements VF_Configurable
                         $row->{$level . '_id'} = 0;
                         $row->{$level} = '';
                     }
-                    $vehicle = new VF_Vehicle($this->schema, $row->id, $row);
+                    $vehicle = new VF_Vehicle($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+                    ), $this->getLevelFinder(), $this, $row->id, $row);
                     return array($vehicle);
                 }
                 if ((!isset($levelIds[$level]) || !$levelIds[$level]) && $mode) {
@@ -296,7 +304,8 @@ class VF_Vehicle_Finder implements VF_Configurable
                     continue;
                 }
             }
-            $vehicle = new VF_Vehicle($this->schema, $row->id, $row);
+            $vehicle = new VF_Vehicle($this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+            ), $this->getLevelFinder(), $this, $row->id, $row);
             array_push($return, $vehicle);
         }
         return $return;
@@ -356,19 +365,6 @@ class VF_Vehicle_Finder implements VF_Configurable
         return 0 != count($this->findByLevels($levelTitles));
     }
 
-    function getConfig()
-    {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
-        return $this->config;
-    }
-
-    function setConfig(Zend_Config $config)
-    {
-        $this->config = $config;
-    }
-
     function getColumns()
     {
         $columns = array();
@@ -390,18 +386,6 @@ class VF_Vehicle_Finder implements VF_Configurable
         }
     }
 
-    /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
-
     protected function cols($stopLevel = false)
     {
         $cols = array();
@@ -421,7 +405,7 @@ class VF_Vehicle_Finder implements VF_Configurable
 
     function select()
     {
-        return new VF_Select($this->getReadAdapter());
+        return new VF_Select($this->getReadAdapter(), $this->schema);
     }
 
     function checkForInvalidLevels($levels)
@@ -487,5 +471,13 @@ class VF_Vehicle_Finder implements VF_Configurable
             $levelIds['year_end'] = $year_end;
         }
         return $levelIds;
+    }
+
+    /**
+     * @return VF_Level_Finder|VF_Level_Finder_Selector
+     */
+    protected function getLevelFinder()
+    {
+        return $this->levelFinder;
     }
 }

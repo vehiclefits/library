@@ -15,9 +15,13 @@ class VF_Schema implements VF_Configurable
 
     protected $id;
 
-    function __construct($id = 1)
+    /** @var Zend_Db_Adapter_Abstract */
+    protected $read_adapter;
+
+    function __construct($id = 1, Zend_Db_Adapter_Abstract $read_adapter, Zend_Config $config)
     {
         $this->id = $id;
+        $this->read_adapter = $read_adapter;
     }
 
     static function create($levels)
@@ -45,9 +49,6 @@ class VF_Schema implements VF_Configurable
 
     function getConfig()
     {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
         return $this->config;
     }
 
@@ -280,7 +281,7 @@ class VF_Schema implements VF_Configurable
     /** @return Zend_Db_Adapter_Abstract */
     function getReadAdapter()
     {
-        return VF_Singleton::getInstance()->getReadAdapter();
+        return $this->read_adapter;
     }
 
     static function reset()

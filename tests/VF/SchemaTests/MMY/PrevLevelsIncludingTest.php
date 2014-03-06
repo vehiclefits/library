@@ -8,24 +8,24 @@ class VF_SchemaTests_MMY_PrevLevelsIncludingTest extends VF_TestCase
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testPrevLevelsIncludingMake()
     {
-        $schema = VF_Singleton::getInstance()->schema();
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals(array('make'), $schema->getPrevLevelsIncluding('make'));
     }
 
     function testPrevLevelsIncludingsModel()
     {
-        $schema = VF_Singleton::getInstance()->schema();
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals(array('make', 'model'), $schema->getPrevLevelsIncluding('model'));
     }
 
     function testPrevLevelssIncludingYear()
     {
-        $schema = VF_Singleton::getInstance()->schema();
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals(array('make', 'model', 'year'), $schema->getPrevLevelsIncluding('year'));
     }
 }

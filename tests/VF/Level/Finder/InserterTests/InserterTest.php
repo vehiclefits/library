@@ -26,7 +26,7 @@ class VF_Level_Finder_InserterTests_InserterTest extends VF_TestCase
 
     function testSaveLevelWithParent()
     {
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $model->setTitle(self::ENTITY_TITLE);
         $model->save(self::PARENT_ID);
         $model = $this->findEntityById($model->getId(), $model->getType(), self::PARENT_ID);
@@ -35,7 +35,7 @@ class VF_Level_Finder_InserterTests_InserterTest extends VF_TestCase
 
     function testSaveSetsMakeId()
     {
-        $make = new VF_Level('make');
+        $make = $this->vfLevel('make');
         $make->setTitle(self::ENTITY_TITLE);
         $make->save();
         $this->assertNotEquals(0, $make->getId(), 'saved entity should have an id value');
@@ -43,7 +43,7 @@ class VF_Level_Finder_InserterTests_InserterTest extends VF_TestCase
 
     function testSaveSetsMakeId2()
     {
-        $make = new VF_Level('make');
+        $make = $this->vfLevel('make');
         $make->setTitle(self::ENTITY_TITLE);
         $make->save(array());
         $this->assertNotEquals(0, $make->getId(), 'saved entity should have an id value');
@@ -51,7 +51,7 @@ class VF_Level_Finder_InserterTests_InserterTest extends VF_TestCase
 
     function testSaveSetsModelId()
     {
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $model->setTitle(self::ENTITY_TITLE);
         $model->save(self::PARENT_ID);
         $model = $this->findEntityById($model->getId(), $model->getType(), self::PARENT_ID);
@@ -60,7 +60,7 @@ class VF_Level_Finder_InserterTests_InserterTest extends VF_TestCase
 
     function testSaveSetsModelId2()
     {
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $model->setTitle(self::ENTITY_TITLE);
         $model->save(array('make' => self::PARENT_ID));
         $model = $this->findEntityById($model->getId(), $model->getType(), self::PARENT_ID);
@@ -70,7 +70,7 @@ class VF_Level_Finder_InserterTests_InserterTest extends VF_TestCase
     function testSaveIsRepeatable()
     {
         $vehicle = $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => 2000));
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $model->setTitle('Civic');
         $model->save($vehicle->getValue('make'));
         $this->assertEquals($vehicle->getValue('model'), $model->getId(), 'saving multiple times should keep the same id');
@@ -78,7 +78,7 @@ class VF_Level_Finder_InserterTests_InserterTest extends VF_TestCase
 
     function testSaveRootLevel()
     {
-        $make = new VF_Level('make');
+        $make = $this->vfLevel('make');
         $make->setTitle(self::ENTITY_TITLE);
         $make = $this->saveAndReload($make);
         $this->assertNotEquals(0, $make->getId(), 'saved entity should have an id value');

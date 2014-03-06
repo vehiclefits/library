@@ -20,12 +20,8 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_AjaxTests_FilterByProductTest extends VF_TestCase
+class VF_AjaxTests_FilterByProductTest extends VF_AjaxTests_AjaxTestCase
 {
-    function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
     function testShouldFilterModelByProduct()
     {
@@ -39,23 +35,4 @@ class VF_AjaxTests_FilterByProductTest extends VF_TestCase
         $this->assertEquals('<option value="' . $vehicle1->getLevel('model')->getTitle() . '">Civic</option>', $this->execute(), 'should list model for correct product only');
     }
 
-    function execute()
-    {
-        ob_start();
-        $_GET['front'] = 1;
-        $this->getAjax()->execute($this->getSchema(), false);
-        return ob_get_clean();
-    }
-
-    /** @return VF_Ajax */
-    function getAjax()
-    {
-        return new VF_Ajax();
-    }
-
-    /** @return VF_Schema */
-    function getSchema()
-    {
-        return new VF_Schema();
-    }
 }

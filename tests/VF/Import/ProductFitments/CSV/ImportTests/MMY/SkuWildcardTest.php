@@ -8,7 +8,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_SkuWildcardTest extends VF_I
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'sku, make, model, year
 sku*, honda, civic, 2000';
         $this->insertProduct('sku1');
@@ -55,9 +55,9 @@ foo*, honda, civic, 2000')
             ->setProductSkuField('reference')
             ->setProductIdField('id_product')
             ->import();
-        $product1 = new VF_Product;
+        $product1 = $this->vfProduct();
         $product1->setId($productID1);
-        $product2 = new VF_Product;
+        $product2 = $this->vfProduct();
         $product2->setId($productID2);
         $fitments = $product1->getFitModels();
         $this->assertEquals('honda civic 2000', $fitments[0]->__toString(), 'should add fitment to product');
@@ -67,6 +67,8 @@ foo*, honda, civic, 2000')
 
     function mappingsImporterFromFile($csvFile)
     {
-        return new VF_Import_ProductFitments_CSV_Import($csvFile);
+        return new VF_Import_ProductFitments_CSV_Import($csvFile, $this->getServiceContainer()->getSchemaClass(
+            ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+        ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
     }
 }

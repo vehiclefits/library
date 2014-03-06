@@ -1,59 +1,66 @@
 <?php
+
 /**
  * Vehicle Fits (http://www.vehiclefits.com for more information.)
+ *
  * @copyright  Copyright (c) Vehicle Fits, llc
+ * @author     Kyle Cannon <kyle.d.cannon@gmail.com>
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_SingletonTest_URLsTest extends VF_TestCase
+class VF_ConfigTests_UrlTest extends VF_ServiceContainer_TestCase
 {
+
     /**
      * Should throw exception if trying to get process URL before one is set
+     *
      * @expectedException Exception
      */
     function testShouldThrowExceptionIfTryToGetProcessURLBeforeOneIsSet()
     {
-        $singleton = new VF_Singleton();
-        $singleton->processUrl();
+        $this->getServiceContainer()->getConfigClass()->processUrl();
     }
 
     function testShouldSetProcessURL()
     {
-        $singleton = new VF_Singleton();
-        $singleton->setProcessURL('foo');
-        $this->assertEquals('foo', $singleton->processUrl(), 'should set process URL');
+        $config = $this->getServiceContainer()->getConfigClass();
+        $config->setProcessURL('foo');
+        $this->assertEquals('foo', $config->processUrl(), 'should set process URL');
     }
 
     /**
      * Should throw exception if trying to get base URL before one is set
+     *
      * @expectedException Exception
      */
     function testShouldThrowExceptionIfTryToGetBaseURLBeforeOneIsSet()
     {
-        $singleton = new VF_Singleton();
-        $singleton->getBaseUrl();
+        $config = $this->getServiceContainer()->getConfigClass();
+        $config->getBaseUrl();
     }
 
     function testShouldSetBaseUrl()
     {
-        $singleton = new VF_Singleton();
-        $singleton->setBaseURL('foo');
-        $this->assertEquals('foo', $singleton->getBaseUrl(), 'should set base URL');
+        $config = $this->getServiceContainer()->getConfigClass();
+        $config->setBaseURL('foo');
+        $this->assertEquals('foo', $config->getBaseUrl(), 'should set base URL');
     }
 
     /**
      * Should throw exception if trying to get homepageSearchURL before one is set
+     *
      * @expectedException Exception
      */
     function testShouldThrowExceptionIfTryToGethomepageSearchURLBeforeOneIsSet()
     {
-        $singleton = new VF_Singleton();
-        $singleton->homepageSearchURL();
+        $config = $this->getServiceContainer()->getConfigClass();
+        $config->homepageSearchURL();
     }
 
     function testShouldSetHomepageSearchUrl()
     {
-        $singleton = new VF_Singleton();
-        $singleton->setHomepageSearchURL('foo');
-        $this->assertEquals('foo', $singleton->homepageSearchURL(), 'should set homepage search URL');
+        $config = $this->getServiceContainer()->getConfigClass();
+        $config->setHomepageSearchURL('foo');
+        $this->assertEquals('foo', $config->homepageSearchURL(), 'should set homepage search URL');
     }
-}
+
+} 

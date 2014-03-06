@@ -35,7 +35,7 @@ class VF_Wheel_Importer_Definitions_BoltsTests_MMTYTest extends VF_Wheel_Importe
         $this->import('make,model,trim,year_start,year_end,bolt_pattern
 CHEVROLET,K-2500 PICKUP ,BASE,1988,2000,8X165.1');
         $vehicle = $this->vehicleFinder()->findOneByLevels(array('make' => 'CHEVROLET', 'model' => 'K-2500 PICKUP', 'trim' => 'BASE', 'year' => 1988));
-        $vehicle = new VF_Wheel_Vehicle($vehicle);
+        $vehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
         $this->assertEquals(8, $vehicle->boltPattern()->lug_count, 'should import');
     }
 
@@ -44,7 +44,7 @@ CHEVROLET,K-2500 PICKUP ,BASE,1988,2000,8X165.1');
         $this->import('make,model,trim,year_start,year_end,bolt_pattern
 MAZDA,PROTÉGÉ ,DX,1988,2000,8X165.1');
         $vehicle = $this->vehicleFinder()->findOneByLevels(array('make' => 'MAZDA', 'model' => 'PROTÉGÉ', 'trim' => 'dx', 'year' => 1990));
-        $vehicle = new VF_Wheel_Vehicle($vehicle);
+        $vehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
         $this->assertEquals(8, $vehicle->boltPattern()->lug_count, 'should import');
     }
 
@@ -53,26 +53,26 @@ MAZDA,PROTÉGÉ ,DX,1988,2000,8X165.1');
         $this->import('"make","model","trim","year_start","year_end","bolt pattern"
 "PROTÉGÉ","2.2, 3.0 CL","base","1995","2009","4x114.3"');
         $vehicle = $this->vehicleFinder()->findOneByLevels(array('make' => 'PROTÉGÉ', 'model' => '2.2', 'trim' => 'base', 'year' => 1995));
-        $vehicle = new VF_Wheel_Vehicle($vehicle);
+        $vehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
         $this->assertEquals(4, $vehicle->boltPattern()->lug_count, 'should import');
     }
 
     function testShouldImportUTF8()
     {
-        $importer = new VF_Wheel_Importer_Definitions_Bolts(dirname(__FILE__) . '/bolts_small-utf8.csv');
+        $importer = $this->getVehicleBoltImporter(dirname(__FILE__) . '/bolts_small-utf8.csv', $this->getServiceContainer());
         $importer->import();
         $vehicle = $this->vehicleFinder()->findOneByLevels(array('make' => 'PROTÉGÉ', 'model' => '2.2', 'trim' => 'base', 'year' => 1995));
-        $vehicle = new VF_Wheel_Vehicle($vehicle);
+        $vehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
         $this->assertEquals(4, $vehicle->boltPattern()->lug_count, 'should import');
     }
 
     function testShouldImportANSI()
     {
-        return $this->markTestIncomplete();
-        $importer = new VF_Wheel_Importer_Definitions_Bolts(dirname(__FILE__) . '/bolts_small-ansi.csv');
+        $this->markTestIncomplete();
+        $importer = $this->getVehicleBoltImporter(dirname(__FILE__) . '/bolts_small-ansi.csv', $this->getServiceContainer());
         $importer->import();
         $vehicle = $this->vehicleFinder()->findOneByLevels(array('make' => 'PROTÉGÉ', 'model' => '2.2', 'trim' => 'base', 'year' => 1995));
-        $vehicle = new VF_Wheel_Vehicle($vehicle);
+        $vehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
         $this->assertEquals(4, $vehicle->boltPattern()->lug_count, 'should import');
     }
 
@@ -81,7 +81,7 @@ MAZDA,PROTÉGÉ ,DX,1988,2000,8X165.1');
         $this->csvData = $data;
         $this->csvFile = TEMP_PATH . '/bolt-definitions-range.csv';
         file_put_contents($this->csvFile, $this->csvData);
-        $importer = new VF_Wheel_Importer_Definitions_Bolts($this->csvFile);
+        $importer = $this->getVehicleBoltImporter($this->csvFile, $this->getServiceContainer());
         $importer->import();
     }
 }

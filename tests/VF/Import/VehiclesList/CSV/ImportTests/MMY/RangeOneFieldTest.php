@@ -8,7 +8,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_RangeOneFieldTest extends VF_Im
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testSingleYear()

@@ -4,14 +4,20 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Product
+class VF_Product extends VF_AbstractFinder
 {
     /** @var Collection of VF_Vehicle */
     protected $fits = NULL;
     /** @var VF_Vehicle the customer has associated */
     protected $fit;
+    /** @var VF_Schema */
+    protected $schema;
     /** @var Zend_Config */
     protected $config;
+    /** @var Zend_Db_Adapter_Abstract */
+    protected $readAdapter;
+    /** @var VF_Vehicle_Finder */
+    protected $vehicleFinder;
 
     protected $id;
 
@@ -23,19 +29,6 @@ class VF_Product
     function getId()
     {
         return $this->id;
-    }
-
-    function getConfig()
-    {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
-        return $this->config;
-    }
-
-    function setConfig(Zend_Config $config)
-    {
-        $this->config = $config;
     }
 
     function getFitModels()
@@ -82,34 +75,13 @@ class VF_Product
 
     function getOrderBy()
     {
-        $schema = VF_Singleton::getInstance()->schema();
-        $levels = $schema->getLevels();
+        $levels = $this->schema->getLevels();
         $c = count($levels);
         $sql = '';
         for ($i = 0; $i <= $c - 1; $i++) {
             $sql .= '`' . $levels[$i] . '`' . ($i < $c - 1 ? ',' : '');
         }
         return $sql;
-    }
-
-    public static function getJoins()
-    {
-        $joins = '';
-        $schema = VF_Singleton::getInstance()->schema();
-        $levels = $schema->getLevels();
-        $c = count($levels);
-        for ($i = 0; $i <= $c - 1; $i++) {
-            $joins .= sprintf(
-                '
-                LEFT JOIN
-                    `elite_%1$s`
-                ON
-                    `elite_%1$s`.`id` = `".$this->getSchema()->mappingsTable()."`.`%1$s_id`
-                ',
-                $levels[$i]
-            );
-        }
-        return $joins;
     }
 
     /**
@@ -142,12 +114,13 @@ class VF_Product
 
     function vehicleFinder()
     {
-        return new VF_Vehicle_Finder($this->getSchema());
+        return $this->vehicleFinder;
     }
 
     function insertMapping(VF_Vehicle $vehicle)
     {
-        $mapping = new VF_Mapping($this->getId(), $vehicle);
+        $mapping = new VF_Mapping($this->getId(), $vehicle, $this->getSchema(), $this->getReadAdapter(
+        ), $this->getConfig());
         return $mapping->save();
     }
 
@@ -311,10 +284,9 @@ class VF_Product
 
     function getMappingId(VF_Vehicle $vehicle)
     {
-        $schema = VF_Singleton::getInstance()->schema();
         $select = $this->getReadAdapter()->select()
             ->from($this->getSchema()->mappingsTable(), 'id')
-            ->where($schema->getLeafLevel() . '_id = ?', $vehicle->getLeafValue())
+            ->where($this->schema->getLeafLevel() . '_id = ?', $vehicle->getLeafValue())
             ->where('entity_id = ?', $this->getId());
         return $select->query()->fetchColumn();
     }
@@ -325,15 +297,13 @@ class VF_Product
      * @return Mage_Catalog_Model_Product
      */
     function duplicate()
-    {
-        $schema = VF_Singleton::getInstance()->schema();
-        $vehicleFinder = new VF_Vehicle_Finder($schema);
-        $leaf = $schema->getLeafLevel() . '_id';
+    {   
+        $leaf = $this->schema->getLeafLevel() . '_id';
         $newProduct = parent::duplicate();
         foreach ($this->getFits() as $fit) {
             print_r($fit);
             exit;
-            $vehicle = $vehicleFinder->findByLeaf($fit->$leaf);
+            $vehicle = $this->vehicleFinder->findByLeaf($fit->$leaf);
             $newProduct->insertMapping($vehicle);
         }
         if ($this->isUniversal()) {
@@ -347,21 +317,20 @@ class VF_Product
      */
     function doAddFit($entity)
     {
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema);
         $params = array($entity->getType() => $entity->getTitle());
-        $vehicles = $vehicleFinder->findByLevels($params);
+        $vehicles = $this->vehicleFinder->findByLevels($params);
         return $vehicles;
     }
 
     function createFitFromRow($row)
     {
-        $schema = VF_Singleton::getInstance()->schema();
-        return new VF_Vehicle($schema, $row->id, $row);
+        return new VF_Vehicle($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(
+        ), $this->getVehicleFinder(), $row->id, $row);
     }
 
     function doGetFits($productId)
     {
-        $select = new VF_Select($this->getReadAdapter());
+        $select = new VF_Select($this->getReadAdapter(), $this->getSchema());
         $select->from($this->getSchema()->mappingsTable())
             ->joinAndSelectLevels()
             ->where('entity_id=?', $productId);
@@ -374,22 +343,5 @@ class VF_Product
             $fits[] = $row;
         }
         return $fits;
-    }
-
-    function getSchema()
-    {
-        return VF_Singleton::getInstance()->schema();
-    }
-
-    /** @return Zend_Db_Statement_Interface */
-    function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
     }
 }

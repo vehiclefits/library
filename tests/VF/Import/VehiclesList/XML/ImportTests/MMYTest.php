@@ -21,7 +21,7 @@ class VF_Import_VehiclesList_XML_ImportTests_MMYTest extends VF_Import_VehiclesL
 </vehicles>';
         $this->xmlFile = TEMP_PATH . '/definitions.xml';
         file_put_contents($this->xmlFile, $this->xmlData);
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testDoesntImportBlank()

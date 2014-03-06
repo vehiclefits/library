@@ -24,7 +24,7 @@ class VF_Tire_Catalog_TireProduct_ImportTests_SkuNotFoundTest extends VF_Tire_Ca
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldSkipNotFoundSku()
@@ -39,7 +39,10 @@ class VF_Tire_Catalog_TireProduct_ImportTests_SkuNotFoundTest extends VF_Tire_Ca
     {
         $file = TEMP_PATH . '/vehicle-tire-sizes.csv';
         file_put_contents($file, $stringData);
-        $importer = new VF_Tire_Importer_Definitions_TireSize($file);
+        $importer = new VF_Tire_Importer_Definitions_TireSize($file, $this->getServiceContainer()->getSchemaClass(
+            ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+            ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass(
+            ));
         $importer->import();
     }
 

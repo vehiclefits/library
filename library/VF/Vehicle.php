@@ -20,15 +20,9 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Vehicle implements VF_Configurable
+class VF_Vehicle extends VF_AbstractFinder implements VF_Configurable
 {
     protected $row;
-
-    /** @var VF_Schema */
-    protected $schema;
-
-    /** @var Zend_Config */
-    protected $config;
 
     protected $titles = array();
 
@@ -39,34 +33,39 @@ class VF_Vehicle implements VF_Configurable
 
     protected $lastFlexibleLevel;
 
-    static function create(VF_Schema $schema, $titles = array())
+    static function create(
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $adapter,
+        Zend_Config $config,
+        VF_Level_Finder $levelFinder,
+        VF_Vehicle_Finder $vehicleFinder,
+        $titles = array()
+    )
     {
         $row = new stdClass();
-        return new VF_Vehicle($schema, 0, $row, false, $titles);
+        return new VF_Vehicle($schema, $adapter, $config, $levelFinder, $vehicleFinder, 0, $row, false, $titles);
     }
 
-    function __construct(VF_Schema $schema, $id, $row, $lastFlexibleLevel = false, $titles = array())
+    public function __construct(
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $adapter,
+        Zend_Config $config,
+        VF_Level_Finder $levelFinder,
+        VF_Vehicle_Finder $vehicleFinder,
+        $id,
+        $row,
+        $lastFlexibleLevel = false,
+        $titles = array()
+    )
     {
-        $this->lastFlexibleLevel = $lastFlexibleLevel;
-        $this->schema = $schema;
+        parent::__construct($schema, $adapter, $config, $levelFinder, $vehicleFinder);
+
         $this->row = $row;
+        $this->lastFlexibleLevel = $lastFlexibleLevel;
         if ($id) {
             $this->row->id = $id;
         }
         $this->titles = $titles;
-    }
-
-    function getConfig()
-    {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
-        return $this->config;
-    }
-
-    function setConfig(Zend_Config $config)
-    {
-        $this->config = $config;
     }
 
     function getLevel($level)
@@ -75,13 +74,15 @@ class VF_Vehicle implements VF_Configurable
             return $this->levels[$level];
         }
         if ($this->levelIsOutsideFlexibleSelection($level)) {
-            return new VF_Level($level, 0, $this->schema());
+            return new VF_Level($level, 0, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+            ), $this->getLevelFinder());
         }
         $id = $this->getValue($level);
-        $levelFinder = new VF_Level_Finder($this->schema());
+        $levelFinder = $this->getLevelFinder();
         $object = $levelFinder->find($level, $id);
         if (false == $object) {
-            $object = new VF_Level($level, $id, $this->schema());
+            $object = new VF_Level($level, $id, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+            ), $this->getLevelFinder());
             if (false == $id) {
                 $title = isset($this->titles[$level]) ? $this->titles[$level] : '';
                 $object->setTitle($title);
@@ -211,21 +212,21 @@ class VF_Vehicle implements VF_Configurable
             $bind[str_replace(' ', '_', $level->getType()) . '_id'] = $level->getId();
             $bind[str_replace(' ', '_', $level->getType())] = $level->getTitle();
         }
-        $finder = new VF_Vehicle_Finder($this->schema);
+        $finder = $this->getVehicleFinder();
         if ($finder->vehicleExists($this->toTitleArray())) {
             $vehicle = $finder->findOneByLevels($this->toTitleArray());
             return $this->row->id = $vehicle->getId();
         }
         // doesnt exist, insert it
         $insertAdapter = new VF_Db_Adapter_InsertWrapper($this->getReadAdapter());
-        $insertAdapter->insert($this->schema()->definitionTable(), $bind);
+        $insertAdapter->insert($this->getSchema()->definitionTable(), $bind);
         $this->row->id = $this->getReadAdapter()->lastInsertId();
     }
 
     function unlink()
     {
         $where = $this->whereForUnlink();
-        $result = $this->query('SELECT * FROM ' . $this->schema()->definitionTable() . ' WHERE ' . $where)->fetchAll();
+        $result = $this->query('SELECT * FROM ' . $this->getSchema()->definitionTable() . ' WHERE ' . $where)->fetchAll();
         foreach ($result as $row) {
             $this->unlinkVehicle($row);
         }
@@ -234,13 +235,14 @@ class VF_Vehicle implements VF_Configurable
     function unlinkVehicle($vehicleRow)
     {
         $where = $this->whereForUnlink();
-        $this->query('DELETE FROM ' . $this->schema()->definitionTable() . ' WHERE ' . $where);
-        $this->query('DELETE FROM ' . $this->schema()->mappingsTable() . ' WHERE ' . $where);
+        $this->query('DELETE FROM ' . $this->getSchema()->definitionTable() . ' WHERE ' . $where);
+        $this->query('DELETE FROM ' . $this->getSchema()->mappingsTable() . ' WHERE ' . $where);
         foreach (array_reverse($this->getLevelObjs()) as $level) {
-            $countInUse = $this->query('SELECT count(*) from ' . $this->schema()->definitionTable() . ' WHERE ' . $level->getType() . '_id = ' . $vehicleRow[$level->getType() . '_id'])->fetchColumn();
+            /** @var VF_Level $level */
+            $countInUse = $this->query('SELECT count(*) from ' . $this->getSchema()->definitionTable() . ' WHERE ' . $level->getType() . '_id = ' . $vehicleRow[$level->getType() . '_id'])->fetchColumn();
             if (!$countInUse) {
                 $levelType = $level->getType();
-                $this->query('DELETE FROM ' . $this->schema()->levelTable($level->getType()) . ' WHERE id = ' . $vehicleRow[$levelType . '_id']);
+                $this->query('DELETE FROM ' . $this->getSchema()->levelTable($level->getType()) . ' WHERE id = ' . $vehicleRow[$levelType . '_id']);
                 if ($this->getValue($levelType)) {
                     return;
                 }
@@ -252,29 +254,13 @@ class VF_Vehicle implements VF_Configurable
     {
         $where = array();
         foreach ($this->getLevelObjs() as $level) {
+            /** @var VF_Level $level */
             if ($level->getId()) {
                 $where[] = $this->getReadAdapter()->quoteInto($level->getType() . '_id = ?', $level->getId());
             }
         }
         $where = implode(' && ', $where);
         return $where;
-    }
-
-    protected function getLevels()
-    {
-        return $this->schema->getLevels();
-    }
-
-    /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
     }
 
     protected function levelIsOutsideFlexibleSelection($level)
@@ -291,8 +277,4 @@ class VF_Vehicle implements VF_Configurable
         return isset($this->row->$var) ? $this->row->$var : 0;
     }
 
-    function schema()
-    {
-        return $this->schema;
-    }
 }

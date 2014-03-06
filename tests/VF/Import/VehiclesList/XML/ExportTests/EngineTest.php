@@ -30,7 +30,8 @@ class VF_Import_VehiclesList_XML_ExportTests_EngineTest extends VF_Import_Vehicl
 
     function testImportsMakeTitle()
     {
-        $exporter = new VF_Import_VehiclesList_XML_Export;
+        $exporter = new VF_Import_VehiclesList_XML_Export($this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass());
         $this->assertEquals('<?xml version="1.0"?>
 <vehicles version="1.0">
     <definition>

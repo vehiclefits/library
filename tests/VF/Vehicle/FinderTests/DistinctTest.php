@@ -8,7 +8,7 @@ class VF_Vehicle_FinderTests_DistinctTest extends VF_Vehicle_FinderTests_TestCas
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2000'));
         $this->createVehicle(array('make' => 'Honda', 'model' => 'Civic', 'year' => '2001'));
         $this->createVehicle(array('make' => 'Ford', 'model' => 'F150', 'year' => '2000'));

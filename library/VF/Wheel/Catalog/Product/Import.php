@@ -35,7 +35,8 @@ class VF_Wheel_Catalog_Product_Import extends VF_Import_Abstract
     {
         $sku = $this->getFieldValue('sku', $row);
         $productId = $this->productId($sku);
-        $product = new VF_Wheel_Catalog_Product(new VF_Product());
+        $product = new VF_Wheel_Catalog_Product($this->getReadAdapter(), new VF_Product($this->getSchema(
+        ), $this->getReadAdapter(), $this->getConfig(), $this->getLevelFinder(), $this->getVehicleFinder()));
         $product->setId($productId);
         $boltPattern = $this->wheelSize($row);
         $product->addBoltPattern($boltPattern);

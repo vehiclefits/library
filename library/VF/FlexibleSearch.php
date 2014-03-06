@@ -22,20 +22,12 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
+class VF_FlexibleSearch extends VF_AbstractFinderRequest implements VF_FlexibleSearch_Interface
 {
-
-    protected $schema;
-    protected $request;
-    protected $config;
+    /** @var  VF_Vehicle_Finder */
     protected $vehicleSelection;
     protected $fitmentInSession;
 
-    function __construct(VF_Schema $schema, Zend_Controller_Request_Abstract $request)
-    {
-        $this->schema = $schema;
-        $this->request = $request;
-    }
 
     function getLevel()
     {
@@ -112,27 +104,18 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
 
     function vehicleSelection()
     {
-        if (!$this->vehicleSelection) {
-            return $this->vehicleSelection = $this->doVehicleSelection();
-        }
-        return $this->vehicleSelection;
-
-    }
-
-    function doVehicleSelection()
-    {
         if ($this->shouldClear()) {
-            $this->clearSelection();
+            $this->clearVehicleSelection();
             return array();
         }
-        $vehicleFinder = new VF_Vehicle_Finder($this->schema);
+
         // Multi-tree (admin panel) integration
         if ($this->request->getParam('fit')) {
             $id = $this->getId();
             if (!$id) {
                 return false;
             }
-            return $vehicleFinder->findByLevel($this->getLevel(), $id);
+            return $this->vehicleFinder->findByLevel($this->getLevel(), $id);
         }
         if (!$this->hasGETRequest() && !$this->hasSESSIONRequest()) {
             return array();
@@ -141,9 +124,9 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         try {
             $params = $this->vehicleRequestParams();
             if (isset($params['year_start']) && isset($params['year_end'])) {
-                $vehicles = $vehicleFinder->findByRangeIds($params);
+                $vehicles = $this->vehicleFinder->findByRangeIds($params);
             } else {
-                $vehicles = $vehicleFinder->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
+                $vehicles = $this->vehicleFinder->findByLevelIds($params, VF_Vehicle_Finder::INCLUDE_PARTIALS);
             }
             return $vehicles;
         } catch (VF_Exception_DefinitionNotFound $e) {
@@ -215,9 +198,20 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         return isset($_SESSION[$level]) && (int)$_SESSION[$level];
     }
 
-    function getRequest()
+    function getParamFromSession($param)
     {
-        return $this->request;
+        if (isset($_SESSION[$param]) && $this->shouldStoreInSession()) {
+            return $_SESSION[$param];
+        }
+        return null;
+    }
+
+    function getParam($param)
+    {
+        if (null == $value = $this->getRequest()->getParam($param)) {
+            return $this->getParamFromSession($param);
+        }
+        return $value;
     }
 
     function getRequestValues()
@@ -242,6 +236,10 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         return $values[$this->schema->getLeafLevel()];
     }
 
+    public function doesLevelHaveDefaultLoadingTextAsValue($level) {
+        return $this->getConfig()->getLoadingText() == $this->getRequest()->getParam($level);
+    }
+
     function getValueForSelectedLevel($level)
     {
         // multi tree integration
@@ -251,21 +249,20 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         if (!$this->hasGETRequest() && isset($_SESSION[$level])) {
             return $_SESSION[$level];
         }
-        if (!$this->getRequest()->getParam($level) || 'loading' == $this->getRequest()->getParam($level)) {
+        if (!$this->getRequest()->getParam($level) || $this->doesLevelHaveDefaultLoadingTextAsValue($level)) {
             return false;
         }
         if ($this->isNumericRequest()) {
             return $this->getRequest()->getParam($level);
         } else {
             $levelStringValue = $this->getRequest()->getParam($level);
-            $levelFinder = new VF_Level_Finder();
             $parentLevel = $this->schema()->getPrevLevel($level);
             if ($parentLevel) {
                 $parentValue = $this->getValueForSelectedLevel($parentLevel);
             } else {
                 $parentValue = null;
             }
-            return $levelFinder->findEntityIdByTitle(
+            return $this->getLevelFinder()->findEntityIdByTitle(
                 $level,
                 $levelStringValue,
                 isset($parentValue) ? $parentValue : null
@@ -348,10 +345,15 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
         return $rows;
     }
 
-    function storeFitInSession()
+    function storeInSession()
+    {
+        return $this->storeFitmentInSession();
+    }
+
+    function storeFitmentInSession()
     {
         if (!$this->fitmentInSession) {
-            return $this->fitmentInSession = $this->doStoreFitInSession();
+            return $this->fitmentInSession = $this->doStoreFitmentInSession();
         }
         return $this->fitmentInSession;
     }
@@ -359,11 +361,13 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
     /**
      * store paramaters in the session
      *
+     * @todo Refactor Elite_Vafgarage module section
+     *
      * @return integer fit_id
      */
-    function doStoreFitInSession()
+    function doStoreFitmentInSession()
     {
-        if (!$this->shouldStoreVehicleInSession()) {
+        if (!$this->shouldStoreInSession()) {
             return;
         }
         if ($this->hasGETRequest()) {
@@ -387,12 +391,13 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             }
         }
         if ($this->shouldClear()) {
-            $this->clearSelection();
+            $this->clearVehicleSelection();
+            return;
         }
-        return $this->getValueForSelectedLevel($this->schema()->getLeafLevel());
+        return $this->getValueForSelectedLevel($this->getSchema()->getLeafLevel());
     }
 
-    function shouldStoreVehicleInSession()
+    function shouldStoreInSession()
     {
         if (null == $this->getConfig()) {
             return true;
@@ -414,7 +419,7 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
 
     function getFlexibleDefinition()
     {
-        $this->storeFitInSession();
+        $this->storeFitmentInSession();
         try {
             $level = $this->getLevel();
             $selectedVehicles = $this->vehicleSelection();
@@ -426,50 +431,19 @@ class VF_FlexibleSearch implements VF_FlexibleSearch_Interface
             if (!$level || !$levelObj || !$levelObj->getId()) {
                 return false;
             }
-            $vehicleFinder = new VF_Vehicle_Finder($this->schema());
-            $vehicle = $vehicleFinder->findOneByLevelIds($this->vehicleRequestParams());
+            $vehicle = $this->vehicleFinder->findOneByLevelIds($this->vehicleRequestParams());
         } catch (VF_Exception_DefinitionNotFound $e) {
             return false;
         }
         return $vehicle;
     }
 
-    function clearSelection()
+    function clearVehicleSelection()
     {
-        foreach ($this->schema()->getLevels() as $level) {
+        foreach ($this->getSchema()->getLevels() as $level) {
             if (isset($_SESSION[$level])) {
                 unset($_SESSION[$level]);
             }
         }
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
-
-    /**
-     * @return VF_Schema
-     */
-    function schema()
-    {
-        return VF_Singleton::getInstance()->schema();
-    }
-
-    function setConfig($config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @return Zend_Config
-     */
-    function getConfig()
-    {
-        if (!$this->config) {
-            return VF_Singleton::getInstance()->getConfig();
-        }
-        return $this->config;
     }
 }

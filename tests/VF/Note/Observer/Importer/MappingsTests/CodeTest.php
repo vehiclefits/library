@@ -8,7 +8,7 @@ class VF_Note_Observer_Importer_MappingsTests_CodeTest extends VF_Note_Observer_
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->insertProduct('sku');
     }
 

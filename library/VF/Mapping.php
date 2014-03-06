@@ -21,30 +21,18 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 /** The association between a product ID and a definition */
-class VF_Mapping implements VF_Configurable
+class VF_Mapping extends VF_Base implements VF_Configurable
 {
 
     protected $product_id, $vehicle;
     /** @var Zend_Config */
     protected $config;
 
-    function __construct($product_id, VF_Vehicle $vehicle)
+    function __construct($product_id, VF_Vehicle $vehicle, VF_Schema $schema, Zend_Db_Adapter_Abstract $adapter, Zend_Config $config)
     {
+        parent::__construct($schema, $adapter, $config);
         $this->product_id = $product_id;
         $this->vehicle = $vehicle;
-    }
-
-    function getConfig()
-    {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
-        return $this->config;
-    }
-
-    function setConfig(Zend_Config $config)
-    {
-        $this->config = $config;
     }
 
     function vehicle()
@@ -57,8 +45,7 @@ class VF_Mapping implements VF_Configurable
         if (!(int)$this->product_id) {
             throw new Exception('Trying to insert a mapping with no product ID');
         }
-        $schema = $this->vehicle()->schema();
-        $schema->setConfig($this->getConfig());
+        $schema = $this->getSchema();
         $levels = $schema->getLevels();
         $select = $this->getReadAdapter()->select()
             ->from($schema->mappingsTable(), array('id'));
@@ -98,18 +85,6 @@ class VF_Mapping implements VF_Configurable
         );
         $r = $this->query($query);
         return $this->getReadAdapter()->lastInsertId();
-    }
-
-    /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
     }
 
     function inflect($identifier)

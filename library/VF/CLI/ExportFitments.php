@@ -31,7 +31,7 @@ class VF_CLI_ExportFitments extends VF_CLI
     function main()
     {
         $stream = fopen("php://output", 'w');
-        $exporter = new VF_Import_ProductFitments_CSV_Export();
+        $exporter = new VF_Import_ProductFitments_CSV_Export($this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass());
         $exporter->setProductTable($this->opt->getOption('product-table'));
         $exporter->export($stream);
     }

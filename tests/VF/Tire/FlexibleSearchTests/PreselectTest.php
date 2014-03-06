@@ -25,7 +25,7 @@ class VF_Tire_FlexibleSearchTests extends VF_TestCase
 
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldSelectAspectRatio()

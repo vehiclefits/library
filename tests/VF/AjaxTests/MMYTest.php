@@ -20,12 +20,8 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_AjaxTests_MMYTest extends VF_TestCase
+class VF_AjaxTests_MMYTest extends VF_AjaxTests_AjaxTestCase
 {
-    function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
     function testShouldListMakes()
     {
@@ -114,9 +110,9 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         ob_start();
         $_GET['front'] = 1;
         $config = new Zend_Config(array('search' => array('showAllOptions' => 'true')));
-        $ajax = new VF_Ajax;
+        $ajax = $this->getAjax();
         $ajax->setConfig($config);
-        $ajax->execute($this->getSchema());
+        $ajax->execute();
         $actual = ob_get_clean();
         $expected = '<option value="Civic">Civic</option>';
         $this->assertEquals($expected, $actual, 'should list models not in use if config says to');
@@ -147,7 +143,7 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $config = new Zend_Config(array('search' => array('defaultText' => '-All %s-')));
         $ajax->setConfig($config);
         ob_start();
-        $ajax->execute($this->getSchema());
+        $ajax->execute();
         $actual = ob_get_clean();
         $expected = '<option value="0">-All Model-</option><option value="Accord">Accord</option><option value="Civic">Civic</option>';
         $this->assertEquals($expected, $actual, 'should list models for a make');
@@ -167,23 +163,4 @@ class VF_AjaxTests_MMYTest extends VF_TestCase
         $this->assertEquals('<option value="0">-please select-</option><option value="2000">2000</option><option value="2001">2001</option><option value="2002">2002</option>', $this->execute(), 'should list models for a make');
     }
 
-    function execute()
-    {
-        ob_start();
-        $_GET['front'] = 1;
-        $this->getAjax()->execute($this->getSchema());
-        return ob_get_clean();
-    }
-
-    /** @return VF_Ajax */
-    function getAjax()
-    {
-        return new VF_Ajax();
-    }
-
-    /** @return VF_Schema */
-    function getSchema()
-    {
-        return new VF_Schema();
-    }
 }

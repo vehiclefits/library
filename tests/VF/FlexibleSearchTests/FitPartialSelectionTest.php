@@ -6,10 +6,6 @@
  */
 class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
 {
-    protected function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
     function testShouldIgnoreLoadingModel()
     {
@@ -97,15 +93,16 @@ class VF_FlexibleSearchTests_FitPartialSelectionTest extends VF_TestCase
     {
         $vehicle = $this->createMMY();
         $_SESSION = $vehicle->toValueArray();
-        $helper = $this->getHelper(array(), $vehicle->toValueArray());
-        $helper->storeFitInSession();
+        $container1 = $this->getHelper(array(), $vehicle->toValueArray());
+        $container1->storeFitInSession();
         $requestParams = array(
             'make' => $vehicle->getLevel('make')->getId(),
             'model' => 'loading',
             'year' => 'loading'
         );
-        $helper = $this->getHelper(array(), $requestParams);
-        $helper->storeFitInSession();
+        $container2 = $this->getHelperWithNewServiceContainer(array(), $requestParams);
+        $container2->storeFitInSession();
+
         $this->assertEquals($vehicle->getLevel('make')->getId(), $_SESSION['make']);
         $this->assertFalse($_SESSION['model']);
         $this->assertFalse($_SESSION['year']);

@@ -8,9 +8,9 @@ class VF_Note_ExportTest extends VF_TestCase
 {
     function testExport()
     {
-        $finder = new VF_Note_Finder();
+        $finder = $this->noteFinder();
         $noteId = $finder->insert('code1', 'message1');
-        $export = new VF_Note_Export;
+        $export = new VF_Note_Export($this->getServiceContainer()->getReadAdapterClass());
         $csv = $export->export();
         $expected = '"id","code","message"
 "' . $noteId . '","code1","message1"

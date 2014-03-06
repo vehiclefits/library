@@ -36,8 +36,8 @@ class VF_CLI_Schema extends VF_CLI
 
     function __construct()
     {
-        $this->generator = new VF_Schema_Generator();
         parent::__construct();
+        $this->generator = new VF_Schema_Generator($this->getServiceContainer()->getReadAdapterClass());
     }
 
     function main()
@@ -63,11 +63,17 @@ class VF_CLI_Schema extends VF_CLI
             $this->generator->dropExistingTables();
         }
         if ($options['add']) {
-            VF_Schema::create($options['levels']);
+
             $this->notifyUser(self::DONE);
         } else {
             $this->createTheNewTables();
         }
+    }
+
+    protected function createSchema($levels)
+    {
+        $this->generator->dropExistingTables();
+        $this->generator->execute(explode(',', $levels));
     }
 
     protected function isYes($value)

@@ -19,7 +19,7 @@ class VF_Note_Import extends VF_Import_Abstract
     {
         $code = $this->getFieldValue('code', $row);
         $message = $this->getFieldValue('message', $row);
-        $finder = new VF_Note_Finder();
+        $finder = new VF_Note_Finder($this->getReadAdapter());
         $finder->insert($code, $message);
     }
 }

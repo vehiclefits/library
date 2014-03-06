@@ -5,15 +5,29 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Search_Level implements VF_Configurable
+class VF_Search_Level extends VF_AbstractFinderRequest implements VF_Configurable
 {
-    /** @var  Zend_Config */
-    protected $config;
     /** @var  VF_Search_Form */
     protected $searchForm;
     protected $level;
     protected $prevLevel;
     protected $displayBrTag;
+    /** @var \VF_FlexibleSearch|\VF_FlexibleSearch_Interface */
+    protected $flexibleSearch;
+
+
+    public function __construct(
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $adapter,
+        VF_Config $config,
+        VF_Level_Finder $levelFinder,
+        VF_Vehicle_Finder $vehicleFinder,
+        Zend_Controller_Request_Abstract $request,
+        VF_FlexibleSearch_Interface $flexibleSearch
+    ) {
+        parent::__construct($schema, $adapter, $config, $levelFinder, $vehicleFinder, $request);
+        $this->flexibleSearch = $flexibleSearch;
+    }
 
     /**
      * Display a select box, pre-populated with values if its the first, or if there's a prev. selection.
@@ -44,17 +58,17 @@ class VF_Search_Level implements VF_Configurable
     protected function _display()
     {
         ob_start();
-        if ($this->helper()->showLabels()) {
+        if ($this->getConfig()->showLabels()) {
             echo '<label>';
             echo ucfirst($this->level);
             echo ':</label>';
         }
-        $prevLevelsIncluding = $this->schema()->getPrevLevelsIncluding($this->level);
+        $prevLevelsIncluding = $this->getSchema()->getPrevLevelsIncluding($this->level);
         $prevLevelsIncluding = implode(',', $prevLevelsIncluding);
         ?>
         <select name="<?= $this->selectName() ?>"
                 class="<?= $this->selectName() ?>Select {prevLevelsIncluding: '<?= $prevLevelsIncluding ?>'}">
-            <option value="0"><?= $this->__($this->helper()->getDefaultSearchOptionText($this->level)) ?></option>
+            <option value="0"><?= $this->__($this->getConfig()->getDefaultSearchOptionText($this->level)) ?></option>
             <?php
             foreach ($this->getEntities() as $entity) {
                 /** @var VF_Level $entity */
@@ -90,11 +104,6 @@ class VF_Search_Level implements VF_Configurable
         return str_replace(' ', '_', $this->level);
     }
 
-    function schema()
-    {
-        return new VF_Schema();
-    }
-
     /**
      * Check if an entity is the selected one for this 'level'
      *
@@ -107,8 +116,8 @@ class VF_Search_Level implements VF_Configurable
         if ($this->level != $this->leafLevel()) {
             return (bool)($levelObject->getId() == $this->searchForm->getSelected($this->level));
         }
-        VF_Singleton::getInstance()->setRequest($this->searchForm->getRequest());
-        $currentSelection = VF_Singleton::getInstance()->vehicleSelection();
+
+        $currentSelection = $this->getFlexibleSearch()->vehicleSelection();
         if (false === $currentSelection) {
             return false;
         }
@@ -165,7 +174,7 @@ class VF_Search_Level implements VF_Configurable
 
     protected function leafLevel()
     {
-        return $this->schema()->getLeafLevel();
+        return $this->getSchema()->getLeafLevel();
     }
 
     protected function displayBrTag()
@@ -173,7 +182,7 @@ class VF_Search_Level implements VF_Configurable
         if (is_bool($this->displayBrTag)) {
             return $this->displayBrTag;
         }
-        return VF_Singleton::getInstance()->displayBrTag();
+        return $this->getConfig()->displayBrTag();
     }
 
     protected function __($text)
@@ -181,21 +190,12 @@ class VF_Search_Level implements VF_Configurable
         return $this->searchForm->translate($text);
     }
 
-    protected function helper()
+    /**
+     * @return VF_FlexibleSearch_Interface|VF_FlexibleSearch
+     */
+    public function getFlexibleSearch()
     {
-        return VF_Singleton::getInstance();
+        return $this->flexibleSearch;
     }
 
-    function getConfig()
-    {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = $this->helper()->getConfig();
-        }
-        return $this->config;
-    }
-
-    function setConfig(Zend_Config $config)
-    {
-        $this->config = $config;
-    }
 }

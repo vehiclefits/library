@@ -24,8 +24,8 @@ class VF_Wheel_Catalog_ProductTest extends VF_TestCase
 {
     function testCreateNewProduct()
     {
-        $product = new VF_Product;
-        $wheelProduct = new VF_Wheel_Catalog_Product($product);
+        $product = $this->vfProduct();
+        $wheelProduct = new VF_Wheel_Catalog_Product($this->getServiceContainer()->getReadAdapterClass(), $product);
         $this->assertEquals(array(), $wheelProduct->getBoltPatterns(), 'should create new product w/ no bolt patterns');
     }
 
@@ -38,7 +38,7 @@ class VF_Wheel_Catalog_ProductTest extends VF_TestCase
 
     function testWhenAddingBoltShouldAddApplicableVehicleApplications()
     {
-        $wheelVehicle = new VF_Wheel_Vehicle($this->createMMY());
+        $wheelVehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $this->createMMY());
         $wheelVehicle->save();
         $wheelVehicle->addBoltPattern($this->boltPattern('4x114.3'));
         $wheelProduct = $this->newWheelProduct();
@@ -49,7 +49,7 @@ class VF_Wheel_Catalog_ProductTest extends VF_TestCase
 
     function testShouldIncludeOEOffset()
     {
-        $wheelVehicle = new VF_Wheel_Vehicle($this->createMMY());
+        $wheelVehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $this->createMMY());
         $wheelVehicle->save();
         $wheelVehicle->addBoltPattern($this->boltPattern('4x114.3', 15));
         $wheelProduct = $this->newWheelProduct();
@@ -60,7 +60,7 @@ class VF_Wheel_Catalog_ProductTest extends VF_TestCase
 
     function testShouldExcludeOEOffset()
     {
-        $wheelVehicle = new VF_Wheel_Vehicle($this->createMMY());
+        $wheelVehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $this->createMMY());
         $wheelVehicle->save();
         $wheelVehicle->addBoltPattern($this->boltPattern('4x114.3', 15));
         $wheelProduct = $this->newWheelProduct();
@@ -71,7 +71,7 @@ class VF_Wheel_Catalog_ProductTest extends VF_TestCase
 
     function testWhenNoOffset()
     {
-        $wheelVehicle = new VF_Wheel_Vehicle($this->createMMY());
+        $wheelVehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $this->createMMY());
         $wheelVehicle->save();
         $wheelVehicle->addBoltPattern($this->boltPattern('4x114.3', 15));
         $wheelProduct = $this->newWheelProduct();
@@ -115,10 +115,13 @@ class VF_Wheel_Catalog_ProductTest extends VF_TestCase
         $file = TEMP_PATH . '/product-wheel-sizes.csv';
         file_put_contents($file, $data);
         $this->insertProduct('sku');
-        $importer = new VF_Wheel_Catalog_Product_ImportTests_TestSubClass($file);
+        $importer = new VF_Wheel_Catalog_Product_ImportTests_TestSubClass($file, $this->getServiceContainer()
+            ->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()
+            ->getConfigClass(), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()
+            ->getVehicleFinderClass());
         $importer->import();
         $product = $this->getVFProductForSku('sku');
-        $product = new VF_Wheel_Catalog_Product($product);
+        $product = new VF_Wheel_Catalog_Product($this->getServiceContainer()->getReadAdapterClass(), $product);
         $boltPatterns = $product->getBoltPatterns();
         $this->assertEquals(4, $boltPatterns[0]->getLugCount(), 'should set lug_count');
         $this->assertEquals(144.3, $boltPatterns[0]->getDistance(), 'should set bolt distance');
@@ -126,7 +129,7 @@ class VF_Wheel_Catalog_ProductTest extends VF_TestCase
 
     function testShouldAddWhenOffsetFits()
     {
-        $wheelVehicle = new VF_Wheel_Vehicle($this->createMMY());
+        $wheelVehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $this->createMMY());
         $wheelVehicle->save();
         $wheelVehicle->addBoltPattern($this->boltPattern('4x114.3', 38.5));
         $wheelProduct = $this->newWheelProduct();
@@ -137,7 +140,7 @@ class VF_Wheel_Catalog_ProductTest extends VF_TestCase
 
     function testShouldNotAddWhenOffsetDoesntFit()
     {
-        $wheelVehicle = new VF_Wheel_Vehicle($this->createMMY());
+        $wheelVehicle = new VF_Wheel_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $this->createMMY());
         $wheelVehicle->save();
         $wheelVehicle->addBoltPattern($this->boltPattern('4x114.3', 20));
         $wheelProduct = $this->newWheelProduct();

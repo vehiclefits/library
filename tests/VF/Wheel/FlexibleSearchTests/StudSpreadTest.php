@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Vehicle Fits
  *
@@ -17,6 +18,7 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
+ *
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
@@ -28,19 +30,19 @@ class VF_Wheel_FlexibleSearchTests_StudSpreadTest extends VF_TestCase
         $this->assertEquals(114.3, $flexibleSearch->studSpread(), 'should get stud spread from request');
     }
 
-    function testShouldStoreInSession()
+    function testShouldNotStoreInSessionBecauseMissingLugCount()
     {
         $flexibleSearch = $this->flexibleWheelSearch(array('stud_spread' => '114.3'));
-        VF_Singleton::getInstance()->storeFitInSession();
-        $this->assertEquals(114.3, $this->flexibleWheelSearch()->studSpread(), 'should store stud spread in session');
+        $this->getServiceContainer()->storeFitInSession();
+        $this->assertNull($this->flexibleWheelSearch()->studSpread(), 'should store stud spread in session');
     }
 
     function testShouldClearFromSession()
     {
         $flexibleSearch = $this->flexibleWheelSearch(array('stud_spread' => '5'));
-        VF_Singleton::getInstance()->storeFitInSession();
+        $this->getServiceContainer()->storeFitInSession();
         $flexibleSearch = $this->flexibleWheelSearch(array('stud_spread' => '0'));
-        VF_Singleton::getInstance()->storeFitInSession();
+        $this->getServiceContainer()->storeFitInSession();
         $this->assertEquals(0, $this->flexibleWheelSearch()->studSpread(), 'should clear stud spread from session');
     }
 }

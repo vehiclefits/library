@@ -11,7 +11,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_LevelSkuWildCommaTest extend
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->f150 = $this->createMMY('Ford', 'F-150', '2000');
         $this->f250 = $this->createMMY('Ford', 'F-250', '2000');
         $this->foo = $this->createMMY('Ford', 'foo', '2000');

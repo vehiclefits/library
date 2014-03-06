@@ -24,7 +24,7 @@ class VF_Level_Finder_UpdaterTest extends VF_TestCase
 {
     function testSaveLevelWithParent()
     {
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $model->setTitle('Civic');
         $model->save();
         $model = $this->findEntityById($model->getId(), $model->getType());
@@ -36,7 +36,7 @@ class VF_Level_Finder_UpdaterTest extends VF_TestCase
 
     function testSaveRootLevel()
     {
-        $make = new VF_Level('make');
+        $make = $this->vfLevel('make');
         $make->setTitle('Honda');
         $make = $this->saveAndReload($make);
         $make->setTitle('Acura');

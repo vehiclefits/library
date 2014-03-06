@@ -6,10 +6,6 @@
  */
 class VF_VehicleTest extends VF_TestCase
 {
-    function doSetUp()
-    {
-        $this->switchSchema('make,model,year');
-    }
 
     function testSaveParenetheses()
     {

@@ -28,7 +28,7 @@ class VF_Wheel_FlexibleSearchTests_VehicleSearchTest extends VF_TestCase
 
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->vehicle = $this->createMMY();
         $this->vehicle->save();
     }

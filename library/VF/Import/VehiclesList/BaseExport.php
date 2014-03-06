@@ -6,9 +6,21 @@
  */
 class VF_Import_VehiclesList_BaseExport
 {
-    function schema()
+    /** @var VF_Schema */
+    protected $schema;
+    /** @var Zend_Db_Adapter_Abstract */
+    protected $readAdapter;
+
+    /** @todo Refactor to use VF_Base class */
+    public function __construct(VF_Schema $schema, Zend_Db_Adapter_Abstract $readAdapter)
     {
-        return new VF_Schema();
+        $this->schema = $schema;
+        $this->readAdapter = $readAdapter;
+    }
+
+    public function schema()
+    {
+        return $this->schema;
     }
 
     function rowResult()
@@ -34,6 +46,6 @@ class VF_Import_VehiclesList_BaseExport
     /** @return Zend_Db_Adapter_Abstract */
     function getReadAdapter()
     {
-        return VF_Singleton::getInstance()->getReadAdapter();
+        return $this->readAdapter;
     }
 }

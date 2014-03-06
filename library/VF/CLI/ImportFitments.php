@@ -35,7 +35,10 @@ class VF_CLI_ImportFitments extends VF_CLI
             exit;
         }
         $file = $this->lastArgument();
-        $importer = new VF_Import_ProductFitments_CSV_Import($file);
+        $importer = new VF_Import_ProductFitments_CSV_Import($file, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(
+        ), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
+
         $importer->setProductTable($this->opt->getOption('product-table'));
         $importer->import();
     }

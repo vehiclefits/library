@@ -24,7 +24,7 @@ class VF_Tire_Catalog_TireProduct_ImportTests_LogTest extends VF_Tire_Catalog_Ti
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = '"sku","section_width","aspect_ratio","diameter","tire_type"
 "sku","205","55","16","2"';
         $this->csvFile = TEMP_PATH . '/product-tire-sizes.csv';

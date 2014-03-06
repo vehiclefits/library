@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Vehicle Fits
  *
@@ -17,34 +18,37 @@
  * Do not edit or add to this file if you wish to upgrade Vehicle Fits to newer
  * versions in the future. If you wish to customize Vehicle Fits for your
  * needs please refer to http://www.vehiclefits.com for more information.
+ *
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Tire_FlexibleSearch extends VF_FlexibleSearch_Wrapper implements VF_FlexibleSearch_Interface
+class VF_Tire_FlexibleSearch extends VF_FlexibleSearch implements VF_FlexibleSearch_Interface
 {
 
-    protected $config;
+    function storeInSession()
+    {
+        $this->storeTireSizeInSession();
+        return parent::storeInSession();
+    }
 
     function storeTireSizeInSession()
     {
-        if ($this->shouldClear()) {
-            return $this->clear();
+        if ($this->shouldClearTireFromSession()) {
+            $this->clearTireSelectionFromSession();
+            return;
         }
-        $this->clearSelection();
-        $wheelSearch = new VF_Wheel_FlexibleSearch($this);
-        $wheelSearch->clear();
-        $_SESSION['section_width'] = $this->getParam('section_width');
-        $_SESSION['aspect_ratio'] = $this->getParam('aspect_ratio');
-        $_SESSION['diameter'] = $this->getParam('diameter');
-        $_SESSION['tire_type'] = $this->getParam('tire_type');
+        $_SESSION['section_width'] = $this->sectionWidth();
+        $_SESSION['aspect_ratio'] = $this->aspectRatio();
+        $_SESSION['diameter'] = $this->diameter();
+        $_SESSION['tire_type'] = $this->tireType();
     }
 
-    function shouldClear()
+    function shouldClearTireFromSession()
     {
         return 0 == $this->sectionWidth() && 0 == $this->aspectRatio() && 0 == $this->diameter();
     }
 
-    function clear()
+    function clearTireSelectionFromSession()
     {
         unset($_SESSION['section_width']);
         unset($_SESSION['aspect_ratio']);
@@ -55,9 +59,9 @@ class VF_Tire_FlexibleSearch extends VF_FlexibleSearch_Wrapper implements VF_Fle
     function doGetProductIds()
     {
         if ($this->hasNoRequest()) {
-            return $this->wrappedFlexibleSearch->doGetProductIds();
+            return parent::doGetProductIds();
         }
-        $finder = new VF_Tire_Finder();
+        $finder = new VF_Tire_Finder($this->getReadAdapter());
         $productIds = $finder->productIds($this->tireSize(), $this->tireType());
         if (array() == $productIds) {
             return array(0);
@@ -106,31 +110,22 @@ class VF_Tire_FlexibleSearch extends VF_FlexibleSearch_Wrapper implements VF_Fle
 
     function setSizeFromVehicle()
     {
-        if (!is_null($this->getConfig()->tire->populateWhenSelectVehicle) && $this->getConfig()->tire->populateWhenSelectVehicle === '') {
+        if (!is_null($this->getConfig()->tire->populateWhenSelectVehicle)
+            && $this->getConfig()->tire->populateWhenSelectVehicle === ''
+        ) {
             return;
         }
         $vehicles = $this->vehicleSelection();
         $vehicle = $vehicles[0];
-        $select = $this->getReadAdapter()->select()
-            ->from('elite_vehicle_tire', array('section_width', 'diameter', 'aspect_ratio'))
-            ->where('leaf_id = ?', $vehicle->getLeafValue())
-            ->limit(1);
+        $select = $this->getReadAdapter()->select()->from(
+                'elite_vehicle_tire',
+                array('section_width', 'diameter', 'aspect_ratio')
+            )->where('leaf_id = ?', $vehicle->getLeafValue())->limit(1);
         $rs = $select->query()->fetch();
         $_SESSION['section_width'] = $rs['section_width'];
         $_SESSION['diameter'] = $rs['diameter'];
         $_SESSION['aspect_ratio'] = $rs['aspect_ratio'];
     }
 
-    function getConfig()
-    {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
-        return $this->config;
-    }
 
-    function setConfig(Zend_Config $config)
-    {
-        $this->config = $config;
-    }
 }

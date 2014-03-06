@@ -8,7 +8,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_Y2kTest extends VF_Import_TestC
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testYearRange2Digit()

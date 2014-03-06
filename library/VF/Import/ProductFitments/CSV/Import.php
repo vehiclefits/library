@@ -127,15 +127,15 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
     function determineAlreadyExistingFitments()
     {
         $condition = '';
-        foreach ($this->schema()->getLevels() as $level) {
+        foreach ($this->getSchema()->getLevels() as $level) {
             $condition .= 'i.' . $level . '_id = m.' . $level . '_id';
-            if ($this->schema()->getLeafLevel() != $level) {
+            if ($this->getSchema()->getLeafLevel() != $level) {
                 $condition .= ' && ';
             }
         }
         $select = $this->getReadAdapter()->select()
             ->from(array('i' => 'elite_import'), 'count(*)')
-            ->joinLeft(array('m' => $this->schema()->mappingsTable()), $condition, array())
+            ->joinLeft(array('m' => $this->getSchema()->mappingsTable()), $condition, array())
             ->where('i.product_id = m.entity_id');
         $this->skipped_mappings = $this->getReadAdapter()->query($select)->fetchColumn();
     }
@@ -143,13 +143,13 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
     function updateMappingIdsInTempTable()
     {
         $condition = '';
-        foreach ($this->schema()->getLevels() as $level) {
+        foreach ($this->getSchema()->getLevels() as $level) {
             $condition .= 'i.' . $level . '_id = m.' . $level . '_id';
-            if ($this->schema()->getLeafLevel() != $level) {
+            if ($this->getSchema()->getLeafLevel() != $level) {
                 $condition .= ' && ';
             }
         }
-        $this->query('UPDATE elite_import i, ' . $this->schema()->mappingsTable() . ' m
+        $this->query('UPDATE elite_import i, ' . $this->getSchema()->mappingsTable() . ' m
                       SET i.mapping_id = m.id
                       WHERE ' . $condition . ' && i.product_id = m.entity_id');
     }
@@ -256,7 +256,7 @@ class VF_Import_ProductFitments_CSV_Import extends VF_Import_VehiclesList_CSV_Im
 
     function dispatchMappingImportEvent($row)
     {
-        $noteImporter = new VF_Note_Observer_Importer_Mappings;
+        $noteImporter = new VF_Note_Observer_Importer_Mappings($this->getReadAdapter());
         $noteImporter->doImportRow($this->getFieldPositions(), $row);
     }
 

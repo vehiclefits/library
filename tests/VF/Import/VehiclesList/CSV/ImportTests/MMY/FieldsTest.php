@@ -10,7 +10,7 @@ class VF_Import_VehiclesList_CSV_ImportTests_MMY_FieldsTest extends VF_Import_Te
 
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->csvData = 'make, model, year';
     }
 

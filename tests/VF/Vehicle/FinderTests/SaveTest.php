@@ -8,7 +8,7 @@ class VF_Vehicle_FinderTests_SaveTest extends VF_TestCase
 {
     function doSetUp()
     {
-        $schemaGenerator = new VF_Schema_Generator();
+        $schemaGenerator = $this->schemaGenerator();
         $schemaGenerator->dropExistingTables();
         $schemaGenerator->execute(array(
             'year',
@@ -20,7 +20,7 @@ class VF_Vehicle_FinderTests_SaveTest extends VF_TestCase
 
     function doTearDown()
     {
-        $schemaGenerator = new VF_Schema_Generator();
+        $schemaGenerator = $this->schemaGenerator();
         $schemaGenerator->dropExistingTables();
     }
 

@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Note_Finder
+class VF_Note_Finder extends VF_Db
 {
     /** @param integer $id find notes with a given id */
     function find($id = 0)
@@ -140,15 +140,4 @@ class VF_Note_Finder
         $this->query($sql);
     }
 
-    /** @return Zend_Db_Statement_Interface */
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
 }

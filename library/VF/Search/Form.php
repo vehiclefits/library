@@ -20,7 +20,7 @@
  * @copyright  Copyright (c) 2013 Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Search_Form implements VF_Configurable
+class VF_Search_Form extends VF_AbstractFinderRequest implements VF_Configurable
 {
 
     /** @var Zend_Config */
@@ -30,14 +30,25 @@ class VF_Search_Form implements VF_Configurable
 
     protected $template;
 
+    /** @var \VF_FlexibleSearch */
+    protected $flexibleSearch;
+
+    public function __construct(
+        VF_Schema $schema,
+        Zend_Db_Adapter_Abstract $adapter,
+        Zend_Config $config,
+        VF_Level_Finder $levelFinder,
+        VF_Vehicle_Finder $vehicleFinder,
+        Zend_Controller_Request_Abstract $request,
+        VF_FlexibleSearch_Interface $flexibleSearch
+    ) {
+        parent::__construct($schema, $adapter, $config, $levelFinder, $vehicleFinder, $request);
+        $this->flexibleSearch = $flexibleSearch;
+    }
+
     function getProductId()
     {
         return 0;
-    }
-
-    function getRequest()
-    {
-        return VF_Singleton::getInstance()->getRequest();
     }
 
     function getSelected($level)
@@ -55,7 +66,8 @@ class VF_Search_Form implements VF_Configurable
         if ($parentLevel) {
             $parent_id = $this->getSelected($parentLevel);
         }
-        $levelObject = new VF_Level($level);
+        $levelObject = new VF_Level($level, 0, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(
+        ), $this->getLevelFinder());
         if ($this->isNotRootAndHasNoParent($level, $parent_id)) {
             return array();
         }
@@ -87,7 +99,7 @@ class VF_Search_Form implements VF_Configurable
     function getRequestLevels()
     {
         $levels = array();
-        $displayLevels = $this->getLevels();
+        $displayLevels = $this->getSchemaLevels();
         foreach ($displayLevels as $level) {
 
             $val = $this->getFlexibleSearch()->getValueForSelectedLevel($level);
@@ -101,11 +113,6 @@ class VF_Search_Form implements VF_Configurable
     function getSubmitText()
     {
         return $this->translate('Search');
-    }
-
-    function getLevels()
-    {
-        return VF_Singleton::getInstance()->schema()->getLevels();
     }
 
     function showClearButton()
@@ -170,7 +177,7 @@ class VF_Search_Form implements VF_Configurable
 
     function shouldShowMyGarageActive()
     {
-        return VF_Singleton::getInstance()->getConfig()->mygarage->collapseAfterSelection &&
+        return $this->getConfig()->mygarage->collapseAfterSelection &&
         $this->getFlexibleDefinition() !== false &&
         $this->formId() == 'vafForm';
     }
@@ -190,7 +197,7 @@ class VF_Search_Form implements VF_Configurable
      */
     function getFlexibleSearch()
     {
-        return VF_Singleton::getInstance()->flexibleSearch();
+        return $this->flexibleSearch;
     }
 
     function renderCategoryOptions()
@@ -207,13 +214,6 @@ class VF_Search_Form implements VF_Configurable
         <?php
         }
         return ob_get_clean();
-    }
-
-    function getSchema()
-    {
-        $schema = VF_Singleton::getInstance()->schema();
-        $schema->setConfig($this->getConfig());
-        return $schema;
     }
 
     function renderBefore()
@@ -237,19 +237,6 @@ class VF_Search_Form implements VF_Configurable
     function unavailableSelections()
     {
         return $this->getConfig()->search->unavailableSelections;
-    }
-
-    function getConfig()
-    {
-        if (!$this->config instanceof Zend_Config) {
-            $this->config = VF_Singleton::getInstance()->getConfig();
-        }
-        return $this->config;
-    }
-
-    function setConfig(Zend_Config $config)
-    {
-        $this->config = $config;
     }
 
     function url($url)

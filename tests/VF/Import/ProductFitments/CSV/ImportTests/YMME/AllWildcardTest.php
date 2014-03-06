@@ -22,7 +22,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_YMME_AllWildcardTest extends VF_
         // there is no 2001/Ford/F-150 with a 1.8L in this example
         $this->mappingsImport('sku, make, model, year, engine' . "\n" .
         'sku,Ford,F-150,"2000,2001,2002",{{all}}');
-        $product = new VF_Product();
+        $product = $this->vfProduct();
         $product->setId($this->product_id);
         $fits = $product->getFits();
         $this->assertEquals(3, count($fits), 'should not a non-existant vehicle even it is implied');

@@ -26,6 +26,18 @@ class VF_Import_ValueExploder
     protected $input;
     protected $exploderToken = '{{all}}';
     protected $wildCardToken = '*';
+    /** @var VF_Schema */
+    protected $schema;
+    /** @var Zend_Db_Adapter_Abstract */
+    protected $readAdapter;
+    /** @var  VF_Vehicle_Finder */
+    protected $vehicleFinder;
+
+    public function __construct(VF_Schema $schema, Zend_Db_Adapter_Abstract $readAdapter, VF_Vehicle_Finder $vehicleFinder) {
+        $this->schema = $schema;
+        $this->readAdapter = $readAdapter;
+        $this->vehicleFinder = $vehicleFinder;
+    }
 
     function explode($input)
     {
@@ -37,8 +49,8 @@ class VF_Import_ValueExploder
         $this->i = 0;
         $this->replaceAllWithWildcard();
         $result = array();
-        $finder = new VF_Vehicle_Finder($this->getSchema());
-        foreach ($finder->findByLevels($this->input) as $vehicle) {
+
+        foreach ($this->vehicleFinder->findByLevels($this->input) as $vehicle) {
             array_push($result, $vehicle->toTitleArray());
         }
         return $result;
@@ -70,12 +82,12 @@ class VF_Import_ValueExploder
 
     function getSchema()
     {
-        return new VF_Schema();
+        return $this->schema;
     }
 
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {
-        return VF_Singleton::getInstance()->getReadAdapter();
+        return $this->readAdapter;
     }
 }

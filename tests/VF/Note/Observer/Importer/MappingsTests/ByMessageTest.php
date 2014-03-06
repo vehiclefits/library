@@ -8,7 +8,7 @@ class VF_Note_Observer_Importer_MappingsTests_ByMessageTest extends VF_Note_Obse
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldIgnoreRowsWithCodeButNoMessage_WithoutComma()

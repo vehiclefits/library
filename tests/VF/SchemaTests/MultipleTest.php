@@ -29,29 +29,35 @@ class VF_SchemaTests_MultipleTest extends VF_TestCase
 
     function testCreateNewSchemaId()
     {
-        $schema = VF_Schema::create('foo,bar');
+        $schema = $this->createSchemaWithServiceContainer('foo,bar')->getSchemaClass();
         $this->assertTrue($schema->id() > 0, 'should assign new ID when create new schema');
     }
 
     function testShouldAssumeDefaultSchemaWhenNotSpecified()
     {
-        VF_Schema::create('foo,bar');
-        $schema = VF_Singleton::getInstance()->schema();
+        $container = $this->createSchemaWithServiceContainer('foo,bar');
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals(array('make', 'model', 'option', 'year'), $schema->getLevels(), 'should assume default schema when not specified');
     }
 
-    function testGetNewSchemasLevels()
+    function testGetNewSchemasLevelsOfThreeSchemas()
     {
-        $schema1 = VF_Schema::create('foo,bar');
-        VF_Schema::create('foo2,bar2');
-        $this->assertEquals(array('foo', 'bar'), $schema1->getLevels(), 'should get the correct levels when we specify which schema');
+        $schema1 = new VF_Schema($this->getServiceContainer()->getSchemaClass()->id(), $this->getReadAdapter(), $this->getServiceContainer()->getConfigClass());
+        $container2 = $this->createSchemaWithServiceContainer('foo,bar');
+        $schema2 = new VF_Schema($container2->getSchemaClass()->id(), $this->getReadAdapter(), $this->getServiceContainer()->getConfigClass());
+        $container3 = $this->createSchemaWithServiceContainer('foo2,bar2');
+        $schema3 = new VF_Schema($container3->getSchemaClass()->id(), $this->getReadAdapter(), $this->getServiceContainer()->getConfigClass());
+
+        $this->assertEquals(array('make','model','option','year'), $schema1->getLevels(), 'should get the correct levels when we specify which schema');
+        $this->assertEquals(array('foo', 'bar'), $schema2->getLevels(), 'should get the correct levels when we specify which schema');
+        $this->assertEquals(array('foo2', 'bar2'), $schema3->getLevels(), 'should get the correct levels when we specify which schema');
     }
 
     function testShouldGetSchemaById()
     {
-        $schema = VF_Schema::create('foo,bar');
+        $schema = $this->createSchemaWithServiceContainer('foo,bar')->getSchemaClass();
         $schemaID = $schema->id();
-        $new_schema = new VF_Schema($schemaID);
+        $new_schema = new VF_Schema($schemaID, $this->getReadAdapter(), $this->getServiceContainer()->getConfigClass());
         $this->assertEquals(array('foo', 'bar'), $new_schema->getLevels(), 'should look up schema specified by ID passed to constructor');
     }
 }

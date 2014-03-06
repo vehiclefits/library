@@ -22,6 +22,14 @@
  */
 class VF_Wheel_Finder
 {
+    /** @var \Zend_Db_Adapter_Abstract */
+    protected $readAdapter;
+
+    public function __construct(Zend_Db_Adapter_Abstract $readAdapter)
+    {
+        $this->readAdapter = $readAdapter;
+    }
+
     function listLugCounts()
     {
         $select = $this->getReadAdapter()->select()
@@ -63,6 +71,6 @@ class VF_Wheel_Finder
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {
-        return VF_Singleton::getInstance()->getReadAdapter();
+        return $this->readAdapter;
     }
 }

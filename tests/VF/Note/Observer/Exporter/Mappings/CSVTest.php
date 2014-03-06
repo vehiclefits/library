@@ -8,7 +8,7 @@ class VF_Note_Observer_Exporter_Mappings_CSVTest extends VF_Import_ProductFitmen
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->createNoteDefinition('code1', 'foo');
         $this->createNoteDefinition('code2', 'bar');
         $this->csvData = 'sku, make, model, year, notes
@@ -20,19 +20,14 @@ sku, honda, civic, 2000, "code1,code2"';
 
     function testNotes()
     {
-        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass($this->csvFile);
+        $importer = new VF_Import_ProductFitments_CSV_Import_TestSubClass($this->csvFile, $this->getServiceContainer()
+            ->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()
+            ->getConfigClass(), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()
+            ->getVehicleFinderClass());
         $importer->import();
         $data = $this->exportProductFitments();
         $string = explode("\n", $data);
         $this->assertEquals("sku,universal,make,model,year,notes", $string[0]);
         $this->assertEquals("sku,0,honda,civic,2000,\"code1,code2\"", $string[1]);
-    }
-}
-
-class VF_Import_ProductFitmentsExport_TestStub extends VF_Import_ProductFitments_CSV_Export
-{
-    function getProductTable()
-    {
-        return 'test_catalog_product_entity';
     }
 }

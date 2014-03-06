@@ -25,7 +25,7 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
 
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testListAll_OnLevel()
@@ -36,7 +36,7 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listAll();
         $this->assertEquals('A', $actual[0]->getTitle(), 'should sort items');
         $this->assertEquals('B', $actual[1]->getTitle(), 'should sort items');
@@ -65,7 +65,7 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listAll();
         $actual = $model->listAll();
         $this->assertEquals('A', $actual[0]->getTitle(), 'should sort items');
@@ -81,7 +81,7 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listAll($vehicle1->getLevel('make')->getId());
         $this->assertEquals('A', $actual[0]->getTitle(), 'should sort items');
         $this->assertEquals('B', $actual[1]->getTitle(), 'should sort items');
@@ -89,9 +89,10 @@ class VF_Level_FinderTests_ListAllTests_MMYTest extends VF_TestCase
 
     function testShouldListChildrenLevelsInSecondSchema()
     {
-        $schema = VF_Schema::create('foo,bar');
-        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $schema);
-        $bar = new VF_Level('bar', null, $schema);
+        $container = $this->createSchemaWithServiceContainer('foo,bar');
+        $vehicle = $this->createVehicle(array('foo' => '123', 'bar' => '456'), $container);
+        $bar = new VF_Level('bar', null, $container->getSchemaClass(), $container->getReadAdapterClass(
+        ), $container->getConfigClass(), $container->getLevelFinderClass());
         $actual = $bar->listAll($vehicle->getValue('foo'));
         $this->assertEquals('456', $actual[0]->getTitle(), 'should list children levels in 2nd schema');
     }

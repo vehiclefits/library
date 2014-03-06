@@ -24,7 +24,7 @@ class VF_Level_FinderTests_FindByTitleInUseTest extends VF_TestCase
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldNotIncludeOptionsNotInUse()
@@ -34,7 +34,7 @@ class VF_Level_FinderTests_FindByTitleInUseTest extends VF_TestCase
         $vehicle3 = $this->createMMY('A', 'C', '1');
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUseByTitle();
         $this->assertEquals('A', $actual[0]->getTitle());
         $this->assertEquals('B', $actual[1]->getTitle());
@@ -49,7 +49,7 @@ class VF_Level_FinderTests_FindByTitleInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUseByTitle(array('make' => $vehicle2->getLevel('make')->getTitle()));
         $this->assertEquals(2, count($actual));
         $this->assertEquals($vehicle2->getLevel('model')->getId(), $actual[0]->getId());
@@ -64,7 +64,7 @@ class VF_Level_FinderTests_FindByTitleInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $year = new VF_Level('year');
+        $year = $this->vfLevel('year');
         $actual = $year->listInUseByTitle(array('make' => $vehicle2->getLevel('make')->getTitle(), 'model' => $vehicle2->getLevel('model')->getTitle()));
         $this->assertEquals(1, count($actual));
         $this->assertEquals($vehicle2->getLevel('year')->getId(), $actual[0]->getId());

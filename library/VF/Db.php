@@ -4,15 +4,31 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class VF_Db
+abstract class VF_Db
 {
-    function getReadAdapter()
+    /** @var \Zend_Db_Adapter_Abstract */
+    protected $adapter;
+
+    public function __construct(Zend_Db_Adapter_Abstract $adapter)
     {
-        return VF_Singleton::getInstance()->getReadAdapter();
+        $this->adapter = $adapter;
     }
 
-    function getWriteAdapter()
+    /**
+     * @return Zend_Db_Adapter_Abstract
+     */
+    public function getReadAdapter()
     {
-        return VF_Singleton::getInstance()->getWriteAdapter();
+        return $this->adapter;
+    }
+
+    /**
+     * @param $sql
+     *
+     * @return Zend_Db_Statement_Interface
+     */
+    public function query($sql)
+    {
+        return $this->getReadAdapter()->query($sql);
     }
 }

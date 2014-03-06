@@ -6,14 +6,6 @@
  */
 class VF_Level_Finder extends VF_Level_Finder_Abstract
 {
-    static function getInstance()
-    {
-        static $finder;
-        if (is_null($finder)) {
-            $finder = new VF_Level_Finder();
-        }
-        return $finder;
-    }
 
     function find($level, $id)
     {
@@ -39,7 +31,7 @@ class VF_Level_Finder extends VF_Level_Finder_Abstract
     function listAll($level, $parent_id = 0)
     {
         if (is_string($level)) {
-            $level = new VF_Level($level, null, $this->schema);
+            $level = new VF_Level($level, null, $this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this);
         }
         return $this->selector()->listAll($level, $parent_id);
     }
@@ -51,6 +43,6 @@ class VF_Level_Finder extends VF_Level_Finder_Abstract
 
     function selector()
     {
-        return new VF_Level_Finder_Selector($this->schema);
+        return new VF_Level_Finder_Selector($this->getSchema(), $this->getReadAdapter(), $this->getConfig(), $this);
     }
 }

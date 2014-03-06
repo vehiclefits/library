@@ -17,6 +17,9 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     protected $maxRunningTime;
 
+    /** @var VF_ServiceContainer */
+    protected $serviceContainer;
+
     function runTest()
     {
         $startTime = microtime(true);
@@ -27,6 +30,20 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         }
     }
 
+    protected function vfSearchForm() {
+        return new VF_Search_Form($this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()
+            ->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(), $this->getServiceContainer()
+            ->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass(), $this->getServiceContainer()
+            ->getRequestClass(), $this->getServiceContainer()->getFlexibleSearch());
+    }
+
+    protected function vfSearchLevel() {
+        return new VF_Search_Level($this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()
+            ->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(), $this->getServiceContainer()
+            ->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass(), $this->getServiceContainer()
+            ->getRequestClass(), $this->getServiceContainer()->getFlexibleSearch());
+    }
+
     function setMaxRunningTime($maxRunningTime)
     {
         $this->maxRunningTime = $maxRunningTime;
@@ -34,16 +51,12 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        VF_Singleton::reset();
-        VF_Singleton::getInstance(true);
-        VF_Singleton::getInstance()->setRequest(new Zend_Controller_Request_Http);
-        $database = new VF_TestDbAdapter(array(
-            'dbname' => VAF_DB_NAME,
+        $this->serviceContainer = new VF_ServiceContainer(1, new Zend_Controller_Request_HttpTestCase(), new VF_TestDbAdapter(array(
+            'dbname'   => VAF_DB_NAME,
             'username' => VAF_DB_USERNAME,
             'password' => VAF_DB_PASSWORD
-        ));
-        VF_Singleton::getInstance()->setReadAdapter($database);
-        VF_Schema::$levels = null;
+        )));
+
         $_SESSION = array();
         $_GET = array();
         $_REQUEST = array();
@@ -54,6 +67,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         if (class_exists('Mage', false)) {
             Mage::resetRegistry();
         }
+
         $this->doSetUp();
     }
 
@@ -72,21 +86,50 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         $this->switchSchema('make,model,year');
     }
 
+    function getServiceContainer()
+    {
+        return $this->serviceContainer;
+    }
+
+    function setServiceContainer(VF_ServiceContainer $serviceContainer)
+    {
+        return $this->serviceContainer = $serviceContainer;
+    }
+
+    protected function initNewServiceContainerWithRequest(Zend_Controller_Request_Abstract $request) {
+        return new VF_ServiceContainer(1, $request, new VF_TestDbAdapter(array(
+            'dbname'   => VAF_DB_NAME,
+            'username' => VAF_DB_USERNAME,
+            'password' => VAF_DB_PASSWORD
+        )));
+    }
+
+    protected function setServiceContainerWithRequest(Zend_Controller_Request_Abstract $request)
+    {
+        /** @var Zend_Controller_Request_HttpTestCase $requestClass */
+        $requestClass = $this->getServiceContainer()->getRequestClass();
+        $requestClass->clearParams();
+        $requestClass->setParams($request->getParams());
+    }
+
     protected function doTearDown()
     {
+
     }
 
     function tearDown()
     {
         $this->rollbackTransaction();
+        $this->getReadAdapter()->closeConnection();
         $this->doTearDown();
+        unset($this->serviceContainer);
     }
 
     protected function switchSchema($levels, $force = false)
     {
         if (!$force) {
             try {
-                $schema = VF_Singleton::getInstance()->schema();
+                $schema = $this->getServiceContainer()->getSchemaClass();
                 if ($levels == implode(',', $schema->getLevels())) {
                     $this->startTransaction();
                     return;
@@ -95,21 +138,55 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
             } catch (Zend_Db_Statement_Exception $e) {
             }
         }
-        $schemaGenerator = new VF_Schema_Generator();
+        $schemaGenerator = new VF_Schema_Generator($this->getReadAdapter());
         $schemaGenerator->dropExistingTables();
         $schemaGenerator->execute(explode(',', $levels));
         VF_Schema::reset();
         $this->startTransaction();
     }
 
-    protected function createVehicle($titles = array(), $schema = null)
+    /**
+     * @param $levels
+     *
+     * @return VF_ServiceContainer
+     */
+    protected function createSchemaWithServiceContainer($levels)
     {
-        $vehicle = VF_Vehicle::create($schema ? $schema : new VF_Schema(), $titles);
+
+        $this->getReadAdapter()->insert(
+            'elite_schema',
+            array(
+                'key'   => 'levels',
+                'value' => $levels
+            )
+        );
+        $schema_id = $this->getReadAdapter()->lastInsertId();
+        $schemaGenerator = new VF_Schema_Generator($this->getReadAdapter());
+        $schemaGenerator->execute(explode(',', $levels), false, $schema_id);
+        return new VF_ServiceContainer($schema_id, $this->getRequest(), $this->getReadAdapter());
+    }
+
+    protected function createVehicle($titles = array(), VF_ServiceContainer $serviceContainer = null)
+    {
+        if(is_null($serviceContainer)) {
+            $serviceContainer = $this->getServiceContainer();
+        }
+        $vehicle = VF_Vehicle::create(
+            $serviceContainer->getSchemaClass(),
+            $serviceContainer->getReadAdapterClass(),
+            $serviceContainer->getConfigClass(),
+            $serviceContainer->getLevelFinderClass(),
+            $serviceContainer->getVehicleFinderClass(),
+            $titles
+        );
         $vehicle->save();
         return $vehicle;
     }
 
-    /** @deprecated use createVehicle() */
+    /**
+     * @deprecated use createVehicle()
+     * @see        VF_TestCase::createVehicle
+     */
     protected function createMMY($makeTitle = 'test make', $modelTitle = 'test model', $yearTitle = 'test year')
     {
         $titles = array(
@@ -117,7 +194,14 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
             'model' => $modelTitle ? $modelTitle : 'model',
             'year' => $yearTitle ? $yearTitle : 'year'
         );
-        $vehicle = VF_Vehicle::create(new VF_Schema(), $titles);
+        $vehicle = VF_Vehicle::create(
+            $this->getServiceContainer()->getSchemaClass(),
+            $this->getServiceContainer()->getReadAdapterClass(),
+            $this->getServiceContainer()->getConfigClass(),
+            $this->getServiceContainer()->getLevelFinderClass(),
+            $this->getServiceContainer()->getVehicleFinderClass(),
+            $titles
+        );
         $vehicle->save();
         return $vehicle;
     }
@@ -132,26 +216,55 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     function createTireMMY($make, $model, $year)
     {
         $vehicle = $this->createMMY($make, $model, $year);
-        return new VF_Tire_Vehicle($vehicle);
+        return new VF_Tire_Vehicle($this->getServiceContainer()->getReadAdapterClass(), $vehicle);
     }
 
     protected function createYMM($yearTitle = 'test year', $makeTitle = 'test make', $modelTitle = 'test model')
     {
-        $vehicle = VF_Vehicle::create(new VF_Schema(), array('year' => $yearTitle, 'make' => $makeTitle, 'model' => $modelTitle));
+        $vehicle = VF_Vehicle::create(
+            $this->getServiceContainer()->getSchemaClass(),
+            $this->getServiceContainer()->getReadAdapterClass(),
+            $this->getServiceContainer()->getConfigClass(),
+            $this->getServiceContainer()->getLevelFinderClass(),
+            $this->getServiceContainer()->getVehicleFinderClass(),
+            array('year' => $yearTitle, 'make' => $makeTitle, 'model' => $modelTitle)
+        );
         $vehicle->save();
         return $vehicle;
     }
 
-    protected function createMMCT($makeTitle = 'test make', $modelTitle = 'test model', $chassisTitle = 'test chassis', $trimTitle = 'test trim')
-    {
-        $vehicle = VF_Vehicle::create(new VF_Schema(), array('make' => $makeTitle, 'model' => $modelTitle, 'chassis' => $chassisTitle, 'trim' => $trimTitle));
+    protected function createMMCT(
+        $makeTitle = 'test make',
+        $modelTitle = 'test model',
+        $chassisTitle = 'test chassis',
+        $trimTitle = 'test trim'
+    ) {
+        $vehicle = VF_Vehicle::create(
+            $this->getServiceContainer()->getSchemaClass(),
+            $this->getServiceContainer()->getReadAdapterClass(),
+            $this->getServiceContainer()->getConfigClass(),
+            $this->getServiceContainer()->getLevelFinderClass(),
+            $this->getServiceContainer()->getVehicleFinderClass(),
+            array('make' => $makeTitle, 'model' => $modelTitle, 'chassis' => $chassisTitle, 'trim' => $trimTitle)
+        );
         $vehicle->save();
         return $vehicle;
     }
 
-    protected function createMMTC($makeTitle = 'test make', $modelTitle = 'test model', $trimTitle = 'test trim', $chassisTitle = 'test chassis')
-    {
-        $vehicle = VF_Vehicle::create(new VF_Schema(), array('make' => $makeTitle, 'model' => $modelTitle, 'trim' => $trimTitle, 'chassis' => $chassisTitle));
+    protected function createMMTC(
+        $makeTitle = 'test make',
+        $modelTitle = 'test model',
+        $trimTitle = 'test trim',
+        $chassisTitle = 'test chassis'
+    ) {
+        $vehicle = VF_Vehicle::create(
+            $this->getServiceContainer()->getSchemaClass(),
+            $this->getServiceContainer()->getReadAdapterClass(),
+            $this->getServiceContainer()->getConfigClass(),
+            $this->getServiceContainer()->getLevelFinderClass(),
+            $this->getServiceContainer()->getVehicleFinderClass(),
+            array('make' => $makeTitle, 'model' => $modelTitle, 'trim' => $trimTitle, 'chassis' => $chassisTitle)
+        );
         $vehicle->save();
         return $vehicle;
     }
@@ -229,10 +342,10 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     protected function findEntityIdByTitle($title, $type)
     {
         $result = $this->query(sprintf(
-            "SELECT `id` FROM %s WHERE `title` = %s",
-            $this->getReadAdapter()->quoteIdentifier('elite_level_1_' . $type),
-            $this->getReadAdapter()->quote($title)
-        ));
+                "SELECT `id` FROM %s WHERE `title` = %s",
+                $this->getReadAdapter()->quoteIdentifier('elite_level_1_' . $type),
+                $this->getReadAdapter()->quote($title)
+            ));
         $id = $result->fetchColumn(0);
         $result->closeCursor();
         return $id ? $id : false;
@@ -252,12 +365,14 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     /** @return integer the created fit's ID */
     protected function insertMappingMMY($vehicle, $product_id = 1)
     {
-        $mapping = new VF_Mapping($product_id, $vehicle);
+        $mapping = new VF_Mapping($product_id, $vehicle, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass());
         return $mapping->save();
     }
 
     protected function insertMapping(VF_Vehicle $vehicle, $product_id=1) {
-        $mapping = new VF_Mapping($product_id, $vehicle);
+        $mapping = new VF_Mapping($product_id, $vehicle, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass());
         return $mapping->save();
     }
 
@@ -279,7 +394,8 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     /** @return integer the created fit's ID */
     protected function insertMappingMMTC($vehicle, $product_id = 1)
     {
-        $mapping = new VF_Mapping($product_id, $vehicle);
+        $mapping = new VF_Mapping($product_id, $vehicle, $this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass());
         return $mapping->save();
     }
 
@@ -310,7 +426,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
      */
     protected function insertYear($model_id, $title = '')
     {
-        $year = new VF_Level('year');
+        $year = new VF_Level('year', 0, $this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass());
         $year->setTitle($title);
         return $year->save($model_id);
     }
@@ -321,7 +437,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         if ($id) {
             return $id;
         }
-        $entity = new VF_Level($level);
+        $entity = $this->vfLevel($level);
         if (!is_null($config)) {
             $entity->setConfig($config);
         }
@@ -361,25 +477,22 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function findVehicleByLevelsMMY($make, $model, $year)
     {
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
-        return $vehicleFinder->findOneByLevels(array('make' => $make, 'model' => $model, 'year' => $year));
+        return $this->getServiceContainer()->getVehicleFinderClass()->findOneByLevels(array('make' => $make, 'model' => $model, 'year' => $year));
     }
 
     function findVehicleByLevelsYMM($year, $make, $model)
     {
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
-        return $vehicleFinder->findOneByLevels(array('make' => $make, 'model' => $model, 'year' => $year));
+        return $this->getServiceContainer()->getVehicleFinderClass()->findOneByLevels(array('make' => $make, 'model' => $model, 'year' => $year));
     }
 
     function findVehicleByLevelsMMOY($make, $model, $option, $year)
     {
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
-        return $vehicleFinder->findOneByLevels(array('make' => $make, 'model' => $model, 'option' => $option, 'year' => $year));
+        return $this->getServiceContainer()->getVehicleFinderClass()->findOneByLevels(array('make' => $make, 'model' => $model, 'option' => $option, 'year' => $year));
     }
 
     protected function findEntityByTitle($type, $title, $parent_id = 0)
     {
-        $finder = new VF_Level_Finder();
+        $finder = $this->levelFinder();
         return $finder->findEntityByTitle($type, $title, $parent_id);
     }
 
@@ -392,8 +505,17 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {
-        $adapter = VF_Singleton::getInstance()->getReadAdapter();
+        $adapter = $this->getServiceContainer()->getReadAdapterClass();
         return $adapter;
+    }
+
+    public function vfLevel($type, $id = 0, VF_ServiceContainer $serviceContainer = null)
+    {
+        if (is_null($serviceContainer)) {
+            $serviceContainer = $this->getServiceContainer();
+        }
+        return new VF_Level($type, $id, $serviceContainer->getSchemaClass(), $serviceContainer->getReadAdapterClass(
+        ), $serviceContainer->getConfigClass(), $serviceContainer->getLevelFinderClass());
     }
 
     function getRequest($params = array())
@@ -409,9 +531,9 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         $this->setRequest($request);
     }
 
-    function setRequest($request)
+    function setRequest(Zend_Controller_Request_Abstract $request)
     {
-        VF_Singleton::getInstance()->setRequest($request);
+        $this->setServiceContainerWithRequest($request);
     }
 
     protected function request($controllerName = '', $routeName = '', $uri = false)
@@ -437,7 +559,7 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function newVFProduct($id = null)
     {
-        $product = new VF_Product;
+        $product = $this->vfProduct();
         if (!is_null($id)) {
             $product->setId($id);
         }
@@ -446,19 +568,26 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function newWheelProduct($id = null)
     {
-        $product = new VF_Wheel_Catalog_Product($this->newVFProduct($id));
+        $product = new VF_Wheel_Catalog_Product($this->getServiceContainer()->getReadAdapterClass(), $this->newVFProduct($id));
         return $product;
     }
 
     function newWheelAdapterProduct($id = null)
     {
-        $product = new VF_Wheeladapter_Catalog_Product($this->newVFProduct($id));
+        $product = new VF_Wheeladapter_Catalog_Product($this->getServiceContainer()->getReadAdapterClass(), $this->newVFProduct($id));
         return $product;
     }
 
-    function newTireProduct($id = null, $tireSize = null, $tireType = null)
+    public function vfTireCatalogProduct(VF_Product $product, VF_ServiceContainer $container = null) {
+        if(is_null($container)) {
+            return new VF_Tire_Catalog_TireProduct($this->getServiceContainer()->getReadAdapterClass(), $product);
+        }
+        return new VF_Tire_Catalog_TireProduct($container->getReadAdapterClass(), $product);
+    }
+
+    function newTireProduct($id = null, $tireSize = null, $tireType = null, VF_ServiceContainer $container = null)
     {
-        $tireProduct = new VF_Tire_Catalog_TireProduct($this->newVFProduct($id));
+        $tireProduct = $this->vfTireCatalogProduct($this->newVFProduct($id), $container);
         if (!is_null($tireSize)) {
             $tireProduct->setTireSize($tireSize);
         }
@@ -472,31 +601,20 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
     function flexibleTireSearch($requestParams = array())
     {
         $this->setRequestParams($requestParams);
-        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $this->getRequest($requestParams));
-        $tireFlexibleSearch = new VF_Tire_FlexibleSearch($flexibleSearch);
-        return $tireFlexibleSearch;
+        return $this->getServiceContainer()->getFlexibleSearchClass();
     }
 
     /** @return VF_Wheeladapter_FlexibleSearch */
     function flexibleWheeladapterSearch($requestParams = array())
     {
         $this->setRequestParams($requestParams);
-        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $this->getRequest($requestParams));
-        $tireFlexibleSearch = new VF_Wheeladapter_FlexibleSearch($flexibleSearch);
-        return $tireFlexibleSearch;
+        return $this->getServiceContainer()->getFlexibleSearchClass();
     }
 
     function flexibleWheelSearch($requestParams = array())
     {
-        if (count($requestParams)) {
-            $this->setRequestParams($requestParams);
-            $request = $this->getRequest($requestParams);
-        } else {
-            $request = VF_Singleton::getInstance()->getRequest();
-        }
-        $flexibleSearch = new VF_FlexibleSearch(new VF_Schema(), $request);
-        $flexibleSearch = new VF_Wheel_FlexibleSearch($flexibleSearch);
-        return $flexibleSearch;
+        $this->setRequestParams($requestParams);
+        return $this->getServiceContainer()->getFlexibleSearchClass();
     }
 
     protected function dropAndRecreateMockProductTable()
@@ -555,19 +673,31 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         $r = $this->query($sql);
         $product_id = $r->fetchColumn();
         $r->closeCursor();
-        $product = new VF_Product();
+        $product = $this->vfProduct();
         $product->setId($product_id);
         return $product;
     }
 
-    function levelFinder()
-    {
-        return new VF_Level_Finder;
+    function vfProduct() {
+        return new VF_Product($this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()
+            ->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(), $this->getServiceContainer()
+            ->getLevelFinderClass(), $this->getServiceContainer()->getVehicleFinderClass());
     }
 
-    function vehicleFinder($schema = null)
+    function levelFinder(VF_ServiceContainer $serviceContainer = null)
     {
-        return new VF_Vehicle_Finder($schema ? $schema : new VF_Schema());
+        if(is_null($serviceContainer)) {
+            return $this->getServiceContainer()->getLevelFinderClass();
+        }
+        return $serviceContainer->getLevelFinderClass();
+    }
+
+    function vehicleFinder(VF_ServiceContainer $serviceContainer = null)
+    {
+        if(is_null($serviceContainer)) {
+            return $this->getServiceContainer()->getVehicleFinderClass();
+        }
+        return $serviceContainer->getVehicleFinderClass();
     }
 
     function boltPattern($boltPatternString, $offset = null)
@@ -575,19 +705,28 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return VF_Wheel_BoltPattern::create($boltPatternString, $offset);
     }
 
-    function wheelAdapterFinder()
+    function wheelAdapterFinder(VF_ServiceContainer $container = null)
     {
-        return new VF_Wheeladapter_Finder;
+        if(is_null($container)) {
+            return new VF_Wheeladapter_Finder($this->getServiceContainer()->getReadAdapterClass());
+        }
+        return new VF_Wheeladapter_Finder($container->getReadAdapterClass());
     }
 
-    function tireFinder()
+    function tireFinder(VF_ServiceContainer $container = null)
     {
-        return new VF_Tire_Finder;
+        if (is_null($container)) {
+            return new VF_Tire_Finder($this->getServiceContainer()->getReadAdapterClass());
+        }
+        return new VF_Tire_Finder($container->getReadAdapterClass());
     }
 
-    function noteFinder()
+    function noteFinder(VF_ServiceContainer $container = null)
     {
-        return new VF_Note_Finder();
+        if(is_null($container)) {
+            return new VF_Note_Finder($this->getServiceContainer()->getReadAdapterClass());
+        }
+        return new VF_Note_Finder($container->getReadAdapterClass());
     }
 
     function definitionsController($request = null)
@@ -601,9 +740,9 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
         return $controller;
     }
 
-    function vehicleExists($titles = array(), $allowPartialVehicleMatch = false, $schema = null)
+    function vehicleExists($titles = array(), $allowPartialVehicleMatch = false, VF_ServiceContainer $serviceContainer = null)
     {
-        return 0 != count($this->vehicleFinder($schema)->findByLevels($titles, $allowPartialVehicleMatch));
+        return 0 != count($this->vehicleFinder($serviceContainer)->findByLevels($titles, $allowPartialVehicleMatch));
     }
 
     function createNoteDefinition($code, $message)
@@ -613,104 +752,67 @@ abstract class VF_TestCase extends PHPUnit_Framework_TestCase
 
     function newMake($title)
     {
-        $make = new VF_Level('make');
+        $make = $this->vfLevel('make');
         $make->setTitle($title);
         return $make;
     }
 
     function newModel($title)
     {
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $model->setTitle($title);
         return $model;
     }
 
     function newYear($title)
     {
-        $year = new VF_Level('year');
+        $year = $this->vfLevel('year');
         $year->setTitle($title);
         return $year;
     }
 
     function newLevel($level, $title)
     {
-        $level = new VF_Level($level);
+        $level = $this->vfLevel($level);
         $level->setTitle($title);
         return $level;
     }
 
     function schemaGenerator()
     {
-        return new VF_Schema_Generator();
+        return new VF_Schema_Generator($this->getReadAdapter());
     }
 
     function newNoteProduct($id = 0)
     {
         $product = $this->newVFProduct($id);
-        return new VF_Note_Catalog_Product($product);
+        return new VF_Note_Catalog_Product($this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()
+            ->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(), $product);
     }
 
-    function merge($slaveLevels, $masterLevel)
-    {
-        $merge = new Elite_Vaf_Model_Merge($slaveLevels, $masterLevel);
-        $merge->execute();
-    }
-
-    function split($vehicle, $grain, $newTitles)
-    {
-        $split = new Elite_Vaf_Model_Split($vehicle, $grain, $newTitles);
-        $split->execute();
-    }
-
-    function getHelper($config = array(), $requestParams = array())
-    {
+    /**
+     * @return VF_ServiceContainer
+     */
+    function getHelperWithNewServiceContainer($config = array(), $requestParams = array()) {
         $request = $this->getRequest($requestParams);
-        $helper = VF_Singleton::getInstance();
-        $helper->reset();
-        $helper->setRequest($request);
+        $serviceContainer = $this->initNewServiceContainerWithRequest($request);
         if (count($config)) {
-            $helper->setConfig(new Zend_Config($config, true));
+            $serviceContainer->getConfigClass()->merge(new Zend_Config($config, true));
         }
-        return $helper;
-    }
-}
-
-class Elite_Vaf_Model_TestSubClass extends VF_Level
-{
-
-    function getLevels()
-    {
-        return array('make', 'model', 'year');
+        return $serviceContainer;
     }
 
-    function getNextLevel()
-    {
-        return '';
-    }
-
-    function getPrevLevel()
-    {
-        return '';
-    }
-
-    function getLeafLevel()
-    {
-        return 'year';
-    }
-
-    function createEntity($level, $id = 0)
-    {
-        switch ($level) {
-            case 'make':
-                return new Elite_Vaf_Model_TestSubClass_Make($level, $id);
-                break;
-            case 'model':
-                return new Elite_Vaf_Model_TestSubClass_Model($level, $id);
-                break;
-            case 'year':
-                return new Elite_Vaf_Model_TestSubClass_Year($level, $id);
-                break;
+    /**
+     * @return VF_ServiceContainer
+     */
+    function getHelper($config = array(), $requestParams = array()) {
+        $request = $this->getRequest($requestParams);
+        $this->setServiceContainerWithRequest($request);
+        if (count($config)) {
+            $this->getServiceContainer()->getConfigClass()->merge(new Zend_Config($config, true));
         }
-        return new VF_Level($level, $id);
+        return $this->getServiceContainer();
     }
+
+
 }

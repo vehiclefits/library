@@ -48,6 +48,6 @@ class VF_Wheel_FinderTest extends VF_TestCase
 
     function wheelFinder()
     {
-        return new VF_Wheel_Finder;
+        return new VF_Wheel_Finder($this->getServiceContainer()->getReadAdapterClass());
     }
 }

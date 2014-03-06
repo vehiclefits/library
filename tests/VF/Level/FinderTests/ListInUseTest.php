@@ -24,7 +24,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testShouldNotIncludeOptionsNotInUse()
@@ -34,7 +34,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $vehicle3 = $this->createMMY('A', 'C', '1');
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse();
         $this->assertEquals('A', $actual[0]->getTitle());
         $this->assertEquals('B', $actual[1]->getTitle());
@@ -44,7 +44,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
     function testShouldNotIncludeOptionsWhenNoFitments()
     {
         $vehicle = $this->createMMY('A', 'A', '1');
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse();
         $this->assertEquals(0, count($actual), 'when no fitments, should not list anything');
     }
@@ -57,7 +57,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse();
         $this->assertEquals('A', $actual[0]->getTitle(), 'should sort items');
         $this->assertEquals('B', $actual[1]->getTitle(), 'should sort items');
@@ -73,7 +73,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
         $parents = array('make' => $vehicle1->getLevel('make')->getId(), 'model' => $vehicle1->getLevel('model')->getId(), 'year' => '-please select-');
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse($parents);
         $this->assertEquals('A', $actual[0]->getTitle(), 'should sort items when flexible selection is made');
         $this->assertEquals('B', $actual[1]->getTitle(), 'should sort items when flexible selection is made');
@@ -89,7 +89,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
         $parents = array('make' => $vehicle1->getLevel('make')->getId(), 'model' => $vehicle1->getLevel('model')->getId(), 'year' => $vehicle1->getLevel('year')->getId());
-        $year = new VF_Level('year');
+        $year = $this->vfLevel('year');
         $actual = $year->listInUse($parents);
         $this->assertEquals('2001', $actual[0]->getTitle(), 'If a year is selected (and thus in the parents array), all years should still be listed as available options');
         $this->assertEquals('2002', $actual[1]->getTitle(), 'If a year is selected (and thus in the parents array), all years should still be listed as available options');
@@ -105,7 +105,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1, $product_id);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse(array(), $product_id);
         $this->assertEquals(1, count($actual), 'should only return 1 model');
         $this->assertEquals($vehicle1->getLevel('model')->getId(), $actual[0]->getId(), 'should only return models for which there are fits, and those fits are for this product_id');
@@ -116,7 +116,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
      */
     function testWithInvalidLevelThorwsException()
     {
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse(array('foo' => 0));
     }
 
@@ -128,7 +128,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse(array('make' => $vehicle2->getLevel('make')->getId()));
         $this->assertEquals(2, count($actual));
         $this->assertEquals($vehicle2->getLevel('model')->getId(), $actual[0]->getId());
@@ -139,7 +139,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
     {
         $vehicle = $this->createMMY('Acura', 'Integra', '2002');
         $this->insertMappingMMY($vehicle);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse(array('year' => $vehicle->getLevel('year')->getId()));
         $this->assertEquals($vehicle->getLevel('model')->getId(), $actual[0]->getId());
     }
@@ -152,7 +152,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $model = new VF_Level('model');
+        $model = $this->vfLevel('model');
         $actual = $model->listInUse(array('make' => $vehicle1->getLevel('make')->getId()));
         $this->assertEquals(3, count($actual));
         $this->assertEquals($vehicle1->getLevel('model')->getId(), $actual[0]->getId());
@@ -162,9 +162,9 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
 
     function testMakeDesc()
     {
-        $schemaGenerator = new VF_Schema_Generator();
+        $schemaGenerator = $this->schemaGenerator();
         $schemaGenerator->setSorting('make', 'desc');
-        $schema = VF_Singleton::getInstance()->schema();
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals('desc', $schema->getSorting('make'));
         $vehicle1 = $this->createMMY('A', 'Civic', '2000');
         $vehicle2 = $this->createMMY('B', 'Civic', '2000');
@@ -172,7 +172,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $make = new VF_Level('make');
+        $make = $this->vfLevel('make');
         $actual = $make->listInUse();
         $this->assertEquals("C", $actual[0]->getTitle(), 'should return makes, in DESC order');
         $this->assertEquals("B", $actual[1]->getTitle(), 'should return makes, in DESC order');
@@ -181,9 +181,9 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
 
     function testMakeAsc()
     {
-        $schemaGenerator = new VF_Schema_Generator();
+        $schemaGenerator = $this->schemaGenerator();
         $schemaGenerator->setSorting('make', 'asc');
-        $schema = VF_Singleton::getInstance()->schema();
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals('asc', $schema->getSorting('make'));
         $vehicle1 = $this->createMMY('A', 'Civic', '2000');
         $vehicle2 = $this->createMMY('B', 'Civic', '2000');
@@ -191,7 +191,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $make = new VF_Level('make');
+        $make = $this->vfLevel('make');
         $actual = $make->listInUse();
         $this->assertEquals("A", $actual[0]->getTitle(), 'should return makes, in ASC order');
         $this->assertEquals("B", $actual[1]->getTitle(), 'should return makes, in ASC order');
@@ -200,9 +200,9 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
 
     function testYearDesc()
     {
-        $schemaGenerator = new VF_Schema_Generator();
+        $schemaGenerator = $this->schemaGenerator();
         $schemaGenerator->setSorting('year', 'desc');
-        $schema = VF_Singleton::getInstance()->schema();
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals('desc', $schema->getSorting('year'));
         $vehicle1 = $this->createMMY('Honda', 'Civic', '1999');
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2000');
@@ -210,7 +210,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $year = new VF_Level('year');
+        $year = $this->vfLevel('year');
         $actual = $year->listInUse(array('model' => $vehicle1->getLevel('model')->getId()));
         $this->assertEquals("2001", $actual[0]->getTitle(), 'should return years, in DESC order');
         $this->assertEquals("2000", $actual[1]->getTitle(), 'should return years, in DESC order');
@@ -219,9 +219,9 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
 
     function testYearAsc()
     {
-        $schemaGenerator = new VF_Schema_Generator();
+        $schemaGenerator = $this->schemaGenerator();
         $schemaGenerator->setSorting('year', 'asc');
-        $schema = VF_Singleton::getInstance()->schema();
+        $schema = $this->getServiceContainer()->getSchemaClass();
         $this->assertEquals('asc', $schema->getSorting('year'));
         $vehicle1 = $this->createMMY('Honda', 'Civic', '1999');
         $vehicle2 = $this->createMMY('Honda', 'Civic', '2000');
@@ -229,7 +229,7 @@ class VF_Level_FinderTests_ListInUseTest extends VF_TestCase
         $this->insertMappingMMY($vehicle1);
         $this->insertMappingMMY($vehicle2);
         $this->insertMappingMMY($vehicle3);
-        $year = new VF_Level('year');
+        $year = $this->vfLevel('year');
         $actual = $year->listInUse(array('model' => $vehicle1->getLevel('model')->getId()));
         $this->assertEquals("1999", $actual[0]->getTitle(), 'should return years, in ASC order');
         $this->assertEquals("2000", $actual[1]->getTitle(), 'should return years, in ASC order');

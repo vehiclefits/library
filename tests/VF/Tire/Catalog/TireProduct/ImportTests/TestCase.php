@@ -25,6 +25,9 @@ class VF_Tire_Catalog_TireProduct_ImportTests_TestCase extends VF_TestCase
 
     function importer($file)
     {
-        return new VF_Tire_Catalog_TireProduct_ImportTests_TestSubClass($file);
+        return new VF_Tire_Catalog_TireProduct_ImportTests_TestSubClass($file, $this->getServiceContainer()
+            ->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()
+            ->getConfigClass(), $this->getServiceContainer()->getLevelFinderClass(), $this->getServiceContainer()
+            ->getVehicleFinderClass());
     }
 }

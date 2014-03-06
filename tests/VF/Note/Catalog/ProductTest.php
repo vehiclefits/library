@@ -4,7 +4,7 @@
  * @copyright  Copyright (c) Vehicle Fits, llc
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class Elite_Vafnote_model_Catalog_ProductTest extends VF_TestCase
+class VF_Note_Catalog_ProductTest extends VF_TestCase
 {
     function testShouldFindNumberOfNotes()
     {

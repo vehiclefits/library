@@ -26,15 +26,47 @@ class VF_CLI
     protected $opt;
     protected $options = array();
 
+    protected $adapter;
+    /** @var \VF_ServiceContainer */
+    protected $serviceContainer;
+
     function __construct()
     {
+
         $this->bootstrap();
         # Define the command line arguments this tool accepts
         $this->opt = new Zend_Console_Getopt($this->options + array(
             'config|c=s' => 'PHP config file to initialize with',
         ));
+        $this->adapter = new VF_TestDbAdapter(array(
+            'dbname'   => getenv('PHP_VAF_DB_NAME'),
+            'username' => getenv('PHP_VAF_DB_USERNAME'),
+            'password' => getenv('PHP_VAF_DB_PASSWORD')
+        ));
         $this->requireConfig();
-        $this->injectDb();
+        $this->createServiceContainer();
+    }
+
+    /**
+     * @return VF_ServiceContainer
+     */
+    function getServiceContainer()
+    {
+        return $this->serviceContainer;
+    }
+
+    /**
+     * @return VF_ServiceContainer
+     */
+    function createServiceContainer()
+    {
+        $schema_id = $this->opt->getOptions('schema_id');
+        if ($schema_id) {
+            return $this->serviceContainer
+                = new VF_ServiceContainer($schema_id, new Zend_Controller_Request_HttpTestCase(), $this->adapter);
+        }
+        return $this->serviceContainer
+            = new VF_ServiceContainer(1, new Zend_Controller_Request_HttpTestCase(), $this->adapter);
     }
 
     /* Set up include paths & register autoloader */
@@ -56,18 +88,6 @@ class VF_CLI
                 require_once('vfconfig.default.php');
             }
         }
-    }
-
-    /* Inject a database adapter into VF_Singleton using the configuration from previous step */
-    function injectDb()
-    {
-        VF_Singleton::getInstance()->setReadAdapter(
-            new VF_TestDbAdapter(array(
-                'dbname' => getenv('PHP_VAF_DB_NAME'),
-                'username' => getenv('PHP_VAF_DB_USERNAME'),
-                'password' => getenv('PHP_VAF_DB_PASSWORD')
-            ))
-        );
     }
 
     function lastArgument()

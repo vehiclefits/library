@@ -11,9 +11,14 @@ class VF_Select extends Zend_Db_Select
     const DEFINITIONS = 'definitions';
     const MAPPINGS = 'mappings';
 
+    public function __construct(Zend_Db_Adapter_Abstract $adapter, VF_Schema $schema)
+    {
+        parent::__construct($adapter);
+        $this->schema = $schema;
+    }
+
     function joinAndSelectLevels($fromTable = null, $levels = array(), $schema = null)
     {
-        $this->schema = $schema ? $schema : new VF_Schema;
         switch ($fromTable) {
             case self::DEFINITIONS:
                 $fromTable = $this->getSchema()->definitionTable();

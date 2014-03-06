@@ -24,19 +24,16 @@ class VFTest extends VF_TestCase
 {
     function setUp()
     {
-        VF_Singleton::reset();
-        VF_Singleton::getInstance(true);
-        VF_Singleton::getInstance()->setRequest(new Zend_Controller_Request_Http);
-        $database = new VF_TestDbAdapter(array(
-            'dbname' => VAF_DB_NAME,
+        $this->serviceContainer = new VF_ServiceContainer(1, new Zend_Controller_Request_HttpTestCase(), new VF_TestDbAdapter(array(
+            'dbname'   => VAF_DB_NAME,
             'username' => VAF_DB_USERNAME,
             'password' => VAF_DB_PASSWORD
-        ));
-        VF_Singleton::getInstance()->setReadAdapter($database);
-        $schemaGenerator = new VF_Schema_Generator();
+        )));
+
+
+        $schemaGenerator = $this->schemaGenerator();
         $schemaGenerator->dropExistingTables();
         $schemaGenerator->execute(array('make', 'model', 'year'));
-        VF_Schema::reset();
     }
 
     function tearDown()
@@ -83,6 +80,7 @@ class VFTest extends VF_TestCase
         passthru($command);
         $command = __DIR__ . '/vf exportfitments  --product-table=test_catalog_product_entity';
         exec($command, $output);
+        echo $output;
         $this->assertEquals('sku,universal,make,model,year,notes', $output[0], 'should export field header');
         $this->assertEquals('sku123,0,Honda,Civic,2000,""', $output[1], 'should export values');
     }

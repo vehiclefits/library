@@ -24,7 +24,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->insertProduct(self::SKU);
     }
 
@@ -47,8 +47,7 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
     {
         $this->mappingsImport('sku, make, model, year, universal
 "sku","","","","1"');
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
-        $vehicles = $vehicleFinder->findAll();
+        $vehicles = $this->vehicleFinder()->findAll();
         $this->assertEquals(0, count($vehicles));
     }
 
@@ -56,7 +55,6 @@ class VF_Import_ProductFitments_CSV_ImportTests_MMY_UniversalTest extends VF_Imp
     {
         $this->mappingsImport('sku, make, model, year, universal
 "sku","","","","1"');
-        $vehicleFinder = new VF_Vehicle_Finder(new VF_Schema());
         $count = $this->getReadAdapter()->query('select count(*) from elite_1_definition')->fetchColumn();
         $this->assertEquals(0, $count);
     }

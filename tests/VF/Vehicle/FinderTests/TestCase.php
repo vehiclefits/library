@@ -6,10 +6,14 @@
  */
 abstract class VF_Vehicle_FinderTests_TestCase extends VF_TestCase
 {
-    protected function getFinder($schema = null)
+    protected function getFinder(VF_ServiceContainer $container = null)
     {
-        $schema = $schema ? $schema : new VF_Schema;
-        return new VF_Vehicle_Finder($schema);
+        if (is_null($container)) {
+            return new VF_Vehicle_Finder($this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()
+                ->getReadAdapterClass(), $this->getServiceContainer()->getConfigClass(), $this->getServiceContainer()
+                ->getLevelFinderClass());
+        }
+        return new VF_Vehicle_Finder($container->getSchemaClass(), $container->getReadAdapterClass(
+        ), $container->getConfigClass(), $container->getLevelFinderClass());
     }
 }
-	

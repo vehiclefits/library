@@ -22,6 +22,15 @@
  */
 class VF_Wheeladapter_Finder
 {
+
+    /** @var \Zend_Db_Adapter_Abstract */
+    protected $readAdapter;
+
+    public function __construct(Zend_Db_Adapter_Abstract $readAdapter)
+    {
+        $this->readAdapter = $readAdapter;
+    }
+
     function listVehicleSideLugCounts()
     {
         return $this->listValues('elite_product_wheel', 'lug_count');
@@ -102,6 +111,6 @@ class VF_Wheeladapter_Finder
     /** @return Zend_Db_Adapter_Abstract */
     protected function getReadAdapter()
     {
-        return VF_Singleton::getInstance()->getReadAdapter();
+        return $this->readAdapter;
     }
 }

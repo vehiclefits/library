@@ -37,7 +37,7 @@ class VF_Wheel_Importer_Definitions_Bolts extends VF_Import_VehiclesList_CSV_Imp
         $boltPattern = $this->getFieldValue('bolt_pattern', $row);
         $offset = $this->getFieldValue('offset', $row);
         $boltPattern = VF_Wheel_BoltPattern::create($boltPattern, $offset);
-        $wheelDefinition = new VF_Wheel_Vehicle($vehicle);
+        $wheelDefinition = new VF_Wheel_Vehicle($this->getReadAdapter(), $vehicle);
         $wheelDefinition->addBoltPattern($boltPattern);
     }
 }

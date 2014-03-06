@@ -25,7 +25,7 @@ class VF_CLI_ExportVehicles extends VF_CLI
     function main()
     {
         $stream = fopen("php://output", 'w');
-        $exporter = new VF_Import_VehiclesList_CSV_Export();
+        $exporter = new VF_Import_VehiclesList_CSV_Export($this->getServiceContainer()->getSchemaClass(), $this->getServiceContainer()->getReadAdapterClass());
         $exporter->export($stream);
     }
 }

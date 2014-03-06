@@ -8,13 +8,14 @@ class VF_Import_ValueExploderMMYTest extends VF_Import_ProductFitments_CSV_Impor
 {
     protected function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
         $this->product_id = $this->insertProduct('sku');
     }
 
     function testExplodeValues()
     {
-        $valueExploder = new VF_Import_ValueExploder;
+        $valueExploder = new VF_Import_ValueExploder($this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getVehicleFinderClass());
         $this->importDefinitions();
         $result = $valueExploder->explode(array('make' => 'honda', 'model' => '{{all}}', 'year' => 2000));
         $this->assertEquals(2, count($result), 'value exploder should explode single token');
@@ -24,7 +25,8 @@ class VF_Import_ValueExploderMMYTest extends VF_Import_ProductFitments_CSV_Impor
 
     function testExplodeValuesMultiple()
     {
-        $valueExploder = new VF_Import_ValueExploder;
+        $valueExploder = new VF_Import_ValueExploder($this->getServiceContainer()->getSchemaClass(
+        ), $this->getServiceContainer()->getReadAdapterClass(), $this->getServiceContainer()->getVehicleFinderClass());
         $this->importDefinitions();
         $result = $valueExploder->explode(array('make' => 'honda', 'model' => '{{all}}', 'year' => '{{all}}'));
         $this->assertEquals(3, count($result), 'value exploder should explode multiple tokens');

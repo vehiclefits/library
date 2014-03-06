@@ -8,7 +8,7 @@ class VF_Level_FinderTests_FindEntityByTitleTest extends VF_TestCase
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testNotFound()

@@ -24,7 +24,7 @@ class VF_Tire_Importer_Definitions_TireSizeTests_MMY_SimpleTest extends VF_Tire_
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testNoVehicle()

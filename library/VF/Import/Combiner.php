@@ -7,12 +7,21 @@
 class VF_Import_Combiner
 {
     protected $error;
+    /** @var VF_Schema */
     protected $schema;
+    /** @var Zend_Db_Adapter_Abstract */
+    protected $readAdapter;
+    /** @var Zend_Config */
     protected $config;
+    /** @var VF_Vehicle_Finder */
+    protected $vehicleFinder;
 
-    function __construct(VF_Schema $schema, $config)
+
+    function __construct(VF_Schema $schema, Zend_Db_Adapter_Abstract $readAdapter, VF_Vehicle_Finder $vehicleFinder, Zend_Config $config)
     {
         $this->schema = $schema;
+        $this->readAdapter = $readAdapter;
+        $this->vehicleFinder = $vehicleFinder;
         $this->config = $config;
     }
 
@@ -61,7 +70,8 @@ class VF_Import_Combiner
         $result = array();
         foreach ($combinations as $key => $combination) {
             // blow out {{all}} tokens
-            $valueExploder = new VF_Import_ValueExploder();
+            $valueExploder = new VF_Import_ValueExploder($this->getSchema(), $this->getReadAdapter(
+            ), $this->getVehicleFinder());
             $result = array_merge($result, $valueExploder->explode($combination));
         }
         return $result;
@@ -110,6 +120,16 @@ class VF_Import_Combiner
     function getSchema()
     {
         return $this->schema;
+    }
+
+    function getVehicleFinder()
+    {
+        return $this->vehicleFinder;
+    }
+
+    function getReadAdapter()
+    {
+        return $this->readAdapter;
     }
 
     function getConfig()

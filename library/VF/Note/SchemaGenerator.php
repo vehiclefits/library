@@ -5,7 +5,7 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 /** Converts a comma delimeted list of level names into a suitable DDL for the schema */
-class VF_Note_SchemaGenerator
+class VF_Note_SchemaGenerator extends VF_Db
 {
     function execute($showProgress = false)
     {
@@ -21,7 +21,7 @@ class VF_Note_SchemaGenerator
         }
     }
 
-    function generator($levels)
+    function generator()
     {
         return 'CREATE TABLE IF NOT EXISTS `elite_note` (
 		  `id` int(50) NOT NULL AUTO_INCREMENT,
@@ -38,14 +38,4 @@ class VF_Note_SchemaGenerator
         ) ENGINE = InnoDB CHARSET=utf8;';
     }
 
-    protected function query($sql)
-    {
-        return $this->getReadAdapter()->query($sql);
-    }
-
-    /** @return Zend_Db_Adapter_Abstract */
-    protected function getReadAdapter()
-    {
-        return VF_Singleton::getInstance()->getReadAdapter();
-    }
 }

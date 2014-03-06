@@ -8,7 +8,7 @@ class VF_Vehicle_FinderTests_UnlinkTest extends VF_Import_TestCase
 {
     function doSetUp()
     {
-        $this->switchSchema('make,model,year');
+        parent::doSetUp();
     }
 
     function testWhenUnlinkMake_ShouldDeleteMake()
