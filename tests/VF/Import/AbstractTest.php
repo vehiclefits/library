@@ -24,18 +24,3 @@ class VF_Import_AbstractTest extends VF_TestCase
         $this->assertEquals($expectedProductId, $import->productId('sku'));
     }
 }
-
-class VF_Import_AbstractTestSubClass extends VF_Import_Abstract
-{
-    function __construct(VF_Schema $schema, Zend_Db_Adapter_Abstract $adapter, Zend_Config $config)
-    {
-        $this->schema = $schema;
-        $this->adapter = $adapter;
-        $this->config = $config;
-    }
-
-    function getProductTable()
-    {
-        return 'test_catalog_product_entity';
-    }
-}
