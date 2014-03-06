@@ -111,11 +111,3 @@ abstract class VF_Import_ProductFitments_CSV_ImportTests_TestCase extends VF_Imp
         return $data;
     }
 }
-
-class VF_Import_ProductFitments_CSV_Import_TestSubClass extends VF_Import_ProductFitments_CSV_Import
-{
-    function getProductTable()
-    {
-        return 'test_catalog_product_entity';
-    }
-}
